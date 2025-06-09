@@ -75,6 +75,7 @@ class AllReportsView extends StatelessWidget {
             }
 
             return ListView.builder(
+              physics: const BouncingScrollPhysics(),
               padding: const EdgeInsets.all(16),
               itemCount: state.summaries.length,
               itemBuilder: (context, index) {

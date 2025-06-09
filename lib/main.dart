@@ -12,6 +12,14 @@ import 'package:dishtv_agent_tracker/presentation/common/theme/app_theme.dart';
 import 'package:dishtv_agent_tracker/presentation/common/theme/theme_cubit.dart';
 import 'package:dishtv_agent_tracker/presentation/routes/app_router.dart';
 
+// Custom ScrollBehavior for smoother scrolling
+class SmoothScrollBehavior extends ScrollBehavior {
+  @override
+  ScrollPhysics getScrollPhysics(BuildContext context) {
+    return const BouncingScrollPhysics();
+  }
+}
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   
@@ -55,6 +63,7 @@ class MyApp extends StatelessWidget {
               darkTheme: AppTheme.darkTheme,
               themeMode: themeMode,
               debugShowCheckedModeBanner: false,
+              scrollBehavior: SmoothScrollBehavior(),
               onGenerateRoute: AppRouter.onGenerateRoute,
               initialRoute: AppRouter.dashboardRoute,
             );

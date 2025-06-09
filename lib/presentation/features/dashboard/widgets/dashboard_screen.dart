@@ -112,7 +112,7 @@ class DashboardView extends StatelessWidget {
               },
               color: AppColors.dishTvOrange,
               child: ListView(
-                physics: const AlwaysScrollableScrollPhysics(),
+                physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
                 children: [
                   const SizedBox(height: 16),
                   Padding(

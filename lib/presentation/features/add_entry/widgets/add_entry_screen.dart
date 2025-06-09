@@ -72,6 +72,7 @@ class AddEntryView extends StatelessWidget {
               return const Center(child: CircularProgressIndicator());
             }
             return SingleChildScrollView(
+              physics: const BouncingScrollPhysics(),
               padding: const EdgeInsets.all(16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,

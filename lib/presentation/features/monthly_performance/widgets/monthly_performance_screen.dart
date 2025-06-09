@@ -30,6 +30,7 @@ class MonthlyPerformanceScreen extends StatelessWidget {
           }
         },
         child: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
           child: Column(
             children: [
               const SizedBox(height: 16),
