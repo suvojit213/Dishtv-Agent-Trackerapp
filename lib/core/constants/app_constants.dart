@@ -1,7 +1,7 @@
 class AppConstants {
   // App information
   static const String appName = 'DishTV Agent Tracker';
-  static const String appVersion = '1.0.1';
+  static const String appVersion = '1.0.2';
   static const String appDeveloper = 'Suvojeet';
   
   // Salary calculation constants

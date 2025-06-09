@@ -5,6 +5,7 @@ import 'package:dishtv_agent_tracker/presentation/features/dashboard/widgets/das
 import 'package:dishtv_agent_tracker/presentation/features/add_entry/widgets/add_entry_screen.dart';
 import 'package:dishtv_agent_tracker/presentation/features/monthly_performance/widgets/monthly_performance_screen.dart';
 import 'package:dishtv_agent_tracker/presentation/features/all_reports/widgets/all_reports_screen.dart';
+import 'package:dishtv_agent_tracker/presentation/features/faq/widgets/faq_screen.dart';
 
 class AppRouter {
   // Route names
@@ -12,6 +13,7 @@ class AppRouter {
   static const String addEntryRoute = '/add-entry';
   static const String monthlyPerformanceRoute = '/monthly-performance';
   static const String allReportsRoute = '/all-reports';
+  static const String faqRoute = '/faq';
 
   // Route generator
   static Route<dynamic> onGenerateRoute(RouteSettings settings) {
@@ -33,6 +35,10 @@ class AppRouter {
       case allReportsRoute:
         return MaterialPageRoute(
           builder: (_) => const AllReportsScreen(),
+        );
+      case faqRoute:
+        return MaterialPageRoute(
+          builder: (_) => const FaqScreen(),
         );
       default:
         return MaterialPageRoute(

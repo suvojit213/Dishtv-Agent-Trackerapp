@@ -69,6 +69,10 @@ class DashboardView extends StatelessWidget {
         actions: [
           const AnimatedThemeSwitcher(),
           IconButton(
+            icon: const Icon(Icons.help_outline),
+            onPressed: () => Navigator.pushNamed(context, AppRouter.faqRoute),
+          ),
+          IconButton(
             icon: const Icon(Icons.refresh),
             onPressed: () {
               context.read<DashboardBloc>().add(RefreshDashboard());
