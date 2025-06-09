@@ -29,27 +29,26 @@ class AllReportsScreen extends StatelessWidget {
 class AllReportsView extends StatelessWidget {
   const AllReportsView({Key? key}) : super(key: key);
 
-  Future<void> _generateAndShareCsv(BuildContext context, MonthlySummary summary) async {
-    // ... यह फंक्शन वैसा ही रहेगा ...
+  Future<void> _generateAndSharePdf(BuildContext context, MonthlySummary summary) async {
     ScaffoldMessenger.of(context)
       ..hideCurrentSnackBar()
-      ..showSnackBar(const SnackBar(content: Text('Generating Report...')));
+      ..showSnackBar(const SnackBar(content: Text("Generating PDF Report...")));
 
     try {
       final repo = context.read<PerformanceRepository>();
-      final csvData = await repo.generateMonthlyReportCsv(summary);
+      final pdfBytes = await repo.generateMonthlyReportPdf(summary);
       final directory = await getTemporaryDirectory();
-      final filePath = '${directory.path}/Report_${summary.monthName}_${summary.year}.csv';
+      final filePath = "${directory.path}/Report_${summary.monthName}_${summary.year}.pdf";
       final file = File(filePath);
-      await file.writeAsString(csvData);
+      await file.writeAsBytes(pdfBytes);
 
-      final xFile = XFile(filePath, mimeType: 'text/csv');
-      await Share.shareXFiles([xFile], subject: 'Monthly Report - ${summary.formattedMonthYear}');
+      final xFile = XFile(filePath, mimeType: "application/pdf");
+      await Share.shareXFiles([xFile], subject: "Monthly Report - ${summary.formattedMonthYear}");
 
     } catch (e) {
       ScaffoldMessenger.of(context)
         ..hideCurrentSnackBar()
-        ..showSnackBar(SnackBar(content: Text('Error creating report: $e')));
+        ..showSnackBar(SnackBar(content: Text("Error creating PDF report: $e")));
     }
   }
 
@@ -111,8 +110,8 @@ class AllReportsView extends StatelessWidget {
             alignment: Alignment.centerRight,
             child: TextButton.icon(
               icon: const Icon(Icons.share_outlined),
-              label: const Text('Export Sheet'),
-              onPressed: () => _generateAndShareCsv(context, summary),
+              label: const Text("Export PDF"),
+              onPressed: () => _generateAndSharePdf(context, summary),
             ),
           )
         ],

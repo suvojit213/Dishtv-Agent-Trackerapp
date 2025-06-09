@@ -13,5 +13,5 @@ abstract class PerformanceRepository {
   Future<MonthlySummary> getMonthlySummary(int month, int year);
   
   // PDF को CSV से बदलें
-  Future<String> generateMonthlyReportCsv(MonthlySummary summary);
+  Future<List<int>> generateMonthlyReportPdf(MonthlySummary summary);
 }

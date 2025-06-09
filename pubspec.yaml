@@ -24,7 +24,7 @@ dependencies:
   permission_handler: ^11.3.1
   open_file: ^3.3.2
   device_info_plus: ^10.1.0
-  csv: ^6.0.0
+  pdf: ^3.10.8 # Add this line for PDF generation
   share_plus: ^9.0.0
   shimmer: ^3.0.0
   percent_indicator: ^4.2.3 # <-- यह नया पैकेज जोड़ा गया है

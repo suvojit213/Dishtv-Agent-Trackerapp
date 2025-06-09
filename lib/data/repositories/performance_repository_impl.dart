@@ -1,4 +1,4 @@
-import 'package:dishtv_agent_tracker/data/datasources/csv_service.dart'; // CSV सर्विस इम्पोर्ट करें
+import 'package:dishtv_agent_tracker/data/datasources/pdf_service.dart';
 import 'package:dishtv_agent_tracker/data/datasources/local_data_source.dart';
 import 'package:dishtv_agent_tracker/domain/entities/daily_entry.dart';
 import 'package:dishtv_agent_tracker/domain/entities/monthly_summary.dart';
@@ -6,7 +6,7 @@ import 'package:dishtv_agent_tracker/domain/repositories/performance_repository.
 
 class PerformanceRepositoryImpl implements PerformanceRepository {
   final LocalDataSource localDataSource;
-  final CsvService _csvService = CsvService(); // CSV सर्विस का इंस्टेंस बनाएं
+  final PdfService _pdfService = PdfService();
 
   PerformanceRepositoryImpl({
     required this.localDataSource,
@@ -42,8 +42,8 @@ class PerformanceRepositoryImpl implements PerformanceRepository {
     final monthYearCombinations = await localDataSource.getUniqueMonthYearCombinations();
     final List<MonthlySummary> summaries = [];
     for (final combination in monthYearCombinations) {
-      final month = combination['month']!;
-      final year = combination['year']!;
+      final month = combination["month"]!;
+      final year = combination["year"]!;
       final summary = await getMonthlySummary(month, year);
       summaries.add(summary);
     }
@@ -61,7 +61,7 @@ class PerformanceRepositoryImpl implements PerformanceRepository {
   
   // PDF मेथड को CSV से बदलें
   @override
-  Future<String> generateMonthlyReportCsv(MonthlySummary summary) async {
-    return _csvService.generateMonthlyReport(summary);
+  Future<List<int>> generateMonthlyReportPdf(MonthlySummary summary) async {
+    return _pdfService.generateMonthlyReportPdf(summary);
   }
 }
