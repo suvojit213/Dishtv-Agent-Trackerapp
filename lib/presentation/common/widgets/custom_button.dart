@@ -3,7 +3,7 @@ import 'package:dishtv_agent_tracker/core/constants/app_colors.dart';
 
 class CustomButton extends StatelessWidget {
   final String text;
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed;
   final bool isPrimary;
   final IconData? icon;
   
