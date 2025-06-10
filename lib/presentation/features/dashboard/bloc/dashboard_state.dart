@@ -1,11 +1,13 @@
 import 'package:equatable/equatable.dart';
 import 'package:dishtv_agent_tracker/domain/entities/monthly_summary.dart';
+import 'package:dishtv_agent_tracker/domain/entities/csat_summary.dart';
 
 enum DashboardStatus { initial, loading, loaded, error }
 
 class DashboardState extends Equatable {
   final DashboardStatus status;
   final MonthlySummary? monthlySummary;
+  final CSATSummary? csatSummary; // Added CSATSummary field
   final String? errorMessage;
   final int currentMonth;
   final int currentYear;
@@ -13,6 +15,7 @@ class DashboardState extends Equatable {
   const DashboardState({
     this.status = DashboardStatus.initial,
     this.monthlySummary,
+    this.csatSummary, // Added to constructor
     this.errorMessage,
     required this.currentMonth,
     required this.currentYear,
@@ -30,6 +33,7 @@ class DashboardState extends Equatable {
   DashboardState copyWith({
     DashboardStatus? status,
     MonthlySummary? monthlySummary,
+    CSATSummary? csatSummary, // Added to copyWith
     String? errorMessage,
     int? currentMonth,
     int? currentYear,
@@ -37,6 +41,7 @@ class DashboardState extends Equatable {
     return DashboardState(
       status: status ?? this.status,
       monthlySummary: monthlySummary ?? this.monthlySummary,
+      csatSummary: csatSummary ?? this.csatSummary, // Added to copyWith logic
       errorMessage: errorMessage,
       currentMonth: currentMonth ?? this.currentMonth,
       currentYear: currentYear ?? this.currentYear,
@@ -44,6 +49,7 @@ class DashboardState extends Equatable {
   }
   
   @override
-  List<Object?> get props => [status, monthlySummary, errorMessage, currentMonth, currentYear];
+  List<Object?> get props => [status, monthlySummary, csatSummary, errorMessage, currentMonth, currentYear];
 }
+
 

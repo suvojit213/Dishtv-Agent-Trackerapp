@@ -1,4 +1,5 @@
 import 'package:dishtv_agent_tracker/domain/entities/daily_entry.dart';
+import 'package:dishtv_agent_tracker/presentation/features/add_entry/widgets/add_csat_entry_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
@@ -32,184 +33,214 @@ class AddEntryView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<AddEntryBloc, AddEntryState>(
-      listener: (context, state) {
-        if (state.status == AddEntryStatus.success) {
-          ScaffoldMessenger.of(context)
-            ..hideCurrentSnackBar()
-            ..showSnackBar(
-              SnackBar(
-                content: Text(
-                  state.isDelete
-                      ? 'Entry deleted successfully!'
-                      : (state.isUpdate
-                          ? 'Entry updated successfully!'
-                          : 'Entry added successfully!'),
+    return DefaultTabController(
+      length: 2,
+      child: BlocListener<AddEntryBloc, AddEntryState>(
+        listener: (context, state) {
+          if (state.status == AddEntryStatus.success) {
+            ScaffoldMessenger.of(context)
+              ..hideCurrentSnackBar()
+              ..showSnackBar(
+                SnackBar(
+                  content: Text(
+                    state.isDelete
+                        ? 'Entry deleted successfully!'
+                        : (state.isUpdate
+                            ? 'Entry updated successfully!'
+                            : 'Entry added successfully!'),
+                  ),
+                  backgroundColor: AppColors.accentGreen,
                 ),
-                backgroundColor: AppColors.accentGreen,
-              ),
-            );
-          Navigator.pop(context, true); 
-        } else if (state.status == AddEntryStatus.failure) {
-          ScaffoldMessenger.of(context)
-            ..hideCurrentSnackBar()
-            ..showSnackBar(
-              SnackBar(
-                content: Text(state.errorMessage ?? 'Failed to save entry'),
-                backgroundColor: AppColors.accentRed,
-              ),
-            );
-        }
-      },
-      child: Scaffold(
-        appBar: CustomAppBar(
+              );
+            Navigator.pop(context, true); 
+          } else if (state.status == AddEntryStatus.failure) {
+            ScaffoldMessenger.of(context)
+              ..hideCurrentSnackBar()
+              ..showSnackBar(
+                SnackBar(
+                  content: Text(state.errorMessage ?? 'Failed to save entry'),
+                  backgroundColor: AppColors.accentRed,
+                ),
+              );
+          }
+        },
+        child: Scaffold(
+          appBar: CustomAppBar(
             title: context.watch<AddEntryBloc>().state.isUpdate
                 ? 'Edit Entry'
-                : 'Add New Entry'),
-        body: BlocBuilder<AddEntryBloc, AddEntryState>(
-          builder: (context, state) {
-            if (state.status == AddEntryStatus.initial || state.status == AddEntryStatus.loading) {
-              return const Center(child: CircularProgressIndicator());
-            }
-            return SingleChildScrollView(
-              physics: const BouncingScrollPhysics(),
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Date Section
-                  _buildSectionTitle(context, 'Date'),
-                  CustomCard(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        // InkWell ab hamesha enabled rahega
-                        InkWell(
-                          onTap: () => _selectDate(context),
-                          child: Container(
-                            width: double.infinity,
-                            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
-                            decoration: BoxDecoration(
-                              color: Theme.of(context).inputDecorationTheme.fillColor,
-                              borderRadius: BorderRadius.circular(8),
-                              border: Border.all(color: AppColors.border),
-                            ),
-                            child: Row(
-                              children: [
-                                const Icon(
-                                  Icons.calendar_today,
-                                  color: AppColors.textSecondary,
-                                ),
-                                const SizedBox(width: 12),
-                                Text(
-                                  DateFormat('dd MMM yyyy').format(state.date),
-                                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontSize: 16),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        // "Date cannot be edited" wala text हटा दिया गया है
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 24),
-
-                  // Login Time Section
-                  _buildSectionTitle(context, 'Login Time'),
-                  CustomCard(
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: _buildTimeField(
-                            context,
-                            'Hours',
-                            state.loginHours.toString(),
-                            (value) => context.read<AddEntryBloc>().add(
-                                  LoginHoursChanged(hours: int.tryParse(value) ?? 0),
-                                ),
-                          ),
-                        ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: _buildTimeField(
-                            context,
-                            'Minutes',
-                            state.loginMinutes.toString(),
-                            (value) => context.read<AddEntryBloc>().add(
-                                  LoginMinutesChanged(minutes: int.tryParse(value) ?? 0),
-                                ),
-                          ),
-                        ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: _buildTimeField(
-                            context,
-                            'Seconds',
-                            state.loginSeconds.toString(),
-                            (value) => context.read<AddEntryBloc>().add(
-                                  LoginSecondsChanged(seconds: int.tryParse(value) ?? 0),
-                                ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 24),
-
-                  // Call Count Section
-                  _buildSectionTitle(context, 'Call Count'),
-                  CustomCard(
-                    padding: const EdgeInsets.symmetric(horizontal: 4),
-                    child: TextFormField(
-                      initialValue: state.callCount.toString(),
-                      keyboardType: TextInputType.number,
-                      decoration: const InputDecoration(
-                        hintText: 'Enter number of calls',
-                        prefixIcon: Icon(Icons.call),
-                        border: InputBorder.none,
-                        focusedBorder: InputBorder.none,
-                        enabledBorder: InputBorder.none,
-                      ),
-                      onChanged: (value) {
-                        context.read<AddEntryBloc>().add(
-                              CallCountChanged(callCount: int.tryParse(value) ?? 0),
-                            );
-                      },
-                    ),
-                  ),
-                  const SizedBox(height: 32),
-
-                  // Buttons Section
-                  SizedBox(
-                    width: double.infinity,
-                    child: CustomButton(
-                      text: state.isUpdate ? 'Update Entry' : 'Add Entry',
-                      onPressed: () {
-                              context.read<AddEntryBloc>().add(const SubmitEntry());
-                            },
-                      icon: state.isUpdate ? Icons.update : Icons.add,
-                    ),
-                  ),
-
-                  if (state.isUpdate) ...[
-                    const SizedBox(height: 16),
-                    SizedBox(
-                      width: double.infinity,
-                      child: CustomButton(
-                        text: 'Delete Entry',
-                        onPressed: () => _showDeleteConfirmationDialog(context),
-                        isPrimary: false, 
-                        icon: Icons.delete_outline,
-                      ),
-                    ),
-                  ]
-                ],
-              ),
-            );
-          },
+                : 'Add New Entry',
+            bottom: TabBar(
+              labelColor: AppColors.dishTvOrange,
+              unselectedLabelColor: AppColors.textSecondary,
+              indicatorColor: AppColors.dishTvOrange,
+              tabs: const [
+                Tab(
+                  icon: Icon(Icons.work_outline),
+                  text: 'Daily Entry',
+                ),
+                Tab(
+                  icon: Icon(Icons.sentiment_satisfied_alt),
+                  text: 'CSAT Entry',
+                ),
+              ],
+            ),
+          ),
+          body: TabBarView(
+            children: [
+              // Daily Entry Tab
+              _buildDailyEntryTab(context),
+              // CSAT Entry Tab
+              const AddCSATEntryScreen(),
+            ],
+          ),
         ),
       ),
+    );
+  }
+
+  Widget _buildDailyEntryTab(BuildContext context) {
+    return BlocBuilder<AddEntryBloc, AddEntryState>(
+      builder: (context, state) {
+        if (state.status == AddEntryStatus.initial || state.status == AddEntryStatus.loading) {
+          return const Center(child: CircularProgressIndicator());
+        }
+        return SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Date Section
+              _buildSectionTitle(context, 'Date'),
+              CustomCard(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // InkWell ab hamesha enabled rahega
+                    InkWell(
+                      onTap: () => _selectDate(context),
+                      child: Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).inputDecorationTheme.fillColor,
+                          borderRadius: BorderRadius.circular(8),
+                          border: Border.all(color: AppColors.border),
+                        ),
+                        child: Row(
+                          children: [
+                            const Icon(
+                              Icons.calendar_today,
+                              color: AppColors.textSecondary,
+                            ),
+                            const SizedBox(width: 12),
+                            Text(
+                              DateFormat('dd MMM yyyy').format(state.date),
+                              style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontSize: 16),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    // "Date cannot be edited" wala text हटा दिया गया है
+                  ],
+                ),
+              ),
+              const SizedBox(height: 24),
+
+              // Login Time Section
+              _buildSectionTitle(context, 'Login Time'),
+              CustomCard(
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: _buildTimeField(
+                        context,
+                        'Hours',
+                        state.loginHours.toString(),
+                        (value) => context.read<AddEntryBloc>().add(
+                              LoginHoursChanged(hours: int.tryParse(value) ?? 0),
+                            ),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: _buildTimeField(
+                        context,
+                        'Minutes',
+                        state.loginMinutes.toString(),
+                        (value) => context.read<AddEntryBloc>().add(
+                              LoginMinutesChanged(minutes: int.tryParse(value) ?? 0),
+                            ),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: _buildTimeField(
+                        context,
+                        'Seconds',
+                        state.loginSeconds.toString(),
+                        (value) => context.read<AddEntryBloc>().add(
+                              LoginSecondsChanged(seconds: int.tryParse(value) ?? 0),
+                            ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 24),
+
+              // Call Count Section
+              _buildSectionTitle(context, 'Call Count'),
+              CustomCard(
+                padding: const EdgeInsets.symmetric(horizontal: 4),
+                child: TextFormField(
+                  initialValue: state.callCount.toString(),
+                  keyboardType: TextInputType.number,
+                  decoration: const InputDecoration(
+                    hintText: 'Enter number of calls',
+                    prefixIcon: Icon(Icons.call),
+                    border: InputBorder.none,
+                    focusedBorder: InputBorder.none,
+                    enabledBorder: InputBorder.none,
+                  ),
+                  onChanged: (value) {
+                    context.read<AddEntryBloc>().add(
+                          CallCountChanged(callCount: int.tryParse(value) ?? 0),
+                        );
+                  },
+                ),
+              ),
+              const SizedBox(height: 32),
+
+              // Buttons Section
+              SizedBox(
+                width: double.infinity,
+                child: CustomButton(
+                  text: state.isUpdate ? 'Update Entry' : 'Add Entry',
+                  onPressed: () {
+                          context.read<AddEntryBloc>().add(const SubmitEntry());
+                        },
+                  icon: state.isUpdate ? Icons.update : Icons.add,
+                ),
+              ),
+
+              if (state.isUpdate) ...[
+                const SizedBox(height: 16),
+                SizedBox(
+                  width: double.infinity,
+                  child: CustomButton(
+                    text: 'Delete Entry',
+                    onPressed: () => _showDeleteConfirmationDialog(context),
+                    isPrimary: false, 
+                    icon: Icons.delete_outline,
+                  ),
+                ),
+              ]
+            ],
+          ),
+        );
+      },
     );
   }
 
@@ -312,3 +343,4 @@ class AddEntryView extends StatelessWidget {
     );
   }
 }
+

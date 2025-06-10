@@ -3,19 +3,21 @@ import 'package:flutter/material.dart';
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
   final List<Widget>? actions;
-  final Widget? leading; // नया 'leading' विजेट यहाँ जोड़ा गया है
+  final Widget? leading;
+  final PreferredSizeWidget? bottom;
 
   const CustomAppBar({
     Key? key,
     required this.title,
     this.actions,
-    this.leading, // कंस्ट्रक्टर में इसे जोड़ें
+    this.leading,
+    this.bottom,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      leading: leading, // AppBar में इसका उपयोग करें
+      leading: leading,
       title: Text(
         title,
         style: const TextStyle(
@@ -25,9 +27,12 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       centerTitle: true,
       elevation: 0,
       actions: actions,
+      bottom: bottom,
     );
   }
 
   @override
-  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
+  Size get preferredSize => Size.fromHeight(
+    kToolbarHeight + (bottom?.preferredSize.height ?? 0.0),
+  );
 }

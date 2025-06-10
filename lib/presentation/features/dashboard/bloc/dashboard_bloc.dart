@@ -4,6 +4,7 @@ import 'package:dishtv_agent_tracker/domain/repositories/performance_repository.
 import 'package:dishtv_agent_tracker/domain/usecases/get_monthly_summary_usecase.dart';
 import 'package:dishtv_agent_tracker/presentation/features/dashboard/bloc/dashboard_event.dart';
 import 'package:dishtv_agent_tracker/presentation/features/dashboard/bloc/dashboard_state.dart';
+import 'package:dishtv_agent_tracker/domain/entities/csat_summary.dart';
 
 class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
   final PerformanceRepository repository;
@@ -11,6 +12,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
 
   // महीने के डेटा को याद रखने के लिए कैश
   final Map<String, MonthlySummary> _summaryCache = {};
+  final Map<String, CSATSummary> _csatSummaryCache = {}; // New cache for CSATSummary
 
   DashboardBloc({required this.repository}) : super(DashboardState.initial()) {
     _getMonthlySummaryUseCase = GetMonthlySummaryUseCase(repository);
@@ -26,15 +28,14 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     final cacheKey = '${event.year}-${event.month}';
 
     // अगर डेटा पहले से कैश में है, तो उसे तुरंत दिखाएं
-    if (_summaryCache.containsKey(cacheKey)) {
+    if (_summaryCache.containsKey(cacheKey) && _csatSummaryCache.containsKey(cacheKey)) {
       emit(state.copyWith(
         status: DashboardStatus.loaded,
         monthlySummary: _summaryCache[cacheKey],
+        csatSummary: _csatSummaryCache[cacheKey], // Pass CSATSummary from cache
         currentMonth: event.month,
         currentYear: event.year,
       ));
-      // बैकग्राउंड में डेटा को फिर भी रिफ्रेश कर सकते हैं (वैकल्पिक)
-      // _fetchAndEmit(event.month, event.year, emit);
       return;
     }
     
@@ -51,12 +52,16 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
   Future<void> _fetchAndEmit(int month, int year, Emitter<DashboardState> emit) async {
     try {
       final monthlySummary = await _getMonthlySummaryUseCase.execute(month, year);
+      final csatSummary = await repository.getCSATSummary(month, year); // Fetch CSATSummary separately
+      
       final cacheKey = '$year-$month';
       _summaryCache[cacheKey] = monthlySummary; // नए डेटा को कैश में सेव करें
+      _csatSummaryCache[cacheKey] = csatSummary; // Save CSATSummary to cache
 
       emit(state.copyWith(
         status: DashboardStatus.loaded,
         monthlySummary: monthlySummary,
+        csatSummary: csatSummary, // Pass fetched CSATSummary
         errorMessage: null,
       ));
     } catch (e) {
@@ -74,9 +79,12 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     // कैश को क्लियर करें ताकि ताजा डेटा आए
     final cacheKey = '${state.currentYear}-${state.currentMonth}';
     _summaryCache.remove(cacheKey);
+    _csatSummaryCache.remove(cacheKey); // Clear CSATSummary cache
     add(LoadDashboardData(
       month: state.currentMonth,
       year: state.currentYear,
     ));
   }
 }
+
+

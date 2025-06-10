@@ -5,6 +5,7 @@ import 'package:dishtv_agent_tracker/presentation/features/dashboard/bloc/goals_
 import 'package:dishtv_agent_tracker/presentation/features/dashboard/bloc/goals_event.dart';
 import 'package:dishtv_agent_tracker/presentation/features/dashboard/widgets/dashboard_shimmer.dart';
 import 'package:dishtv_agent_tracker/presentation/features/dashboard/widgets/monthly_goals_section.dart';
+import 'package:dishtv_agent_tracker/presentation/features/dashboard/widgets/csat_performance_section.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:dishtv_agent_tracker/core/constants/app_colors.dart';
@@ -158,6 +159,8 @@ class DashboardView extends StatelessWidget {
                   const SizedBox(height: 16),
                   MonthlyGoalsSection(summary: state.monthlySummary!),
                   const SizedBox(height: 24),
+                  CSATPerformanceSection(csatSummary: state.csatSummary), // Pass CSAT data directly from state
+                  const SizedBox(height: 24),
                   SummarySection(summary: state.monthlySummary!),
                   const SizedBox(height: 24),
                   SalarySection(summary: state.monthlySummary!),
@@ -215,15 +218,17 @@ class DashboardView extends StatelessWidget {
         ),
         const SizedBox(height: 16),
         const Text(
-          'Credits - Sudhanshu for testing and all others to make possible',
+          'Credits - Special Thanks to Sudhanshu',
            style: TextStyle(fontStyle: FontStyle.italic),
         ),
         const Divider(height: 32),
         const Text(
-          '"And this is made by me and I am learning."',
+          '"I Developed This App for More easy to Track our perfomence from our end, Thanks For using This Application"',
            style: TextStyle(fontStyle: FontStyle.italic),
         ),
       ],
     );
   }
 }
+
+

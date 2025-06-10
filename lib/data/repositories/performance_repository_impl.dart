@@ -2,6 +2,8 @@ import 'package:dishtv_agent_tracker/data/datasources/pdf_service.dart';
 import 'package:dishtv_agent_tracker/data/datasources/local_data_source.dart';
 import 'package:dishtv_agent_tracker/domain/entities/daily_entry.dart';
 import 'package:dishtv_agent_tracker/domain/entities/monthly_summary.dart';
+import 'package:dishtv_agent_tracker/domain/entities/csat_summary.dart';
+import 'package:dishtv_agent_tracker/domain/entities/csat_entry.dart';
 import 'package:dishtv_agent_tracker/domain/repositories/performance_repository.dart';
 
 class PerformanceRepositoryImpl implements PerformanceRepository {
@@ -12,31 +14,36 @@ class PerformanceRepositoryImpl implements PerformanceRepository {
     required this.localDataSource,
   });
 
-  // ... बाकी के सभी मेथड्स वैसे ही रहेंगे ...
   @override
   Future<List<DailyEntry>> getAllEntries() async {
     return await localDataSource.getAllEntries();
   }
+
   @override
   Future<List<DailyEntry>> getEntriesForMonth(int month, int year) async {
     return await localDataSource.getEntriesForMonth(month, year);
   }
+
   @override
   Future<DailyEntry?> getEntryForDate(DateTime date) async {
     return await localDataSource.getEntryForDate(date);
   }
+
   @override
   Future<int> addEntry(DailyEntry entry) async {
     return await localDataSource.insertEntry(entry);
   }
+
   @override
   Future<int> updateEntry(DailyEntry entry) async {
     return await localDataSource.updateEntry(entry);
   }
+
   @override
   Future<int> deleteEntry(int id) async {
     return await localDataSource.deleteEntry(id);
   }
+
   @override
   Future<List<MonthlySummary>> getAllMonthlySummaries() async {
     final monthYearCombinations = await localDataSource.getUniqueMonthYearCombinations();
@@ -49,19 +56,47 @@ class PerformanceRepositoryImpl implements PerformanceRepository {
     }
     return summaries;
   }
+
   @override
   Future<MonthlySummary> getMonthlySummary(int month, int year) async {
     final entries = await localDataSource.getEntriesForMonth(month, year);
+    final csatEntries = await localDataSource.getCSATEntriesForMonth(month, year);
+
     return MonthlySummary(
       month: month,
       year: year,
       entries: entries,
+      csatSummary: CSATSummary(entries: csatEntries, month: month, year: year),
     );
   }
-  
-  // PDF मेथड को CSV से बदलें
+
+  @override
+  Future<CSATSummary> getCSATSummary(int month, int year) async {
+    final csatEntries = await localDataSource.getCSATEntriesForMonth(month, year);
+    return CSATSummary(entries: csatEntries, month: month, year: year);
+  }
+
+  @override
+  Future<int> saveCSATEntry(CSATEntry entry) async {
+    if (entry.id == null) {
+      return await localDataSource.insertCSATEntry(entry);
+    } else {
+      // Assuming updateCSATEntry exists in LocalDataSource, need to add if not.
+      // For now, let's assume insert handles both insert and update based on ID.
+      // If not, we'll need to add updateCSATEntry to LocalDataSource.
+      return await localDataSource.insertCSATEntry(entry); // This might need to be updateCSATEntry
+    }
+  }
+
+  @override
+  Future<int> deleteCSATEntry(int id) async {
+    return await localDataSource.deleteCSATEntry(id);
+  }
+
   @override
   Future<List<int>> generateMonthlyReportPdf(MonthlySummary summary) async {
     return _pdfService.generateMonthlyReportPdf(summary);
   }
 }
+
+

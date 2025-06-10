@@ -1,7 +1,7 @@
 class AppConstants {
   // App information
   static const String appName = 'DishTV Agent Tracker';
-  static const String appVersion = '1.0.2';
+  static const String appVersion = '1.0.3';
   static const String appDeveloper = 'Suvojeet';
   
   // Salary calculation constants
@@ -12,12 +12,14 @@ class AppConstants {
   
   // Database constants
   static const String databaseName = 'dishtv_agent_tracker.db';
-  static const int databaseVersion = 1;
+  static const int databaseVersion = 2; // Updated version
   
   // Table names
   static const String tableEntries = 'daily_entries';
+  static const String tableCSATEntries = 'csat_entries'; // New table
   
   // Shared preferences keys
   static const String prefThemeMode = 'theme_mode';
 }
+
 

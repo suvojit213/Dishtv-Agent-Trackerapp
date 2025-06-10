@@ -321,7 +321,7 @@ class FaqScreen extends StatelessWidget {
               Icon(Icons.code, color: AppColors.textSecondary, size: 20),
               const SizedBox(width: 8),
               Text(
-                'Version: 1.0.2',
+                'Version: 1.0.3',
                 style: Theme.of(context).textTheme.bodyMedium,
               ),
             ],
