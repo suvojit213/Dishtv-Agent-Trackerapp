@@ -6,6 +6,7 @@ import 'package:dishtv_agent_tracker/presentation/features/dashboard/bloc/goals_
 import 'package:dishtv_agent_tracker/presentation/features/dashboard/widgets/dashboard_shimmer.dart';
 import 'package:dishtv_agent_tracker/presentation/features/dashboard/widgets/monthly_goals_section.dart';
 import 'package:dishtv_agent_tracker/presentation/features/dashboard/widgets/csat_performance_section.dart';
+import 'package:dishtv_agent_tracker/presentation/features/dashboard/widgets/cq_performance_section.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:dishtv_agent_tracker/core/constants/app_colors.dart';
@@ -160,6 +161,8 @@ class DashboardView extends StatelessWidget {
                   MonthlyGoalsSection(summary: state.monthlySummary!),
                   const SizedBox(height: 24),
                   CSATPerformanceSection(csatSummary: state.csatSummary), // Pass CSAT data directly from state
+                  const SizedBox(height: 24),
+                  CQPerformanceSection(cqSummary: state.cqSummary), // Pass CQ data directly from state
                   const SizedBox(height: 24),
                   SummarySection(summary: state.monthlySummary!),
                   const SizedBox(height: 24),

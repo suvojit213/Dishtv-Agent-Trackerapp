@@ -4,6 +4,8 @@ import 'package:dishtv_agent_tracker/domain/entities/daily_entry.dart';
 import 'package:dishtv_agent_tracker/domain/entities/monthly_summary.dart';
 import 'package:dishtv_agent_tracker/domain/entities/csat_summary.dart';
 import 'package:dishtv_agent_tracker/domain/entities/csat_entry.dart';
+import 'package:dishtv_agent_tracker/domain/entities/cq_entry.dart';
+import 'package:dishtv_agent_tracker/domain/entities/cq_summary.dart';
 import 'package:dishtv_agent_tracker/domain/repositories/performance_repository.dart';
 
 class PerformanceRepositoryImpl implements PerformanceRepository {
@@ -77,6 +79,12 @@ class PerformanceRepositoryImpl implements PerformanceRepository {
   }
 
   @override
+  Future<CQSummary> getCQSummary(int month, int year) async {
+    final cqEntries = await localDataSource.getCQEntriesForMonth(month, year);
+    return CQSummary(entries: cqEntries, month: month, year: year);
+  }
+
+  @override
   Future<int> saveCSATEntry(CSATEntry entry) async {
     if (entry.id == null) {
       return await localDataSource.insertCSATEntry(entry);
@@ -91,6 +99,41 @@ class PerformanceRepositoryImpl implements PerformanceRepository {
   @override
   Future<int> deleteCSATEntry(int id) async {
     return await localDataSource.deleteCSATEntry(id);
+  }
+
+  // CQ entry methods implementation
+  @override
+  Future<int> saveCQEntry(CQEntry entry) async {
+    if (entry.id == null) {
+      return await localDataSource.insertCQEntry(entry);
+    } else {
+      return await localDataSource.updateCQEntry(entry);
+    }
+  }
+
+  @override
+  Future<int> deleteCQEntry(int id) async {
+    return await localDataSource.deleteCQEntry(id);
+  }
+
+  @override
+  Future<List<CQEntry>> getAllCQEntries() async {
+    return await localDataSource.getAllCQEntries();
+  }
+
+  @override
+  Future<List<CQEntry>> getCQEntriesForMonth(int month, int year) async {
+    return await localDataSource.getCQEntriesForMonth(month, year);
+  }
+
+  @override
+  Future<CQEntry?> getCQEntryForDate(DateTime date) async {
+    return await localDataSource.getCQEntryForDate(date);
+  }
+
+  @override
+  Future<int> updateCQEntry(CQEntry entry) async {
+    return await localDataSource.updateCQEntry(entry);
   }
 
   @override

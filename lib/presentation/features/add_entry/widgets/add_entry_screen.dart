@@ -1,5 +1,6 @@
 import 'package:dishtv_agent_tracker/domain/entities/daily_entry.dart';
 import 'package:dishtv_agent_tracker/presentation/features/add_entry/widgets/add_csat_entry_screen.dart';
+import 'package:dishtv_agent_tracker/presentation/features/add_entry/widgets/add_cq_entry_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
@@ -34,7 +35,7 @@ class AddEntryView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 2,
+      length: 3,
       child: BlocListener<AddEntryBloc, AddEntryState>(
         listener: (context, state) {
           if (state.status == AddEntryStatus.success) {
@@ -82,6 +83,10 @@ class AddEntryView extends StatelessWidget {
                   icon: Icon(Icons.sentiment_satisfied_alt),
                   text: 'CSAT Entry',
                 ),
+                Tab(
+                  icon: Icon(Icons.assessment),
+                  text: 'CQ Entry',
+                ),
               ],
             ),
           ),
@@ -91,6 +96,8 @@ class AddEntryView extends StatelessWidget {
               _buildDailyEntryTab(context),
               // CSAT Entry Tab
               const AddCSATEntryScreen(),
+              // CQ Entry Tab
+              const AddCQEntryScreen(),
             ],
           ),
         ),

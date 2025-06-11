@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:dishtv_agent_tracker/domain/entities/monthly_summary.dart';
 import 'package:dishtv_agent_tracker/domain/entities/csat_summary.dart';
+import 'package:dishtv_agent_tracker/domain/entities/cq_summary.dart';
 
 enum DashboardStatus { initial, loading, loaded, error }
 
@@ -8,6 +9,7 @@ class DashboardState extends Equatable {
   final DashboardStatus status;
   final MonthlySummary? monthlySummary;
   final CSATSummary? csatSummary; // Added CSATSummary field
+  final CQSummary? cqSummary; // Added CQSummary field
   final String? errorMessage;
   final int currentMonth;
   final int currentYear;
@@ -16,6 +18,7 @@ class DashboardState extends Equatable {
     this.status = DashboardStatus.initial,
     this.monthlySummary,
     this.csatSummary, // Added to constructor
+    this.cqSummary, // Added to constructor
     this.errorMessage,
     required this.currentMonth,
     required this.currentYear,
@@ -34,6 +37,7 @@ class DashboardState extends Equatable {
     DashboardStatus? status,
     MonthlySummary? monthlySummary,
     CSATSummary? csatSummary, // Added to copyWith
+    CQSummary? cqSummary, // Added to copyWith
     String? errorMessage,
     int? currentMonth,
     int? currentYear,
@@ -42,6 +46,7 @@ class DashboardState extends Equatable {
       status: status ?? this.status,
       monthlySummary: monthlySummary ?? this.monthlySummary,
       csatSummary: csatSummary ?? this.csatSummary, // Added to copyWith logic
+      cqSummary: cqSummary ?? this.cqSummary, // Added to copyWith logic
       errorMessage: errorMessage,
       currentMonth: currentMonth ?? this.currentMonth,
       currentYear: currentYear ?? this.currentYear,
@@ -49,7 +54,7 @@ class DashboardState extends Equatable {
   }
   
   @override
-  List<Object?> get props => [status, monthlySummary, csatSummary, errorMessage, currentMonth, currentYear];
+  List<Object?> get props => [status, monthlySummary, csatSummary, cqSummary, errorMessage, currentMonth, currentYear];
 }
 
 

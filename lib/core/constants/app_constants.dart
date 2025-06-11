@@ -12,11 +12,12 @@ class AppConstants {
   
   // Database constants
   static const String databaseName = 'dishtv_agent_tracker.db';
-  static const int databaseVersion = 2; // Updated version
+  static const int databaseVersion = 3; // Updated version for CQ feature
   
   // Table names
   static const String tableEntries = 'daily_entries';
-  static const String tableCSATEntries = 'csat_entries'; // New table
+  static const String tableCSATEntries = 'csat_entries';
+  static const String tableCQEntries = 'cq_entries'; // New CQ table
   
   // Shared preferences keys
   static const String prefThemeMode = 'theme_mode';

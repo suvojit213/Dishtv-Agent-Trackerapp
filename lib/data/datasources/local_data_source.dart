@@ -3,6 +3,7 @@ import 'package:path/path.dart';
 import 'package:dishtv_agent_tracker/core/constants/app_constants.dart';
 import 'package:dishtv_agent_tracker/domain/entities/daily_entry.dart';
 import 'package:dishtv_agent_tracker/domain/entities/csat_entry.dart';
+import 'package:dishtv_agent_tracker/domain/entities/cq_entry.dart';
 
 class LocalDataSource {
   static Database? _database;
@@ -55,6 +56,14 @@ class LocalDataSource {
             n_count INTEGER NOT NULL
           )
         ''');
+        // Create CQ entries table
+        await db.execute('''
+          CREATE TABLE ${AppConstants.tableCQEntries} (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            audit_date INTEGER NOT NULL,
+            percentage REAL NOT NULL
+          )
+        ''');
       },
       onUpgrade: (db, oldVersion, newVersion) async {
         if (oldVersion < 2) {
@@ -65,6 +74,15 @@ class LocalDataSource {
               t2_count INTEGER NOT NULL,
               b2_count INTEGER NOT NULL,
               n_count INTEGER NOT NULL
+            )
+          ''');
+        }
+        if (oldVersion < 3) {
+          await db.execute('''
+            CREATE TABLE ${AppConstants.tableCQEntries} (
+              id INTEGER PRIMARY KEY AUTOINCREMENT,
+              audit_date INTEGER NOT NULL,
+              percentage REAL NOT NULL
             )
           ''');
         }
@@ -214,6 +232,98 @@ class LocalDataSource {
     final db = await database;
     return await db.delete(
       AppConstants.tableCSATEntries,
+      where: 'id = ?',
+      whereArgs: [id],
+    );
+  }
+
+  // CQ CRUD operations
+
+  // Create a new CQ entry
+  Future<int> insertCQEntry(CQEntry entry) async {
+    final db = await database;
+    return await db.insert(
+      AppConstants.tableCQEntries,
+      entry.toMap(),
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
+  }
+
+  // Read all CQ entries
+  Future<List<CQEntry>> getAllCQEntries() async {
+    final db = await database;
+    final List<Map<String, dynamic>> maps = await db.query(
+      AppConstants.tableCQEntries,
+      orderBy: 'audit_date DESC',
+    );
+
+    return List.generate(maps.length, (i) {
+      return CQEntry.fromMap(maps[i]);
+    });
+  }
+
+  // Read CQ entries for a specific month
+  Future<List<CQEntry>> getCQEntriesForMonth(int month, int year) async {
+    final db = await database;
+
+    final startDate = DateTime(year, month, 1);
+    final endDate = DateTime(year, month + 1, 0);
+
+    final List<Map<String, dynamic>> maps = await db.query(
+      AppConstants.tableCQEntries,
+      where: 'audit_date >= ? AND audit_date <= ?',
+      whereArgs: [
+        startDate.millisecondsSinceEpoch,
+        endDate.millisecondsSinceEpoch,
+      ],
+      orderBy: 'audit_date ASC',
+    );
+
+    return List.generate(maps.length, (i) {
+      return CQEntry.fromMap(maps[i]);
+    });
+  }
+
+  // Read CQ entry for a specific date
+  Future<CQEntry?> getCQEntryForDate(DateTime date) async {
+    final db = await database;
+
+    // Normalize the date to start of day
+    final normalizedDate = DateTime(date.year, date.month, date.day);
+    final nextDay = normalizedDate.add(const Duration(days: 1));
+
+    final List<Map<String, dynamic>> maps = await db.query(
+      AppConstants.tableCQEntries,
+      where: 'audit_date >= ? AND audit_date < ?',
+      whereArgs: [
+        normalizedDate.millisecondsSinceEpoch,
+        nextDay.millisecondsSinceEpoch,
+      ],
+    );
+
+    if (maps.isEmpty) {
+      return null;
+    }
+
+    return CQEntry.fromMap(maps.first);
+  }
+
+  // Update an existing CQ entry
+  Future<int> updateCQEntry(CQEntry entry) async {
+    final db = await database;
+    return await db.update(
+      AppConstants.tableCQEntries,
+      entry.toMap(),
+      where: 'id = ?',
+      whereArgs: [entry.id],
+    );
+  }
+
+  // Delete a CQ entry
+  Future<int> deleteCQEntry(int id) async {
+    final db = await database;
+    return await db.delete(
+      AppConstants.tableCQEntries,
       where: 'id = ?',
       whereArgs: [id],
     );
