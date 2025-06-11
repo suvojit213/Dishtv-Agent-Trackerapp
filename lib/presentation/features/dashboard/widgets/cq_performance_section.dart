@@ -149,35 +149,6 @@ class CQPerformanceSection extends StatelessWidget {
                 ),
                 
                 const SizedBox(height: 12),
-                
-                // Improvement message if needed
-                if (needsImprovement)
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                    decoration: BoxDecoration(
-                      color: AppColors.accentRed.withOpacity(0.1),
-                      borderRadius: BorderRadius.circular(8),
-                      border: Border.all(color: AppColors.accentRed.withOpacity(0.3)),
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(
-                          Icons.warning_amber_rounded,
-                          color: AppColors.accentRed,
-                          size: 20,
-                        ),
-                        const SizedBox(width: 8),
-                        Text(
-                          'Needs Improvement',
-                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                            color: AppColors.accentRed,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
               ],
             ),
           ),
@@ -196,67 +167,9 @@ class CQPerformanceSection extends StatelessWidget {
                   Icons.assignment_turned_in,
                 ),
               ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: _buildStatCard(
-                  context,
-                  'Highest',
-                  '${cqSummary!.highestCQ.toStringAsFixed(1)}%',
-                  AppColors.accentGreen,
-                  Icons.trending_up,
-                ),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: _buildStatCard(
-                  context,
-                  'Lowest',
-                  '${cqSummary!.lowestCQ.toStringAsFixed(1)}%',
-                  AppColors.accentRed,
-                  Icons.trending_down,
-                ),
-              ),
             ],
           ),
           
-          const SizedBox(height: 16),
-          
-          // Improvement Rate
-          Container(
-            width: double.infinity,
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: cqSummary!.improvementRate > 50 
-                  ? AppColors.accentRed.withOpacity(0.1)
-                  : AppColors.accentGreen.withOpacity(0.1),
-              borderRadius: BorderRadius.circular(8),
-              border: Border.all(
-                color: cqSummary!.improvementRate > 50 
-                    ? AppColors.accentRed.withOpacity(0.3)
-                    : AppColors.accentGreen.withOpacity(0.3),
-              ),
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'Audits Needing Improvement',
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                Text(
-                  '${cqSummary!.auditsNeedingImprovement}/${cqSummary!.totalAudits} (${cqSummary!.improvementRate.toStringAsFixed(1)}%)',
-                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: cqSummary!.improvementRate > 50 
-                        ? AppColors.accentRed
-                        : AppColors.accentGreen,
-                  ),
-                ),
-              ],
-            ),
-          ),
         ],
       ),
     );
@@ -310,4 +223,3 @@ class CQPerformanceSection extends StatelessWidget {
     return AppColors.accentRed;
   }
 }
-
