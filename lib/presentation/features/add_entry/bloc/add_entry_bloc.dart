@@ -48,7 +48,7 @@ class AddEntryBloc extends Bloc<AddEntryEvent, AddEntryState> {
 
     // नई एंट्री के लिए, आज की या चुनी हुई तारीख लें
     final date = event.date ?? DateTime.now();
-    
+
     try {
       final existingEntry = await repository.getEntryForDate(date);
 
