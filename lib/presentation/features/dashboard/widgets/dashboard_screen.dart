@@ -221,12 +221,12 @@ class DashboardView extends StatelessWidget {
         ),
         const SizedBox(height: 16),
         const Text(
-          'Credits - Special Thanks to Sudhanshu',
+          'Credits -Thanks to Sudhanshu & many others who contributed and helped me to complete this app',
            style: TextStyle(fontStyle: FontStyle.italic),
         ),
         const Divider(height: 32),
         const Text(
-          '"I Developed This App for More easy to Track our perfomence from our end, Thanks For using This Application"',
+          '"I Developed This App for Easy to Track DishTV WFH Agent Perfomence Yourself, Thanks For using This Application"',
            style: TextStyle(fontStyle: FontStyle.italic),
         ),
       ],
