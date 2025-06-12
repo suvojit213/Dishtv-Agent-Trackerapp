@@ -2,18 +2,21 @@ import 'package:equatable/equatable.dart';
 import 'package:dishtv_agent_tracker/core/constants/app_constants.dart';
 import 'package:dishtv_agent_tracker/domain/entities/daily_entry.dart';
 import 'package:dishtv_agent_tracker/domain/entities/csat_summary.dart';
+import 'package:dishtv_agent_tracker/domain/entities/cq_summary.dart';
 
 class MonthlySummary extends Equatable {
   final int month;
   final int year;
   final List<DailyEntry> entries;
-  final CSATSummary? csatSummary; // Add CSATSummary field
+  final CSATSummary? csatSummary;
+  final CQSummary? cqSummary; // Add CQSummary field
   
   const MonthlySummary({
     required this.month,
     required this.year,
     required this.entries,
-    this.csatSummary, // Make it optional for now, will be populated later
+    this.csatSummary,
+    this.cqSummary, // Make it optional for now, will be populated later
   });
   
   // Total login hours for the month
@@ -76,7 +79,6 @@ class MonthlySummary extends Equatable {
   }
   
   @override
-  List<Object?> get props => [month, year, entries, csatSummary];
+  List<Object?> get props => [month, year, entries, csatSummary, cqSummary];
 }
-
 

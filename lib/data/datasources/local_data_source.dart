@@ -329,30 +329,58 @@ class LocalDataSource {
     );
   }
 
-  // Get all unique month-year combinations from daily entries
+  // Get all unique month-year combinations from daily, CSAT, and CQ entries
   Future<List<Map<String, int>>> getUniqueMonthYearCombinations() async {
     final db = await database;
-    final List<Map<String, dynamic>> maps = await db.query(
-      AppConstants.tableEntries,
-      columns: ["date"],
-      distinct: true,
-      orderBy: "date DESC",
-    );
-
     final Set<String> uniqueCombinations = {};
     final List<Map<String, int>> result = [];
 
-    for (var map in maps) {
+    // Fetch dates from daily entries
+    final List<Map<String, dynamic>> dailyMaps = await db.query(
+      AppConstants.tableEntries,
+      columns: ["date"],
+      distinct: true,
+    );
+    for (var map in dailyMaps) {
       final date = DateTime.fromMillisecondsSinceEpoch(map["date"] as int);
-      final month = date.month;
-      final year = date.year;
-      final combination = "$month-$year";
-
-      if (!uniqueCombinations.contains(combination)) {
-        uniqueCombinations.add(combination);
-        result.add({"month": month, "year": year});
-      }
+      uniqueCombinations.add("${date.month}-${date.year}");
     }
+
+    // Fetch dates from CSAT entries
+    final List<Map<String, dynamic>> csatMaps = await db.query(
+      AppConstants.tableCSATEntries,
+      columns: ["date"],
+      distinct: true,
+    );
+    for (var map in csatMaps) {
+      final date = DateTime.fromMillisecondsSinceEpoch(map["date"] as int);
+      uniqueCombinations.add("${date.month}-${date.year}");
+    }
+
+    // Fetch dates from CQ entries
+    final List<Map<String, dynamic>> cqMaps = await db.query(
+      AppConstants.tableCQEntries,
+      columns: ["audit_date"],
+      distinct: true,
+    );
+    for (var map in cqMaps) {
+      final date = DateTime.fromMillisecondsSinceEpoch(map["audit_date"] as int);
+      uniqueCombinations.add("${date.month}-${date.year}");
+    }
+
+    // Convert unique combinations to desired format and sort
+    final List<DateTime> sortedDates = uniqueCombinations.map((e) {
+      final parts = e.split('-');
+      return DateTime(int.parse(parts[1]), int.parse(parts[0]));
+    }).toList();
+
+    sortedDates.sort((a, b) => b.compareTo(a)); // Sort in descending order (latest first)
+
+    for (var date in sortedDates) {
+      result.add({"month": date.month, "year": date.year});
+    }
+
     return result;
   }
 }
+

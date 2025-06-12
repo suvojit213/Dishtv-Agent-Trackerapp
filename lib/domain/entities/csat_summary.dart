@@ -55,7 +55,7 @@ class CSATSummary extends Equatable {
   }
   
   // Get average daily CSAT
-  double get averageDailyCSAT {
+  double get averageScore {
     if (entries.isEmpty) return 0.0;
     
     double totalCSAT = entries.fold(0.0, (sum, entry) => sum + entry.csatPercentage);
@@ -65,4 +65,5 @@ class CSATSummary extends Equatable {
   @override
   List<Object?> get props => [entries, month, year];
 }
+
 

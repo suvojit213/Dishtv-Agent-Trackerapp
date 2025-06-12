@@ -45,8 +45,14 @@ class CQSummary extends Equatable {
     ];
     return '${months[month - 1]} $year';
   }
+
+  // Get average CQ score
+  double get averageScore {
+    return monthlyAverageCQ;
+  }
   
   @override
   List<Object?> get props => [entries, month, year];
 }
+
 

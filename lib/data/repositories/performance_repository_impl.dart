@@ -63,12 +63,14 @@ class PerformanceRepositoryImpl implements PerformanceRepository {
   Future<MonthlySummary> getMonthlySummary(int month, int year) async {
     final entries = await localDataSource.getEntriesForMonth(month, year);
     final csatEntries = await localDataSource.getCSATEntriesForMonth(month, year);
+    final cqEntries = await localDataSource.getCQEntriesForMonth(month, year);
 
     return MonthlySummary(
       month: month,
       year: year,
       entries: entries,
       csatSummary: CSATSummary(entries: csatEntries, month: month, year: year),
+      cqSummary: CQSummary(entries: cqEntries, month: month, year: year),
     );
   }
 
