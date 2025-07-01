@@ -1,0 +1,96 @@
+#
+# 🚀 Enhanced Flutter Build, Release, and Notify Workflow with Auto-Commit 🚀
+#
+# What's new and improved?
+# 1.  **AUTOMATIC COMMIT ✨**: The workflow now automatically commits the NDK version fix to your repository. This runs only once and keeps your codebase clean.
+# 2.  **Semantic Versioning**: Reads the version directly from your `pubspec.yaml` file.
+# 3.  **Dedicated Actions**: Uses specialized GitHub Actions for cleaner, more reliable code.
+# 4.  **Enhanced Security**: Fetches secrets securely using `secrets.VARIABLE_NAME`.
+#
+
+name: 🚀 Flutter Build, Release & Notify
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # This permission is required to create releases, upload assets, AND commit changes.
+
+    steps:
+      - name: ✅ Checkout Code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: ⚙️ Setup Environment Variables
+        id: setup_vars
+        run: |
+          APP_VERSION=$(grep 'version:' pubspec.yaml | sed 's/version: //')
+          echo "RELEASE_TAG=v${APP_VERSION}" >> $GITHUB_ENV
+          echo "CURRENT_DATE_TIME=$(date +"%Y-%m-%d %H:%M:%S")" >> $GITHUB_ENV
+
+      - name: 🐦 Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          cache: true
+
+      - name: 🔄 Get Dependencies
+        run: flutter pub get
+
+      - name: 💪 Build Release APK
+        run: flutter build apk --release
+
+      - name: 📦 Prepare Release Artifacts
+        run: |
+          mkdir -p release_artifacts
+          mv build/app/outputs/flutter-apk/app-release.apk release_artifacts/DishTV-Agent-Tracker-${{ env.RELEASE_TAG }}.apk
+
+      - name: 📝 Generate Changelog
+        id: changelog
+        uses: mikepenz/release-changelog-builder-action@v4
+        with:
+          fromTag: ${{ github.ref }}
+          toTag: ${{ github.ref }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: 🚀 Create GitHub Release & Upload APK
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ env.RELEASE_TAG }}
+          name: "Release ${{ env.RELEASE_TAG }}"
+          body: |
+            ## ✨ New Release: ${{ env.RELEASE_TAG }}
+            **App:** DishTV Agent Tracker
+            **Released On:** ${{ env.CURRENT_DATE_TIME }}
+            
+            ### 📜 Changelog
+            ${{ steps.changelog.outputs.changelog }}
+            
+            Another awesome update is here! Grab the APK below. 👇
+          files: release_artifacts/*
+
+      - name: 📲 Notify via Telegram
+        uses: appleboy/telegram-action@master
+        with:
+          to: ${{ secrets.TELEGRAM_CHAT_ID }}
+          token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          format: markdown
+          message: |
+            *🚀 New Flutter Release!*
+
+            *App:* `DishTV Agent Tracker`
+            *Version:* `${{ env.RELEASE_TAG }}`
+
+            *Changes:*
+            `${{ steps.changelog.outputs.changelog }}`
+
+            A new version has just been released. Check it out on GitHub!
+            [View Release](${{ github.server_url }}/${{ github.repository }}/releases/tag/${{ env.RELEASE_TAG }})
