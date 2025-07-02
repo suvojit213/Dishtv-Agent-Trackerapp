@@ -15,7 +15,11 @@ class ThemeCubit extends Cubit<AppThemeMode> {
   void _loadTheme() async {
     final prefs = await SharedPreferences.getInstance();
     final themeIndex = prefs.getInt(_themePrefKey) ?? AppThemeMode.system.index;
-    emit(AppThemeMode.values[themeIndex]);
+    if (themeIndex < AppThemeMode.values.length) {
+      emit(AppThemeMode.values[themeIndex]);
+    } else {
+      emit(AppThemeMode.system); // Fallback to system if index is out of bounds
+    }
   }
 
   // थीम को बदलें

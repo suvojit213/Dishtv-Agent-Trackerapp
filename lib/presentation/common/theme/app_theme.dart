@@ -568,4 +568,192 @@ class AppTheme {
       ),
     ),
   );
+
+  // नया एम्बर थीम
+  static final ThemeData amberTheme = ThemeData(
+    useMaterial3: true,
+    brightness: Brightness.light,
+    colorScheme: ColorScheme.light(
+      primary: Colors.amber[700]!,
+      secondary: Colors.amber[300]!,
+      background: Colors.amber[50]!,
+      surface: Colors.white,
+      onPrimary: Colors.white,
+      onSecondary: Colors.black,
+      onBackground: Colors.black,
+      onSurface: Colors.black,
+      error: AppColors.accentRed,
+    ),
+    scaffoldBackgroundColor: Colors.amber[50]!,
+    appBarTheme: AppBarTheme(
+      backgroundColor: Colors.amber[100]!,
+      foregroundColor: Colors.black,
+      elevation: 0,
+      centerTitle: true,
+    ),
+    cardTheme: CardThemeData(
+      color: Colors.white,
+      elevation: 1,
+      shadowColor: Colors.black12,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
+      ),
+    ),
+    elevatedButtonTheme: ElevatedButtonThemeData(
+      style: ElevatedButton.styleFrom(
+        backgroundColor: Colors.amber[700]!,
+        foregroundColor: Colors.white,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        elevation: 0,
+      ),
+    ),
+    textButtonTheme: TextButtonThemeData(
+      style: TextButton.styleFrom(
+        foregroundColor: Colors.amber[700]!,
+      ),
+    ),
+    inputDecorationTheme: InputDecorationTheme(
+      filled: true,
+      fillColor: Colors.white,
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: const BorderSide(color: Color(0xFFE0E0E0)),
+      ),
+      enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: const BorderSide(color: Color(0xFFE0E0E0)),
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: BorderSide(color: Colors.amber[700]!, width: 1.5),
+      ),
+      hintStyle: const TextStyle(color: Colors.grey),
+    ),
+    bottomNavigationBarTheme: BottomNavigationBarThemeData(
+      backgroundColor: Colors.white,
+      selectedItemColor: Colors.amber[700]!,
+      unselectedItemColor: Colors.grey,
+      type: BottomNavigationBarType.fixed,
+      elevation: 0,
+      showUnselectedLabels: true,
+    ),
+    dividerTheme: const DividerThemeData(
+      color: Color(0xFFE0E0E0),
+      thickness: 1,
+    ),
+    textTheme: const TextTheme(
+      headlineSmall: TextStyle(color: Colors.black, fontWeight: FontWeight.w600),
+      titleLarge: TextStyle(color: Colors.black, fontWeight: FontWeight.w600),
+      titleMedium: TextStyle(color: Colors.black87),
+      bodyMedium: TextStyle(color: Colors.black87),
+      bodySmall: TextStyle(color: Colors.black54),
+    ),
+    floatingActionButtonTheme: FloatingActionButtonThemeData(
+      backgroundColor: Colors.amber[700]!,
+      foregroundColor: Colors.white,
+    ),
+    dialogTheme: DialogThemeData(
+      backgroundColor: Colors.white,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
+      ),
+    ),
+  );
+
+  // नया टील थीम
+  static final ThemeData tealTheme = ThemeData(
+    useMaterial3: true,
+    brightness: Brightness.light,
+    colorScheme: ColorScheme.light(
+      primary: Colors.teal[700]!,
+      secondary: Colors.teal[300]!,
+      background: Colors.teal[50]!,
+      surface: Colors.white,
+      onPrimary: Colors.white,
+      onSecondary: Colors.black,
+      onBackground: Colors.black,
+      onSurface: Colors.black,
+      error: AppColors.accentRed,
+    ),
+    scaffoldBackgroundColor: Colors.teal[50]!,
+    appBarTheme: AppBarTheme(
+      backgroundColor: Colors.teal[100]!,
+      foregroundColor: Colors.black,
+      elevation: 0,
+      centerTitle: true,
+    ),
+    cardTheme: CardThemeData(
+      color: Colors.white,
+      elevation: 1,
+      shadowColor: Colors.black12,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
+      ),
+    ),
+    elevatedButtonTheme: ElevatedButtonThemeData(
+      style: ElevatedButton.styleFrom(
+        backgroundColor: Colors.teal[700]!,
+        foregroundColor: Colors.white,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        elevation: 0,
+      ),
+    ),
+    textButtonTheme: TextButtonThemeData(
+      style: TextButton.styleFrom(
+        foregroundColor: Colors.teal[700]!,
+      ),
+    ),
+    inputDecorationTheme: InputDecorationTheme(
+      filled: true,
+      fillColor: Colors.white,
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: const BorderSide(color: Color(0xFFE0E0E0)),
+      ),
+      enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: const BorderSide(color: Color(0xFFE0E0E0)),
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: BorderSide(color: Colors.teal[700]!, width: 1.5),
+      ),
+      hintStyle: const TextStyle(color: Colors.grey),
+    ),
+    bottomNavigationBarTheme: BottomNavigationBarThemeData(
+      backgroundColor: Colors.white,
+      selectedItemColor: Colors.teal[700]!,
+      unselectedItemColor: Colors.grey,
+      type: BottomNavigationBarType.fixed,
+      elevation: 0,
+      showUnselectedLabels: true,
+    ),
+    dividerTheme: const DividerThemeData(
+      color: Color(0xFFE0E0E0),
+      thickness: 1,
+    ),
+    textTheme: const TextTheme(
+      headlineSmall: TextStyle(color: Colors.black, fontWeight: FontWeight.w600),
+      titleLarge: TextStyle(color: Colors.black, fontWeight: FontWeight.w600),
+      titleMedium: TextStyle(color: Colors.black87),
+      bodyMedium: TextStyle(color: Colors.black87),
+      bodySmall: TextStyle(color: Colors.black54),
+    ),
+    floatingActionButtonTheme: FloatingActionButtonThemeData(
+      backgroundColor: Colors.teal[700]!,
+      foregroundColor: Colors.white,
+    ),
+    dialogTheme: DialogThemeData(
+      backgroundColor: Colors.white,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
+      ),
+    ),
+  );
 }
