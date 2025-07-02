@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:dishtv_agent_tracker/core/constants/app_enums.dart';
 import 'package:dishtv_agent_tracker/presentation/common/theme/theme_cubit.dart';
 
 class AnimatedThemeSwitcher extends StatelessWidget {
@@ -7,8 +8,8 @@ class AnimatedThemeSwitcher extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ThemeCubit, ThemeMode>(
-      builder: (context, themeMode) {
+    return BlocBuilder<ThemeCubit, AppThemeMode>(
+      builder: (context, appThemeMode) {
         return IconButton(
           splashRadius: 20.0,
           icon: AnimatedSwitcher(
@@ -19,12 +20,16 @@ class AnimatedThemeSwitcher extends StatelessWidget {
                 child: ScaleTransition(scale: animation, child: child),
               );
             },
-            child: themeMode == ThemeMode.dark
+            child: appThemeMode == AppThemeMode.dark
                 ? const Icon(Icons.nightlight_round, key: ValueKey('moon'))
                 : const Icon(Icons.wb_sunny_rounded, key: ValueKey('sun')),
           ),
           onPressed: () {
-            context.read<ThemeCubit>().toggleTheme();
+            if (appThemeMode == AppThemeMode.dark) {
+              context.read<ThemeCubit>().setTheme(AppThemeMode.light);
+            } else {
+              context.read<ThemeCubit>().setTheme(AppThemeMode.dark);
+            }
           },
         );
       },
