@@ -100,6 +100,7 @@ class _AddCQEntryScreenState extends State<AddCQEntryScreen> {
                   border: InputBorder.none,
                   focusedBorder: InputBorder.none,
                   enabledBorder: InputBorder.none,
+                  helperText: 'e.g., 85.5 for 85.5%',
                 ),
                 onChanged: (value) {
                   setState(() {

@@ -91,11 +91,12 @@ class _AddCSATEntryScreenState extends State<AddCSATEntryScreen> {
                 initialValue: _t2Count.toString(),
                 keyboardType: TextInputType.number,
                 decoration: const InputDecoration(
-                  hintText: 'Enter T2 count',
+                  hintText: 'Enter T2 count (positive feedback)',
                   prefixIcon: Icon(Icons.thumb_up, color: AppColors.accentGreen),
                   border: InputBorder.none,
                   focusedBorder: InputBorder.none,
                   enabledBorder: InputBorder.none,
+                  helperText: 'e.g., 5 for five positive feedbacks',
                 ),
                 onChanged: (value) {
                   setState(() {
@@ -114,11 +115,12 @@ class _AddCSATEntryScreenState extends State<AddCSATEntryScreen> {
                 initialValue: _b2Count.toString(),
                 keyboardType: TextInputType.number,
                 decoration: const InputDecoration(
-                  hintText: 'Enter B2 count',
+                  hintText: 'Enter B2 count (negative feedback)',
                   prefixIcon: Icon(Icons.thumb_down, color: AppColors.accentRed),
                   border: InputBorder.none,
                   focusedBorder: InputBorder.none,
                   enabledBorder: InputBorder.none,
+                  helperText: 'e.g., 2 for two negative feedbacks',
                 ),
                 onChanged: (value) {
                   setState(() {
@@ -137,11 +139,12 @@ class _AddCSATEntryScreenState extends State<AddCSATEntryScreen> {
                 initialValue: _nCount.toString(),
                 keyboardType: TextInputType.number,
                 decoration: const InputDecoration(
-                  hintText: 'Enter N count',
+                  hintText: 'Enter N count (neutral feedback)',
                   prefixIcon: Icon(Icons.remove, color: AppColors.textSecondary),
                   border: InputBorder.none,
                   focusedBorder: InputBorder.none,
                   enabledBorder: InputBorder.none,
+                  helperText: 'e.g., 1 for one neutral feedback',
                 ),
                 onChanged: (value) {
                   setState(() {

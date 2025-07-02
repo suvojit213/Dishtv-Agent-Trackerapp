@@ -210,6 +210,7 @@ class AddEntryView extends StatelessWidget {
                     border: InputBorder.none,
                     focusedBorder: InputBorder.none,
                     enabledBorder: InputBorder.none,
+                    helperText: 'e.g., 150 for one hundred fifty calls',
                   ),
                   onChanged: (value) {
                     context.read<AddEntryBloc>().add(
@@ -279,9 +280,9 @@ class AddEntryView extends StatelessWidget {
           initialValue: initialValue,
           keyboardType: TextInputType.number,
           textAlign: TextAlign.center,
-          decoration: const InputDecoration(
-            hintText: '0',
-            contentPadding: EdgeInsets.symmetric(
+          decoration: InputDecoration(
+            hintText: label,
+            contentPadding: const EdgeInsets.symmetric(
               horizontal: 8,
               vertical: 12,
             ),
