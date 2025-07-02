@@ -75,6 +75,10 @@ class DashboardView extends StatelessWidget {
             onPressed: () => Navigator.pushNamed(context, AppRouter.faqRoute),
           ),
           IconButton(
+            icon: const Icon(Icons.color_lens),
+            onPressed: () => Navigator.pushNamed(context, AppRouter.themeSelectionRoute),
+          ),
+          IconButton(
             icon: const Icon(Icons.refresh),
             onPressed: () {
               context.read<DashboardBloc>().add(RefreshDashboard());

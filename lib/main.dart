@@ -5,6 +5,7 @@ import 'package:dishtv_agent_tracker/presentation/features/dashboard/bloc/goals_
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:dishtv_agent_tracker/core/constants/app_constants.dart';
+import 'package:dishtv_agent_tracker/core/constants/app_enums.dart';
 import 'package:dishtv_agent_tracker/data/datasources/local_data_source.dart';
 import 'package:dishtv_agent_tracker/data/repositories/performance_repository_impl.dart';
 import 'package:dishtv_agent_tracker/domain/repositories/performance_repository.dart';
@@ -55,12 +56,39 @@ class MyApp extends StatelessWidget {
       ],
       child: BlocProvider(
         create: (context) => ThemeCubit(),
-        child: BlocBuilder<ThemeCubit, ThemeMode>(
-          builder: (context, themeMode) {
+        child: BlocBuilder<ThemeCubit, AppThemeMode>(
+          builder: (context, appThemeMode) {
+            ThemeData selectedTheme;
+            ThemeMode themeMode;
+
+            switch (appThemeMode) {
+              case AppThemeMode.light:
+                selectedTheme = AppTheme.lightTheme;
+                themeMode = ThemeMode.light;
+                break;
+              case AppThemeMode.dark:
+                selectedTheme = AppTheme.darkTheme;
+                themeMode = ThemeMode.dark;
+                break;
+              case AppThemeMode.blue:
+                selectedTheme = AppTheme.blueTheme;
+                themeMode = ThemeMode.light; // Assuming blueTheme is light-based
+                break;
+              case AppThemeMode.green:
+                selectedTheme = AppTheme.greenTheme;
+                themeMode = ThemeMode.light; // Assuming greenTheme is light-based
+                break;
+              case AppThemeMode.system:
+              default:
+                selectedTheme = AppTheme.lightTheme; // Default to light if system is not explicitly handled
+                themeMode = ThemeMode.system;
+                break;
+            }
+
             return MaterialApp(
               title: AppConstants.appName,
-              theme: AppTheme.lightTheme,
-              darkTheme: AppTheme.darkTheme,
+              theme: selectedTheme,
+              darkTheme: AppTheme.darkTheme, // Keep darkTheme for system dark mode fallback
               themeMode: themeMode,
               debugShowCheckedModeBanner: false,
               scrollBehavior: SmoothScrollBehavior(),
