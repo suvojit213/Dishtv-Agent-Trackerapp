@@ -71,7 +71,7 @@ class DashboardView extends StatelessWidget {
         actions: [
           IconButton(
             icon: const Icon(Icons.help_outline),
-            onPressed: () => Navigator.pushNamed(context, AppRouter.faqRoute),
+            onPressed: () => Navigator.pushNamed(context, AppRouter.onboardingTutorialRoute),
           ),
           IconButton(
             icon: const Icon(Icons.color_lens),

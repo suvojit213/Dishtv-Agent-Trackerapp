@@ -3,12 +3,13 @@ import 'package:dishtv_agent_tracker/domain/entities/monthly_summary.dart';
 import 'package:dishtv_agent_tracker/domain/entities/cq_entry.dart';
 import 'package:dishtv_agent_tracker/presentation/screens/theme_selection_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:dishtv_agent_tracker/presentation/features/onboarding/onboarding_tutorial_screen.dart';
 import 'package:dishtv_agent_tracker/presentation/features/dashboard/widgets/dashboard_screen.dart';
 import 'package:dishtv_agent_tracker/presentation/features/add_entry/widgets/add_entry_screen.dart';
 import 'package:dishtv_agent_tracker/presentation/features/add_entry/widgets/add_cq_entry_screen.dart';
 import 'package:dishtv_agent_tracker/presentation/features/monthly_performance/widgets/monthly_performance_screen.dart';
 import 'package:dishtv_agent_tracker/presentation/features/all_reports/widgets/all_reports_screen.dart';
-import 'package:dishtv_agent_tracker/presentation/features/faq/widgets/faq_screen.dart';
+
 
 class AppRouter {
   // Route names
@@ -17,7 +18,7 @@ class AppRouter {
   static const String addCQEntryRoute = '/add-cq-entry';
   static const String monthlyPerformanceRoute = '/monthly-performance';
   static const String allReportsRoute = '/all-reports';
-  static const String faqRoute = '/faq';
+  static const String onboardingTutorialRoute = '/onboarding-tutorial';
   static const String themeSelectionRoute = '/theme-selection';
 
   // Route generator
@@ -46,9 +47,9 @@ class AppRouter {
         return MaterialPageRoute(
           builder: (_) => const AllReportsScreen(),
         );
-      case faqRoute:
+      case onboardingTutorialRoute:
         return MaterialPageRoute(
-          builder: (_) => const FaqScreen(),
+          builder: (_) => const OnboardingTutorialScreen(),
         );
       case themeSelectionRoute:
         return MaterialPageRoute(
