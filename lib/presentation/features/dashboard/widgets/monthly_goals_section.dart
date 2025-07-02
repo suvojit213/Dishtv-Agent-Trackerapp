@@ -58,7 +58,7 @@ class MonthlyGoalsSection extends StatelessWidget {
                       title: 'Calls',
                       current: summary.totalCalls.toString(),
                       target: state.targetCalls.toString(),
-                      color: Colors.green,
+                      color: theme.colorScheme.secondary,
                     ),
                   ],
                 ),
@@ -116,18 +116,26 @@ class MonthlyGoalsSection extends StatelessWidget {
               TextField(
                 controller: hoursController,
                 keyboardType: TextInputType.number,
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   labelText: 'Target Login Hours',
-                  border: OutlineInputBorder(),
+                  border: theme.inputDecorationTheme.border,
+                  enabledBorder: theme.inputDecorationTheme.enabledBorder,
+                  focusedBorder: theme.inputDecorationTheme.focusedBorder,
+                  fillColor: theme.inputDecorationTheme.fillColor,
+                  filled: theme.inputDecorationTheme.filled,
                 ),
               ),
               const SizedBox(height: 16),
               TextField(
                 controller: callsController,
                 keyboardType: TextInputType.number,
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   labelText: 'Target Call Count',
-                  border: OutlineInputBorder(),
+                  border: theme.inputDecorationTheme.border,
+                  enabledBorder: theme.inputDecorationTheme.enabledBorder,
+                  focusedBorder: theme.inputDecorationTheme.focusedBorder,
+                  fillColor: theme.inputDecorationTheme.fillColor,
+                  filled: theme.inputDecorationTheme.filled,
                 ),
               ),
             ],

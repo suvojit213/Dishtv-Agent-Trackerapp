@@ -94,7 +94,7 @@ class SummarySection extends StatelessWidget {
                 Icon(
                   icon,
                   size: 16,
-                  color: AppColors.textSecondary,
+                  color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
                 ),
                 const SizedBox(width: 6),
                 Text(

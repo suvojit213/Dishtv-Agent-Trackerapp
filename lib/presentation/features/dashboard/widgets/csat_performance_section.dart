@@ -19,12 +19,12 @@ class CSATPerformanceSection extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
-              children: [
-                Icon(
-                  Icons.sentiment_satisfied_alt,
-                  color: AppColors.dishTvOrange,
-                  size: 24,
-                ),
+            children: [
+              Icon(
+                Icons.sentiment_satisfied_alt,
+                color: Theme.of(context).colorScheme.primary,
+                size: 24,
+              ),
                 const SizedBox(width: 8),
                 Text(
                   'CSAT Performance',
@@ -40,21 +40,21 @@ class CSATPerformanceSection extends StatelessWidget {
                 children: [
                   Icon(
                     Icons.info_outline,
-                    color: AppColors.textSecondary,
+                    color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
                     size: 48,
                   ),
                   const SizedBox(height: 8),
                   Text(
                     'No CSAT data available',
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: AppColors.textSecondary,
+                      color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
                     ),
                   ),
                   const SizedBox(height: 4),
                   Text(
                     'Add T2, B2, N entries to see CSAT performance',
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: AppColors.textSecondary,
+                      color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
                     ),
                     textAlign: TextAlign.center,
                   ),
@@ -77,7 +77,7 @@ class CSATPerformanceSection extends StatelessWidget {
             children: [
               Icon(
                 Icons.sentiment_satisfied_alt,
-                color: AppColors.dishTvOrange,
+                color: Theme.of(context).colorScheme.primary,
                 size: 24,
               ),
               const SizedBox(width: 8),
@@ -214,9 +214,9 @@ class CSATPerformanceSection extends StatelessWidget {
             width: double.infinity,
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: AppColors.dishTvOrange.withOpacity(0.1),
+              color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
               borderRadius: BorderRadius.circular(8),
-              border: Border.all(color: AppColors.dishTvOrange.withOpacity(0.3)),
+              border: Border.all(color: Theme.of(context).colorScheme.primary.withOpacity(0.3)),
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -231,7 +231,7 @@ class CSATPerformanceSection extends StatelessWidget {
                   csatSummary!.totalSurveyHits.toString(),
                   style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                     fontWeight: FontWeight.bold,
-                    color: AppColors.dishTvOrange,
+                    color: Theme.of(context).colorScheme.primary,
                   ),
                 ),
               ],

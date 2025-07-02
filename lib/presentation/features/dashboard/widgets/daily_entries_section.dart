@@ -27,7 +27,10 @@ class DailyEntriesSection extends StatelessWidget {
           if (entries.isEmpty)
             const CustomCard(
               child: Center(
-                child: Text('Is mahine ke liye koi entry nahi hai.'),
+                child: Text(
+                  'Is mahine ke liye koi entry nahi hai.',
+                  style: TextStyle(color: Colors.grey), // Use a theme-aware color if possible
+                ),
               ),
             )
           else

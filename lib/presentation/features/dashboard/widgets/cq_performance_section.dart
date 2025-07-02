@@ -21,10 +21,10 @@ class CQPerformanceSection extends StatelessWidget {
             Row(
               children: [
                 Icon(
-                  Icons.assessment,
-                  color: AppColors.dishTvOrange,
-                  size: 24,
-                ),
+                Icons.assessment,
+                color: Theme.of(context).colorScheme.primary,
+                size: 24,
+              ),
                 const SizedBox(width: 8),
                 Text(
                   'Call Quality (CQ) Performance',
@@ -40,21 +40,21 @@ class CQPerformanceSection extends StatelessWidget {
                 children: [
                   Icon(
                     Icons.info_outline,
-                    color: AppColors.textSecondary,
+                    color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
                     size: 48,
                   ),
                   const SizedBox(height: 8),
                   Text(
                     'No CQ data available',
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: AppColors.textSecondary,
+                      color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
                     ),
                   ),
                   const SizedBox(height: 4),
                   Text(
                     'Add CQ audit entries to see performance',
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: AppColors.textSecondary,
+                      color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
                     ),
                     textAlign: TextAlign.center,
                   ),
@@ -78,7 +78,7 @@ class CQPerformanceSection extends StatelessWidget {
             children: [
               Icon(
                 Icons.assessment,
-                color: AppColors.dishTvOrange,
+                color: Theme.of(context).colorScheme.primary,
                 size: 24,
               ),
               const SizedBox(width: 8),
@@ -163,7 +163,7 @@ class CQPerformanceSection extends StatelessWidget {
                   context,
                   'Total Audits',
                   cqSummary!.totalAudits.toString(),
-                  AppColors.dishTvOrange,
+                  Theme.of(context).colorScheme.primary,
                   Icons.assignment_turned_in,
                 ),
               ),
