@@ -43,14 +43,31 @@ class PdfService {
               pw.SizedBox(height: 20),
 
               // CSAT Summary
-              if (summary.csatSummary != null) ...[
+              if (summary.csatSummary != null && summary.csatSummary!.entries.isNotEmpty) ...[
                 pw.Text('CSAT Summary', style: pw.TextStyle(fontSize: 20, fontWeight: pw.FontWeight.bold)),
                 pw.SizedBox(height: 10),
+                pw.Table.fromTextArray(
+                  headers: ['Date', 'T2', 'B2', 'N', 'CSAT %'],
+                  data: summary.csatSummary!.entries.map((entry) {
+                    final total = entry.t2Count + entry.b2Count + entry.nCount;
+                    final csatPercentage = total == 0 ? 0.0 : ((entry.t2Count - entry.b2Count) / total) * 100;
+                    return [
+                      DateFormat('dd-MMM-yyyy').format(entry.date),
+                      entry.t2Count.toString(),
+                      entry.b2Count.toString(),
+                      entry.nCount.toString(),
+                      '${csatPercentage.toStringAsFixed(2)}%',
+                    ];
+                  }).toList(),
+                ),
+                pw.SizedBox(height: 20),
+                pw.Text('Overall CSAT Performance', style: pw.TextStyle(fontSize: 16, fontWeight: pw.FontWeight.bold)),
+                pw.SizedBox(height: 5),
                 pw.Table.fromTextArray(
                   headers: ['Description', 'Value'],
                   data: [
                     ['Total CSAT Entries', summary.csatSummary!.entries.length.toString()],
-                    ['Average CSAT Score', formatter.format(summary.csatSummary!.averageScore)],
+                    ['Average CSAT Score', '${formatter.format(summary.csatSummary!.averageScore)}%'],
                   ],
                 ),
                 pw.SizedBox(height: 20),
