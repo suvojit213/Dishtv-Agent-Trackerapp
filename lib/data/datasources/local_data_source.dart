@@ -100,6 +100,20 @@ class LocalDataSource {
     return _database!;
   }
 
+  // Get database path
+  Future<String> getDatabasePath() async {
+    final databasesPath = await getDatabasesPath();
+    return join(databasesPath, AppConstants.databaseName);
+  }
+
+  // Close the database
+  Future<void> closeDatabase() async {
+    if (_database != null) {
+      await _database!.close();
+      _database = null;
+    }
+  }
+
   // CRUD operations for daily entries
 
   // Create a new entry

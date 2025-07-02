@@ -150,6 +150,38 @@ class PerformanceRepositoryImpl implements PerformanceRepository {
   Future<File> generateMonthlyReportExcel(MonthlySummary summary) async {
     return _excelService.generateMonthlyReportExcel(summary);
   }
+
+  @override
+  Future<String> backupDatabase() async {
+    final dbPath = await localDataSource.getDatabasePath();
+    final dbFile = File(dbPath);
+    final backupDir = await getExternalStorageDirectory();
+    if (backupDir == null) {
+      throw Exception("Could not get external storage directory for backup.");
+    }
+    final backupPath = '${backupDir.path}/dishtv_agent_tracker_backup_${DateTime.now().millisecondsSinceEpoch}.db';
+    await dbFile.copy(backupPath);
+    return backupPath;
+  }
+
+  @override
+  Future<void> restoreDatabase(String backupFilePath) async {
+    final dbPath = await localDataSource.getDatabasePath();
+    final dbFile = File(dbPath);
+    final backupFile = File(backupFilePath);
+
+    if (!await backupFile.exists()) {
+      throw Exception("Backup file not found at $backupFilePath");
+    }
+
+    // Close the database before restoring
+    await localDataSource.closeDatabase();
+
+    await backupFile.copy(dbPath);
+
+    // Re-initialize the database after restoring
+    await LocalDataSource.init();
+  }
 }
 
 
