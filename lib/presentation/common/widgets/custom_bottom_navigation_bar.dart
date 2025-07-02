@@ -36,6 +36,11 @@ class CustomBottomNavigationBar extends StatelessWidget {
           activeIcon: Icon(Icons.assessment),
           label: 'Reports',
         ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.settings_outlined),
+          activeIcon: Icon(Icons.settings),
+          label: 'Settings',
+        ),
       ],
     );
   }

@@ -196,6 +196,9 @@ class DashboardView extends StatelessWidget {
             case 2:
               Navigator.pushNamed(context, AppRouter.allReportsRoute);
               break;
+            case 3:
+              Navigator.pushNamed(context, AppRouter.settingsRoute);
+              break;
           }
         },
       ),

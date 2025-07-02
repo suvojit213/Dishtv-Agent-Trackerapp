@@ -10,6 +10,7 @@ import 'package:dishtv_agent_tracker/presentation/features/add_entry/widgets/add
 import 'package:dishtv_agent_tracker/presentation/features/monthly_performance/widgets/monthly_performance_screen.dart';
 import 'package:dishtv_agent_tracker/presentation/features/all_reports/widgets/all_reports_screen.dart';
 import 'package:dishtv_agent_tracker/presentation/screens/app_info_screen.dart';
+import 'package:dishtv_agent_tracker/presentation/features/settings/widgets/settings_screen.dart';
 
 
 class AppRouter {
@@ -22,6 +23,7 @@ class AppRouter {
   static const String onboardingTutorialRoute = '/onboarding-tutorial';
   static const String themeSelectionRoute = '/theme-selection';
   static const String appInfoRoute = '/app-info';
+  static const String settingsRoute = '/settings';
 
   // Route generator
   static Route<dynamic> onGenerateRoute(RouteSettings settings) {
@@ -60,6 +62,10 @@ class AppRouter {
       case appInfoRoute:
         return MaterialPageRoute(
           builder: (_) => const AppInfoScreen(),
+        );
+      case settingsRoute:
+        return MaterialPageRoute(
+          builder: (_) => const SettingsScreen(),
         );
       default:
         return MaterialPageRoute(
