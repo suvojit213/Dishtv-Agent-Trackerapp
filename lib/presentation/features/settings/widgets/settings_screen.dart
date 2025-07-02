@@ -9,6 +9,9 @@ import 'package:file_picker/file_picker.dart';
 import 'package:dishtv_agent_tracker/data/datasources/data_import_service.dart';
 import 'package:dishtv_agent_tracker/data/datasources/local_data_source.dart';
 import 'package:dishtv_agent_tracker/domain/usecases/import_data_usecase.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:dishtv_agent_tracker/core/constants/app_constants.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({Key? key}) : super(key: key);
@@ -45,10 +48,62 @@ class SettingsScreen extends StatelessWidget {
               onPressed: () => _importData(context, ImportDataType.cqEntries),
             ),
             const SizedBox(height: 16),
+            Text(
+              'Feedback & Support',
+              style: Theme.of(context).textTheme.titleLarge,
+            ),
+            const SizedBox(height: 16),
+            CustomButton(
+              text: 'Send Feedback',
+              icon: Icons.feedback,
+              onPressed: () => _sendFeedback(context),
+            ),
           ],
         ),
       ),
     );
+  }
+
+  Future<void> _sendFeedback(BuildContext context) async {
+    final DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+    String deviceDetails = '';
+
+    try {
+      if (Platform.isAndroid) {
+        AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+        deviceDetails = 'Android ${androidInfo.version.release} (SDK ${androidInfo.version.sdkInt}), ${androidInfo.brand} ${androidInfo.model}';
+      } else if (Platform.isIOS) {
+        IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
+        deviceDetails = 'iOS ${iosInfo.systemVersion}, ${iosInfo.model}';
+      }
+    } catch (e) {
+      deviceDetails = 'Could not get device info: $e';
+    }
+
+    final String subject = 'Feedback for ${AppConstants.appName} v${AppConstants.appVersion}';
+    final String body = '\n\n---\nApp Version: ${AppConstants.appVersion}\nDevice: $deviceDetails\n';
+    final Uri emailLaunchUri = Uri(
+      scheme: 'mailto',
+      path: 'suvojitsengupta21@gmail.com',
+      query: encodeQueryParameters(<String, String>{
+        'subject': subject,
+        'body': body,
+      }),
+    );
+
+    try {
+      await launchUrl(emailLaunchUri);
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Could not launch email app: $e')),
+      );
+    }
+  }
+
+  String? encodeQueryParameters(Map<String, String> params) {
+    return params.entries
+        .map((e) => '${Uri.encodeComponent(e.key)}=${Uri.encodeComponent(e.value)}')
+        .join('&');
   }
 
   Future<void> _importData(BuildContext context, ImportDataType type) async {
