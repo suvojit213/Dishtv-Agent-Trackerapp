@@ -45,9 +45,14 @@ class DashboardScreen extends StatelessWidget {
   }
 }
 
-class DashboardView extends StatelessWidget {
+class DashboardView extends StatefulWidget {
   const DashboardView({Key? key}) : super(key: key);
 
+  @override
+  State<DashboardView> createState() => _DashboardViewState();
+}
+
+class _DashboardViewState extends State<DashboardView> {
   void _navigateToMonthlyPerformance(BuildContext context) {
     final dashboardState = context.read<DashboardBloc>().state;
     if (dashboardState.status == DashboardStatus.loaded && dashboardState.monthlySummary != null) {
