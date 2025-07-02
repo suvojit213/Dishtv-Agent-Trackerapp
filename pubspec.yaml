@@ -25,7 +25,7 @@ dependencies:
   open_file: ^3.5.10
   device_info_plus: ^10.1.0
   pdf: ^3.10.8 # Add this line for PDF generation
-  share_plus: ^9.0.0
+  share_plus: ^11.0.0
   shimmer: ^3.0.0
   percent_indicator: ^4.2.3 # <-- यह नया पैकेज जोड़ा गया है
   url_launcher: ^6.3.0
