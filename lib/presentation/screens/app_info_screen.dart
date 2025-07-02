@@ -42,17 +42,27 @@ class AppInfoScreen extends StatelessWidget {
                           fontWeight: FontWeight.bold,
                         ),
                   ),
-                  const SizedBox(height: 8),
-                  _buildInfoRow(
-                    context,
-                    Icons.person,
-                    'Suvojeet Sengupta',
+                  ListTile(
+                    leading: Icon(Icons.person, color: AppColors.textSecondary),
+                    title: Text(
+                      'Suvojeet Sengupta',
+                      style: Theme.of(context).textTheme.bodyLarge,
+                    ),
+                    dense: true,
+                    contentPadding: EdgeInsets.zero,
                   ),
-                  const SizedBox(height: 8),
-                  _buildInfoRow(
-                    context,
-                    Icons.email,
-                    'suvojeet.sengupta@example.com', // Replace with actual email
+                  ListTile(
+                    leading: Icon(Icons.email, color: AppColors.textSecondary),
+                    title: Text(
+                      'suvojitsengupta21@gmail.com',
+                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                            color: AppColors.dishTvOrange,
+                            decoration: TextDecoration.underline,
+                          ),
+                    ),
+                    onTap: () => _launchURL('mailto:suvojitsengupta21@gmail.com'),
+                    dense: true,
+                    contentPadding: EdgeInsets.zero,
                   ),
                   const SizedBox(height: 16),
                   const Divider(),
@@ -63,15 +73,18 @@ class AppInfoScreen extends StatelessWidget {
                           fontWeight: FontWeight.bold,
                         ),
                   ),
-                  const SizedBox(height: 8),
-                  InkWell(
-                    onTap: () => _launchURL('https://github.com/suvojit213/Dishtv-Agent-Trackerapp'),
-                    child: _buildInfoRow(
-                      context,
-                      Icons.code,
+                  ListTile(
+                    leading: Icon(Icons.code, color: AppColors.textSecondary),
+                    title: Text(
                       'GitHub Repository',
-                      isLink: true,
+                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                            color: AppColors.dishTvOrange,
+                            decoration: TextDecoration.underline,
+                          ),
                     ),
+                    onTap: () => _launchURL('https://github.com/suvojit213/Dishtv-Agent-Trackerapp'),
+                    dense: true,
+                    contentPadding: EdgeInsets.zero,
                   ),
                   const SizedBox(height: 16),
                   const Divider(),
@@ -100,24 +113,6 @@ class AppInfoScreen extends StatelessWidget {
           ],
         ),
       ),
-    );
-  }
-
-  Widget _buildInfoRow(BuildContext context, IconData icon, String text, {bool isLink = false}) {
-    return Row(
-      children: [
-        Icon(icon, color: AppColors.textSecondary, size: 20),
-        const SizedBox(width: 12),
-        Expanded(
-          child: Text(
-            text,
-            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                  color: isLink ? AppColors.dishTvOrange : null,
-                  decoration: isLink ? TextDecoration.underline : null,
-                ),
-          ),
-        ),
-      ],
     );
   }
 
