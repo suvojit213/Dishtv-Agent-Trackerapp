@@ -45,6 +45,16 @@ class _OnboardingTutorialScreenState extends State<OnboardingTutorialScreen> {
       'image': Icons.picture_as_pdf,
     },
     {
+      'title': 'Export to Excel',
+      'description': 'Now you can also export your monthly reports to Excel for more detailed analysis. Find this option in the "All Reports" section.',
+      'image': Icons.table_chart,
+    },
+    {
+      'title': 'Accurate Salary Estimate',
+      'description': 'Your estimated salary now includes a CSAT bonus (if criteria met) and a 10% TDS deduction for a more accurate calculation.',
+      'image': Icons.money,
+    },
+    {
       'title': 'Understand Salary Calculation',
       'description': 'Salary is calculated based on your call count and login time. Check the FAQ for details.',
       'image': Icons.calculate,
@@ -54,7 +64,7 @@ class _OnboardingTutorialScreenState extends State<OnboardingTutorialScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const CustomAppBar(title: 'Onboarding Tutorial'),
+      appBar: const CustomAppBar(title: 'DishTV Agent Tracker Features'),
       body: Column(
         children: [
           Expanded(
