@@ -112,6 +112,20 @@ class LocalDataSource {
     );
   }
 
+  // Batch insert daily entries
+  Future<void> insertDailyEntries(List<DailyEntry> entries) async {
+    final db = await database;
+    await db.transaction((txn) async {
+      for (var entry in entries) {
+        await txn.insert(
+          AppConstants.tableEntries,
+          entry.toMap(),
+          conflictAlgorithm: ConflictAlgorithm.replace,
+        );
+      }
+    });
+  }
+
   // Read all entries
   Future<List<DailyEntry>> getAllEntries() async {
     final db = await database;
@@ -205,6 +219,20 @@ class LocalDataSource {
     );
   }
 
+  // Batch insert CSAT entries
+  Future<void> insertCSATEntries(List<CSATEntry> entries) async {
+    final db = await database;
+    await db.transaction((txn) async {
+      for (var entry in entries) {
+        await txn.insert(
+          AppConstants.tableCSATEntries,
+          entry.toMap(),
+          conflictAlgorithm: ConflictAlgorithm.replace,
+        );
+      }
+    });
+  }
+
   // Read CSAT entries for a specific month
   Future<List<CSATEntry>> getCSATEntriesForMonth(int month, int year) async {
     final db = await database;
@@ -247,6 +275,20 @@ class LocalDataSource {
       entry.toMap(),
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
+  }
+
+  // Batch insert CQ entries
+  Future<void> insertCQEntries(List<CQEntry> entries) async {
+    final db = await database;
+    await db.transaction((txn) async {
+      for (var entry in entries) {
+        await txn.insert(
+          AppConstants.tableCQEntries,
+          entry.toMap(),
+          conflictAlgorithm: ConflictAlgorithm.replace,
+        );
+      }
+    });
   }
 
   // Read all CQ entries

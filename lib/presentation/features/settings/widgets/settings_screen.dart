@@ -5,6 +5,10 @@ import 'package:dishtv_agent_tracker/presentation/common/widgets/custom_button.d
 import 'package:dishtv_agent_tracker/domain/repositories/performance_repository.dart';
 import 'package:path_provider/path_provider.dart';
 import 'dart:io';
+import 'package:file_picker/file_picker.dart';
+import 'package:dishtv_agent_tracker/data/datasources/data_import_service.dart';
+import 'package:dishtv_agent_tracker/data/datasources/local_data_source.dart';
+import 'package:dishtv_agent_tracker/domain/usecases/import_data_usecase.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({Key? key}) : super(key: key);
@@ -24,20 +28,61 @@ class SettingsScreen extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             CustomButton(
-              text: 'Backup Data',
-              icon: Icons.cloud_upload,
-              onPressed: () => _backupData(context),
+              text: 'Import Daily Entries (CSV)',
+              icon: Icons.upload_file,
+              onPressed: () => _importData(context, ImportDataType.dailyEntries),
             ),
             const SizedBox(height: 16),
             CustomButton(
-              text: 'Restore Data',
-              icon: Icons.cloud_download,
-              onPressed: () => _restoreData(context),
+              text: 'Import CSAT Entries (CSV)',
+              icon: Icons.upload_file,
+              onPressed: () => _importData(context, ImportDataType.csatEntries),
             ),
+            const SizedBox(height: 16),
+            CustomButton(
+              text: 'Import CQ Entries (CSV)',
+              icon: Icons.upload_file,
+              onPressed: () => _importData(context, ImportDataType.cqEntries),
+            ),
+            const SizedBox(height: 16),
           ],
         ),
       ),
     );
+  }
+
+  Future<void> _importData(BuildContext context, ImportDataType type) async {
+    try {
+      FilePickerResult? result = await FilePicker.platform.pickFiles(
+        type: FileType.custom,
+        allowedExtensions: ['csv'],
+      );
+
+      if (result != null && result.files.single.path != null) {
+        File file = File(result.files.single.path!);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Importing ${type.name} from ${file.path.split('/').last}...')),
+        );
+
+        final importUseCase = ImportDataUseCase(DataImportService(), LocalDataSource());
+        final importedCount = await importUseCase.execute(file, type);
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Successfully imported $importedCount ${type.name} entries!')),
+        );
+        // Optionally, refresh dashboard or relevant data after import
+        // context.read<DashboardBloc>().add(RefreshDashboard());
+      } else {
+        // User canceled the picker
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('File selection cancelled.')),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Import failed: $e')),
+      );
+    }
   }
 
   Future<void> _backupData(BuildContext context) async {
