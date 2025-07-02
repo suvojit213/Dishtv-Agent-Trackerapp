@@ -4,4 +4,6 @@ enum AppThemeMode {
   dark,
   blue,
   green,
+  purple,
+  red,
 }

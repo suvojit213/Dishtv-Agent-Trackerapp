@@ -78,6 +78,14 @@ class MyApp extends StatelessWidget {
                 selectedTheme = AppTheme.greenTheme;
                 themeMode = ThemeMode.light; // Assuming greenTheme is light-based
                 break;
+              case AppThemeMode.purple:
+                selectedTheme = AppTheme.purpleTheme;
+                themeMode = ThemeMode.light;
+                break;
+              case AppThemeMode.red:
+                selectedTheme = AppTheme.redTheme;
+                themeMode = ThemeMode.light;
+                break;
               case AppThemeMode.system:
               default:
                 selectedTheme = AppTheme.lightTheme; // Default to light if system is not explicitly handled
