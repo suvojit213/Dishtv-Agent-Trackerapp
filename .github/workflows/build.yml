@@ -46,6 +46,9 @@ jobs:
           channel: 'stable'
           cache: true
 
+      - name: 🧹 Clean Flutter Project
+        run: flutter clean
+
       - name: 🔄 Get Dependencies
         run: flutter pub get
 
