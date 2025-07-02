@@ -1,4 +1,5 @@
 import 'package:dishtv_agent_tracker/data/datasources/pdf_service.dart';
+import 'package:dishtv_agent_tracker/data/datasources/excel_service.dart';
 import 'package:dishtv_agent_tracker/data/datasources/local_data_source.dart';
 import 'package:dishtv_agent_tracker/domain/entities/daily_entry.dart';
 import 'package:dishtv_agent_tracker/domain/entities/monthly_summary.dart';
@@ -11,6 +12,7 @@ import 'package:dishtv_agent_tracker/domain/repositories/performance_repository.
 class PerformanceRepositoryImpl implements PerformanceRepository {
   final LocalDataSource localDataSource;
   final PdfService _pdfService = PdfService();
+  final ExcelService _excelService = ExcelService();
 
   PerformanceRepositoryImpl({
     required this.localDataSource,
@@ -141,6 +143,11 @@ class PerformanceRepositoryImpl implements PerformanceRepository {
   @override
   Future<List<int>> generateMonthlyReportPdf(MonthlySummary summary) async {
     return _pdfService.generateMonthlyReportPdf(summary);
+  }
+
+  @override
+  Future<File> generateMonthlyReportExcel(MonthlySummary summary) async {
+    return _excelService.generateMonthlyReportExcel(summary);
   }
 }
 

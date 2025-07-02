@@ -32,6 +32,7 @@ abstract class PerformanceRepository {
   
   // PDF को CSV से बदलें
   Future<List<int>> generateMonthlyReportPdf(MonthlySummary summary);
+  Future<File> generateMonthlyReportExcel(MonthlySummary summary);
 }
 
 

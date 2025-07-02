@@ -1,6 +1,8 @@
 import 'dart:io';
 import 'package:dishtv_agent_tracker/domain/entities/monthly_summary.dart';
 import 'package:dishtv_agent_tracker/domain/repositories/performance_repository.dart';
+import 'package:dishtv_agent_tracker/domain/usecases/generate_excel_report_usecase.dart';
+import 'package:open_file/open_file.dart';
 import 'package:dishtv_agent_tracker/presentation/common/widgets/custom_card.dart';
 import 'package:dishtv_agent_tracker/presentation/features/all_reports/bloc/all_reports_bloc.dart';
 import 'package:dishtv_agent_tracker/presentation/features/all_reports/bloc/all_reports_event.dart';
@@ -38,7 +40,7 @@ class AllReportsView extends StatelessWidget {
       final repo = context.read<PerformanceRepository>();
       final pdfBytes = await repo.generateMonthlyReportPdf(summary);
       final directory = await getTemporaryDirectory();
-      final filePath = "${directory.path}/Report_${summary.monthName}_${summary.year}.pdf";
+      final filePath = "${directory.path}/DishTV_Report_${summary.monthName}_${summary.year}.pdf";
       final file = File(filePath);
       await file.writeAsBytes(pdfBytes);
 
@@ -49,6 +51,25 @@ class AllReportsView extends StatelessWidget {
       ScaffoldMessenger.of(context)
         ..hideCurrentSnackBar()
         ..showSnackBar(SnackBar(content: Text("Error creating PDF report: $e")));
+    }
+  }
+
+  Future<void> _generateAndShareExcel(BuildContext context, MonthlySummary summary) async {
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(const SnackBar(content: Text("Generating Excel Report...")));
+
+    try {
+      final generateExcel = GenerateExcelReportUseCase(context.read<PerformanceRepository>());
+      final excelFile = await generateExcel.execute(summary);
+
+      final xFile = XFile(excelFile.path, mimeType: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+      await Share.shareXFiles([xFile], subject: "Monthly Report - ${summary.formattedMonthYear}");
+
+    } catch (e) {
+      ScaffoldMessenger.of(context)
+        ..hideCurrentSnackBar()
+        ..showSnackBar(SnackBar(content: Text("Error creating Excel report: $e")));
     }
   }
 
@@ -108,10 +129,21 @@ class AllReportsView extends StatelessWidget {
           const SizedBox(height: 16),
           Align(
             alignment: Alignment.centerRight,
-            child: TextButton.icon(
-              icon: const Icon(Icons.share_outlined),
-              label: const Text("Export PDF"),
-              onPressed: () => _generateAndSharePdf(context, summary),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextButton.icon(
+                  icon: const Icon(Icons.picture_as_pdf),
+                  label: const Text("Export PDF"),
+                  onPressed: () => _generateAndSharePdf(context, summary),
+                ),
+                const SizedBox(width: 8),
+                TextButton.icon(
+                  icon: const Icon(Icons.table_chart),
+                  label: const Text("Export Excel"),
+                  onPressed: () => _generateAndShareExcel(context, summary),
+                ),
+              ],
             ),
           )
         ],
