@@ -5,13 +5,26 @@ import 'package:permission_handler/permission_handler.dart';
 class BackupRestoreScreen extends StatelessWidget {
   final LocalDataSource _localDataSource = LocalDataSource();
 
-  Future<bool> _requestPermissions() async {
+  Future<bool> _requestPermissions(BuildContext context) async {
     var status = await Permission.storage.status;
-    if (!status.isGranted) {
-      final result = await Permission.storage.request();
-      if (result.isGranted) {
-        return true;
-      }
+    if (status.isGranted) {
+      return true;
+    }
+
+    final result = await Permission.storage.request();
+    if (result.isGranted) {
+      return true;
+    } else if (result.isPermanentlyDenied) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Storage permission permanently denied. Please enable it from app settings.'),
+          action: SnackBarAction(
+            label: 'Settings',
+            onPressed: () => openAppSettings(),
+          ),
+        ),
+      );
+      return false;
     }
     return false;
   }
@@ -28,7 +41,7 @@ class BackupRestoreScreen extends StatelessWidget {
           children: [
             ElevatedButton(
               onPressed: () async {
-                if (await _requestPermissions()) {
+                if (await _requestPermissions(context)) {
                   final success = await _localDataSource.backupDatabase();
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
@@ -50,7 +63,7 @@ class BackupRestoreScreen extends StatelessWidget {
             SizedBox(height: 20),
             ElevatedButton(
               onPressed: () async {
-                if (await _requestPermissions()) {
+                if (await _requestPermissions(context)) {
                   final success = await _localDataSource.restoreDatabase();
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(

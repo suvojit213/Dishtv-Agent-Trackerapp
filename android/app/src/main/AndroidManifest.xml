@@ -27,7 +27,8 @@
             android:value="2" />
     </application>
     
-    <!-- यहाँ से WRITE_EXTERNAL_STORAGE और READ_EXTERNAL_STORAGE वाली लाइनें हटा दी गई हैं -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 
     <queries>
         <intent>
