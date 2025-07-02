@@ -68,28 +68,28 @@ class _OnboardingTutorialScreenState extends State<OnboardingTutorialScreen> {
               },
               itemBuilder: (context, index) {
                 return Padding(
-                  padding: const EdgeInsets.all(16.0),
+                  padding: const EdgeInsets.all(24.0), // Increased padding
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Icon(
                         _onboardingPages[index]['image'] as IconData,
-                        size: 100,
+                        size: 120, // Increased icon size
                         color: AppColors.dishTvOrange,
                       ),
-                      const SizedBox(height: 32),
+                      const SizedBox(height: 40), // Increased spacing
                       Text(
                         _onboardingPages[index]['title'] as String,
-                        style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                        style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                               fontWeight: FontWeight.bold,
                               color: AppColors.dishTvOrange,
-                            ),
+                            ), // Larger title
                         textAlign: TextAlign.center,
                       ),
-                      const SizedBox(height: 16),
+                      const SizedBox(height: 20), // Increased spacing
                       Text(
                         _onboardingPages[index]['description'] as String,
-                        style: Theme.of(context).textTheme.bodyLarge,
+                        style: Theme.of(context).textTheme.titleMedium, // Larger description
                         textAlign: TextAlign.center,
                       ),
                     ],
@@ -100,7 +100,7 @@ class _OnboardingTutorialScreenState extends State<OnboardingTutorialScreen> {
           ),
           _buildPageIndicator(),
           _buildNavigationButtons(),
-          const SizedBox(height: 20),
+          const SizedBox(height: 30), // Increased bottom spacing
         ],
       ),
     );
@@ -113,12 +113,12 @@ class _OnboardingTutorialScreenState extends State<OnboardingTutorialScreen> {
         _onboardingPages.length,
         (index) => AnimatedContainer(
           duration: const Duration(milliseconds: 300),
-          height: 10,
-          width: _currentPage == index ? 30 : 10,
-          margin: const EdgeInsets.symmetric(horizontal: 5),
+          height: 12, // Increased height
+          width: _currentPage == index ? 36 : 12, // Increased width
+          margin: const EdgeInsets.symmetric(horizontal: 6), // Increased margin
           decoration: BoxDecoration(
-            color: _currentPage == index ? AppColors.dishTvOrange : Colors.grey,
-            borderRadius: BorderRadius.circular(5),
+            color: _currentPage == index ? AppColors.dishTvOrange : Colors.grey.shade400, // Lighter grey for inactive
+            borderRadius: BorderRadius.circular(6),
           ),
         ),
       ),
@@ -127,7 +127,7 @@ class _OnboardingTutorialScreenState extends State<OnboardingTutorialScreen> {
 
   Widget _buildNavigationButtons() {
     return Padding(
-      padding: const EdgeInsets.all(16.0),
+      padding: const EdgeInsets.all(24.0), // Increased padding
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -139,7 +139,13 @@ class _OnboardingTutorialScreenState extends State<OnboardingTutorialScreen> {
                   curve: Curves.easeIn,
                 );
               },
-              child: const Text('Previous'),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.dishTvOrange, // Orange button
+                foregroundColor: Colors.white, // White text
+                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12), // Larger padding
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)), // Rounded corners
+              ),
+              child: const Text('Previous', style: TextStyle(fontSize: 16)), // Larger text
             ),
           const Spacer(),
           if (_currentPage < _onboardingPages.length - 1)
@@ -150,14 +156,26 @@ class _OnboardingTutorialScreenState extends State<OnboardingTutorialScreen> {
                   curve: Curves.easeIn,
                 );
               },
-              child: const Text('Next'),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.dishTvOrange,
+                foregroundColor: Colors.white,
+                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+              ),
+              child: const Text('Next', style: TextStyle(fontSize: 16)),
             )
           else
             ElevatedButton(
               onPressed: () {
                 Navigator.pop(context); // Or navigate to home screen
               },
-              child: const Text('Finish'),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.dishTvOrange,
+                foregroundColor: Colors.white,
+                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+              ),
+              child: const Text('Finish', style: TextStyle(fontSize: 16)),
             ),
         ],
       ),
