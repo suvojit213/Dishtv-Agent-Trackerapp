@@ -1,7 +1,6 @@
 import 'package:dishtv_agent_tracker/domain/entities/daily_entry.dart';
 import 'package:dishtv_agent_tracker/domain/entities/monthly_summary.dart';
 import 'package:dishtv_agent_tracker/domain/entities/cq_entry.dart';
-import 'package:dishtv_agent_tracker/presentation/screens/backup_restore_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:dishtv_agent_tracker/presentation/features/dashboard/widgets/dashboard_screen.dart';
 import 'package:dishtv_agent_tracker/presentation/features/add_entry/widgets/add_entry_screen.dart';
@@ -18,8 +17,6 @@ class AppRouter {
   static const String monthlyPerformanceRoute = '/monthly-performance';
   static const String allReportsRoute = '/all-reports';
   static const String faqRoute = '/faq';
-  static const String backupRestoreRoute = '/backup-restore';
-
 
   // Route generator
   static Route<dynamic> onGenerateRoute(RouteSettings settings) {
@@ -50,10 +47,6 @@ class AppRouter {
       case faqRoute:
         return MaterialPageRoute(
           builder: (_) => const FaqScreen(),
-        );
-      case backupRestoreRoute:
-        return MaterialPageRoute(
-          builder: (_) => BackupRestoreScreen(),
         );
       default:
         return MaterialPageRoute(

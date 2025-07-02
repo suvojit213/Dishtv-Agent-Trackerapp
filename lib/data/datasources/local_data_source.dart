@@ -1,13 +1,9 @@
-import 'dart:io';
-
-import 'package:dishtv_agent_tracker/core/constants/app_constants.dart';
-import 'package:dishtv_agent_tracker/domain/entities/cq_entry.dart';
-import 'package:dishtv_agent_tracker/domain/entities/csat_entry.dart';
-import 'package:dishtv_agent_tracker/domain/entities/daily_entry.dart';
-import 'package:file_picker/file_picker.dart';
-import 'package:path/path.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
+import 'package:path/path.dart';
+import 'package:dishtv_agent_tracker/core/constants/app_constants.dart';
+import 'package:dishtv_agent_tracker/domain/entities/daily_entry.dart';
+import 'package:dishtv_agent_tracker/domain/entities/csat_entry.dart';
+import 'package:dishtv_agent_tracker/domain/entities/cq_entry.dart';
 
 class LocalDataSource {
   static Database? _database;
@@ -368,8 +364,7 @@ class LocalDataSource {
       distinct: true,
     );
     for (var map in cqMaps) {
-      final date =
-          DateTime.fromMillisecondsSinceEpoch(map["audit_date"] as int);
+      final date = DateTime.fromMillisecondsSinceEpoch(map["audit_date"] as int);
       uniqueCombinations.add("${date.month}-${date.year}");
     }
 
@@ -386,71 +381,6 @@ class LocalDataSource {
     }
 
     return result;
-  }
-
-  // Close the database
-  Future<void> closeDatabase() async {
-    if (_database != null && _database!.isOpen) {
-      await _database!.close();
-      _database = null;
-    }
-  }
-
-  // Backup the database
-  Future<bool> backupDatabase() async {
-    try {
-      await closeDatabase(); // Close the database before backing up
-
-      final dbFolder = await getDatabasesPath();
-      final dbPath = join(dbFolder, AppConstants.databaseName);
-      final dbFile = File(dbPath);
-
-      if (await dbFile.exists()) {
-        final result = await FilePicker.platform.getDirectoryPath(
-          dialogTitle: 'Select Backup Directory',
-        );
-
-        if (result != null) {
-          final backupPath = join(result, 'dishtv_agent_tracker_backup.db');
-          await dbFile.copy(backupPath);
-          await init(); // Re-open the database
-          return true;
-        }
-      }
-    } catch (e) {
-      // Handle exceptions
-      print('Error backing up database: $e');
-    }
-    await init(); // Re-open the database if something went wrong
-    return false;
-  }
-
-  // Restore the database
-  Future<bool> restoreDatabase() async {
-    try {
-      final result = await FilePicker.platform.pickFiles(
-        type: FileType.custom,
-        allowedExtensions: ['db'],
-        dialogTitle: 'Select Backup File',
-      );
-
-      if (result != null && result.files.single.path != null) {
-        await closeDatabase(); // Close the database before restoring
-
-        final backupFile = File(result.files.single.path!);
-        final dbFolder = await getDatabasesPath();
-        final dbPath = join(dbFolder, AppConstants.databaseName);
-
-        await backupFile.copy(dbPath);
-        await init(); // Re-initialize the database
-        return true;
-      }
-    } catch (e) {
-      // Handle exceptions
-      print('Error restoring database: $e');
-    }
-    await init(); // Re-open the database if something went wrong
-    return false;
   }
 }
 
