@@ -22,7 +22,7 @@ dependencies:
   shared_preferences: ^2.2.3
   google_fonts: ^6.2.1
   permission_handler: ^11.3.1
-  open_file: ^3.3.2
+  open_file: ^3.5.10
   device_info_plus: ^10.1.0
   pdf: ^3.10.8 # Add this line for PDF generation
   share_plus: ^9.0.0
@@ -30,7 +30,7 @@ dependencies:
   percent_indicator: ^4.2.3 # <-- यह नया पैकेज जोड़ा गया है
   url_launcher: ^6.3.0
   excel: ^2.1.0
-  file_picker: ^6.2.0
+  file_picker: ^10.2.0
   csv: ^5.1.1
 
 dev_dependencies:
