@@ -102,6 +102,7 @@ class MonthlyGoalsSection extends StatelessWidget {
   }
 
   void _showEditGoalsDialog(BuildContext context, int currentHours, int currentCalls) {
+    final theme = Theme.of(context);
     final hoursController = TextEditingController(text: currentHours.toString());
     final callsController = TextEditingController(text: currentCalls.toString());
 
