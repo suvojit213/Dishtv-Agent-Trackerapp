@@ -61,8 +61,9 @@ jobs:
         id: changelog
         uses: mikepenz/release-changelog-builder-action@v4
         with:
-          fromTag: ${{ github.ref }}
+          fromTag: ${{ github.event.repository.default_branch }} # Or a specific base tag if you have one
           toTag: ${{ github.ref }}
+          configuration: .github/workflows/changelog-config.json # Optional: for more control over changelog content
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 

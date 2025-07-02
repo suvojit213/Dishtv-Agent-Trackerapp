@@ -11,6 +11,7 @@ import 'package:dishtv_agent_tracker/data/repositories/performance_repository_im
 import 'package:dishtv_agent_tracker/domain/repositories/performance_repository.dart';
 import 'package:dishtv_agent_tracker/presentation/common/theme/app_theme.dart';
 import 'package:dishtv_agent_tracker/presentation/common/theme/theme_cubit.dart';
+import 'package:dishtv_agent_tracker/presentation/common/theme/theme_state.dart';
 import 'package:dishtv_agent_tracker/presentation/routes/app_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -69,12 +70,12 @@ class MyApp extends StatelessWidget {
       ],
       child: BlocProvider(
         create: (context) => ThemeCubit(),
-        child: BlocBuilder<ThemeCubit, AppThemeMode>(
-          builder: (context, appThemeMode) {
+        child: BlocBuilder<ThemeCubit, ThemeState>(
+          builder: (context, themeState) {
             ThemeData selectedTheme;
             ThemeMode themeMode;
 
-            switch (appThemeMode) {
+            switch (themeState.themeMode) {
               case AppThemeMode.system:
                 selectedTheme = AppTheme.lightTheme; // Default theme for system mode, actual theme determined by system brightness
                 themeMode = ThemeMode.system;
@@ -103,6 +104,11 @@ class MyApp extends StatelessWidget {
                 selectedTheme = AppTheme.redTheme;
                 themeMode = selectedTheme.brightness == Brightness.dark ? ThemeMode.dark : ThemeMode.light;
                 break;
+              case AppThemeMode.custom:
+                selectedTheme = AppTheme.generateThemeFromColor(themeState.customColor, Brightness.light); // Assuming light for custom for now
+                themeMode = ThemeMode.light;
+                break;
+            }
               default: // Fallback for any unhandled AppThemeMode, though all are handled now
                 selectedTheme = AppTheme.lightTheme;
                 themeMode = ThemeMode.light;
