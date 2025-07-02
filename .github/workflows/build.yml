@@ -46,16 +46,6 @@ jobs:
           channel: 'stable'
           cache: true
 
-      - name: 🔑 Decode Keystore
-        run: echo "${{ secrets.SIGNING_KEY_BASE64 }}" | base64 --decode > android/app/upload-keystore.jks
-
-      - name: 📝 Create key.properties
-        run: |
-          echo "storeFile=upload-keystore.jks" > android/key.properties
-          echo "storePassword=${{ secrets.KEY_STORE_PASSWORD }}" >> android/key.properties
-          echo "keyAlias=${{ secrets.KEY_ALIAS }}" >> android/key.properties
-          echo "keyPassword=${{ secrets.KEY_PASSWORD }}" >> android/key.properties
-
       - name: 🔄 Get Dependencies
         run: flutter pub get
 
