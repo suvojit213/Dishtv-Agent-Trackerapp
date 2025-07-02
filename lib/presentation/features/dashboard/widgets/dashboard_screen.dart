@@ -21,6 +21,11 @@ import 'package:dishtv_agent_tracker/presentation/features/dashboard/widgets/dai
 import 'package:dishtv_agent_tracker/presentation/features/dashboard/widgets/summary_section.dart';
 import 'package:dishtv_agent_tracker/presentation/features/dashboard/widgets/salary_section.dart';
 import 'package:dishtv_agent_tracker/presentation/routes/app_router.dart';
+import 'package:screenshot/screenshot.dart';
+import 'package:share_plus/share_plus.dart';
+import 'package:path_provider/path_provider.dart';
+import 'dart:io';
+import 'package:dishtv_agent_tracker/presentation/common/widgets/performance_share_card.dart';
 
 class DashboardScreen extends StatelessWidget {
   const DashboardScreen({Key? key}) : super(key: key);
@@ -53,6 +58,8 @@ class DashboardView extends StatefulWidget {
 }
 
 class _DashboardViewState extends State<DashboardView> {
+  final ScreenshotController screenshotController = ScreenshotController();
+
   void _navigateToMonthlyPerformance(BuildContext context) {
     final dashboardState = context.read<DashboardBloc>().state;
     if (dashboardState.status == DashboardStatus.loaded && dashboardState.monthlySummary != null) {
@@ -60,6 +67,50 @@ class _DashboardViewState extends State<DashboardView> {
         context,
         AppRouter.monthlyPerformanceRoute,
         arguments: dashboardState.monthlySummary,
+      );
+    }
+  }
+
+  Future<void> _sharePerformance(BuildContext context, MonthlySummary summary) async {
+    // Show a loading indicator
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Preparing performance image...')),
+    );
+
+    try {
+      // Capture the widget as an image
+      final imageFile = await screenshotController.captureFromWidget(
+        InheritedTheme.captureAll(
+          context,
+          PerformanceShareCard(summary: summary),
+        ),
+        delay: const Duration(milliseconds: 100),
+        pixelRatio: 2.0, // Adjust pixel ratio for better quality
+      );
+
+      if (imageFile != null) {
+        final directory = await getTemporaryDirectory();
+        final imagePath = '${directory.path}/performance_summary.png';
+        final file = File(imagePath);
+        await file.writeAsBytes(imageFile);
+
+        // Share the image
+        await Share.shareXFiles([XFile(file.path)], text: 'Check out my DishTV Agent performance!');
+
+        ScaffoldMessenger.of(context).hideCurrentSnackBar();
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Performance image shared!')),
+        );
+      } else {
+        ScaffoldMessenger.of(context).hideCurrentSnackBar();
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Failed to capture image.')),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).hideCurrentSnackBar();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error sharing performance: $e')),
       );
     }
   }
@@ -81,6 +132,17 @@ class _DashboardViewState extends State<DashboardView> {
           IconButton(
             icon: const Icon(Icons.color_lens),
             onPressed: () => Navigator.pushNamed(context, AppRouter.themeSelectionRoute),
+          ),
+          BlocBuilder<DashboardBloc, DashboardState>(
+            builder: (context, state) {
+              if (state.status == DashboardStatus.loaded && state.monthlySummary != null) {
+                return IconButton(
+                  icon: const Icon(Icons.share),
+                  onPressed: () => _sharePerformance(context, state.monthlySummary!),
+                );
+              }
+              return const SizedBox.shrink();
+            },
           ),
           
         ],
