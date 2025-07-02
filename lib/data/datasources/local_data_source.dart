@@ -396,7 +396,7 @@ class LocalDataSource {
     }
   }
 
-  // Backup the database
+  '''  // Backup the database
   Future<bool> backupDatabase() async {
     try {
       await closeDatabase(); // Close the database before backing up
@@ -460,5 +460,6 @@ class LocalDataSource {
     }
     await init(); // Re-open the database if something went wrong
     return false;
-  }
+  }''
 }
+
