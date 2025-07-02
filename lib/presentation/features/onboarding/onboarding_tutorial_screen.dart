@@ -16,7 +16,7 @@ class _OnboardingTutorialScreenState extends State<OnboardingTutorialScreen> {
   final List<Map<String, dynamic>> _onboardingPages = [
     {
       'title': 'Welcome to DishTV Agent Tracker!',
-      'description': 'This app helps you track your daily calls, login time, and salary. Let's get started!',
+      'description': "This app helps you track your daily calls, login time, and salary. Let's get started!",
       'image': Icons.waving_hand,
     },
     {
