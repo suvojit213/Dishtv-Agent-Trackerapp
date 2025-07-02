@@ -12,6 +12,7 @@ import 'package:dishtv_agent_tracker/domain/repositories/performance_repository.
 import 'package:dishtv_agent_tracker/presentation/common/theme/app_theme.dart';
 import 'package:dishtv_agent_tracker/presentation/common/theme/theme_cubit.dart';
 import 'package:dishtv_agent_tracker/presentation/routes/app_router.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 // Custom ScrollBehavior for smoother scrolling
 class SmoothScrollBehavior extends ScrollBehavior {
@@ -29,21 +30,33 @@ void main() async {
   
   final performanceRepository = PerformanceRepositoryImpl(localDataSource: localDataSource);
   final goalRepository = GoalRepositoryImpl(goalDataSource);
+
+  final prefs = await SharedPreferences.getInstance();
+  final hasShownOnboarding = prefs.getBool('hasShownOnboarding') ?? false;
+
+  String initialRoute = AppRouter.dashboardRoute;
+  if (!hasShownOnboarding) {
+    initialRoute = AppRouter.onboardingTutorialRoute;
+    await prefs.setBool('hasShownOnboarding', true);
+  }
   
   runApp(MyApp(
     performanceRepository: performanceRepository,
     goalRepository: goalRepository,
+    initialRoute: initialRoute,
   ));
 }
 
 class MyApp extends StatelessWidget {
   final PerformanceRepository performanceRepository;
   final GoalRepository goalRepository;
+  final String initialRoute;
   
   const MyApp({
     Key? key,
     required this.performanceRepository,
     required this.goalRepository,
+    required this.initialRoute,
   }) : super(key: key);
 
   @override
@@ -104,7 +117,7 @@ class MyApp extends StatelessWidget {
               debugShowCheckedModeBanner: false,
               scrollBehavior: SmoothScrollBehavior(),
               onGenerateRoute: AppRouter.onGenerateRoute,
-              initialRoute: AppRouter.dashboardRoute,
+              initialRoute: initialRoute,
             );
           },
         ),

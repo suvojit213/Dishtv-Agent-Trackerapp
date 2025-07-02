@@ -21,8 +21,18 @@ class _OnboardingTutorialScreenState extends State<OnboardingTutorialScreen> {
     },
     {
       'title': 'Add Your Daily Entry',
-      'description': 'Tap the "+" button on the dashboard to add your daily call count and login time.',
+      'description': 'Tap the "+" button on the dashboard. Enter your Date, Login Time (Hours, Minutes, Seconds), and Call Count. Then tap "Add Entry".',
       'image': Icons.add_circle_outline,
+    },
+    {
+      'title': 'Add CSAT Entry',
+      'description': 'In the "Add New Entry" screen, switch to the "CSAT Entry" tab. Enter the Date, CSAT Score, and any remarks. Tap "Add CSAT Entry".',
+      'image': Icons.sentiment_satisfied_alt,
+    },
+    {
+      'title': 'Add CQ Entry',
+      'description': 'In the "Add New Entry" screen, switch to the "CQ Entry" tab. Enter the Audit Date and Call Quality Percentage. Tap "Add CQ Entry".',
+      'image': Icons.assessment,
     },
     {
       'title': 'View Monthly Performance',
