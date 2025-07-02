@@ -122,10 +122,11 @@ class AppTheme {
     ),
     cardTheme: CardThemeData(
       color: AppColors.cardBackground,
-      elevation: 0,
+      elevation: 1, // Changed from 0 to 1 for consistency
+      shadowColor: Colors.black12, // Added for consistency
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16),
-        side: const BorderSide(color: AppColors.border, width: 0.5),
+        // Removed side for cleaner look: side: const BorderSide(color: AppColors.border, width: 0.5),
       ),
     ),
     elevatedButtonTheme: ElevatedButtonThemeData(
@@ -149,7 +150,11 @@ class AppTheme {
       fillColor: AppColors.secondaryBackground,
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
-        borderSide: BorderSide.none,
+        borderSide: const BorderSide(color: AppColors.divider), // Changed from BorderSide.none
+      ),
+      enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: const BorderSide(color: AppColors.divider), // Added for consistency
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
@@ -163,6 +168,7 @@ class AppTheme {
       unselectedItemColor: AppColors.textSecondary,
       type: BottomNavigationBarType.fixed,
       elevation: 0,
+      showUnselectedLabels: true, // Added for consistency
     ),
     dividerTheme: const DividerThemeData(
       color: AppColors.divider,
