@@ -62,6 +62,10 @@ class MyApp extends StatelessWidget {
             ThemeMode themeMode;
 
             switch (appThemeMode) {
+              case AppThemeMode.system:
+                selectedTheme = AppTheme.lightTheme; // Default theme for system mode, actual theme determined by system brightness
+                themeMode = ThemeMode.system;
+                break;
               case AppThemeMode.light:
                 selectedTheme = AppTheme.lightTheme;
                 themeMode = ThemeMode.light;
@@ -72,24 +76,23 @@ class MyApp extends StatelessWidget {
                 break;
               case AppThemeMode.blue:
                 selectedTheme = AppTheme.blueTheme;
-                themeMode = ThemeMode.light; // Assuming blueTheme is light-based
+                themeMode = selectedTheme.brightness == Brightness.dark ? ThemeMode.dark : ThemeMode.light;
                 break;
               case AppThemeMode.green:
                 selectedTheme = AppTheme.greenTheme;
-                themeMode = ThemeMode.light; // Assuming greenTheme is light-based
+                themeMode = selectedTheme.brightness == Brightness.dark ? ThemeMode.dark : ThemeMode.light;
                 break;
               case AppThemeMode.purple:
                 selectedTheme = AppTheme.purpleTheme;
-                themeMode = ThemeMode.light;
+                themeMode = selectedTheme.brightness == Brightness.dark ? ThemeMode.dark : ThemeMode.light;
                 break;
               case AppThemeMode.red:
                 selectedTheme = AppTheme.redTheme;
-                themeMode = ThemeMode.light;
+                themeMode = selectedTheme.brightness == Brightness.dark ? ThemeMode.dark : ThemeMode.light;
                 break;
-              case AppThemeMode.system:
-              default:
-                selectedTheme = AppTheme.lightTheme; // Default to light if system is not explicitly handled
-                themeMode = ThemeMode.system;
+              default: // Fallback for any unhandled AppThemeMode, though all are handled now
+                selectedTheme = AppTheme.lightTheme;
+                themeMode = ThemeMode.light;
                 break;
             }
 

@@ -69,7 +69,6 @@ class DashboardView extends StatelessWidget {
           onPressed: () => _showAboutDialog(context),
         ),
         actions: [
-          const AnimatedThemeSwitcher(),
           IconButton(
             icon: const Icon(Icons.help_outline),
             onPressed: () => Navigator.pushNamed(context, AppRouter.faqRoute),
