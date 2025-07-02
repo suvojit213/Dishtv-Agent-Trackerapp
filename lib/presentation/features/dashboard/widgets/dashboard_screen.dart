@@ -11,7 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:dishtv_agent_tracker/core/constants/app_colors.dart';
 import 'package:dishtv_agent_tracker/domain/repositories/performance_repository.dart';
-import 'package:dishtv_agent_tracker/presentation/common/widgets/animated_theme_switcher.dart';
+
 import 'package:dishtv_agent_tracker/presentation/common/widgets/custom_app_bar.dart';
 import 'package:dishtv_agent_tracker/presentation/common/widgets/custom_bottom_navigation_bar.dart';
 import 'package:dishtv_agent_tracker/presentation/features/dashboard/bloc/dashboard_bloc.dart';
