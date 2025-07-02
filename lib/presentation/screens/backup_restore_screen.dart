@@ -1,20 +1,8 @@
 import 'package:dishtv_agent_tracker/data/datasources/local_data_source.dart';
 import 'package:flutter/material.dart';
-import 'package:permission_handler/permission_handler.dart';
 
 class BackupRestoreScreen extends StatelessWidget {
   final LocalDataSource _localDataSource = LocalDataSource();
-
-  Future<bool> _requestPermissions() async {
-    var status = await Permission.storage.status;
-    if (!status.isGranted) {
-      final result = await Permission.storage.request();
-      if (result.isGranted) {
-        return true;
-      }
-    }
-    return false;
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,44 +16,28 @@ class BackupRestoreScreen extends StatelessWidget {
           children: [
             ElevatedButton(
               onPressed: () async {
-                if (await _requestPermissions()) {
-                  final success = await _localDataSource.backupDatabase();
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text(success
-                          ? 'Backup successful!'
-                          : 'Backup failed. Please try again.'),
-                    ),
-                  );
-                } else {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text('Storage permission is required to create a backup.'),
-                    ),
-                  );
-                }
+                final success = await _localDataSource.backupDatabase();
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(success
+                        ? 'Backup successful!'
+                        : 'Backup failed.'),
+                  ),
+                );
               },
               child: Text('Backup Data'),
             ),
             SizedBox(height: 20),
             ElevatedButton(
               onPressed: () async {
-                if (await _requestPermissions()) {
-                  final success = await _localDataSource.restoreDatabase();
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text(success
-                          ? 'Restore successful!\nPlease restart the app to see the changes.'
-                          : 'Restore failed. Please select a valid backup file.'),
-                    ),
-                  );
-                } else {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text('Storage permission is required to restore data.'),
-                    ),
-                  );
-                }
+                final success = await _localDataSource.restoreDatabase();
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(success
+                        ? 'Restore successful!\nPlease restart the app.'
+                        : 'Restore failed.'),
+                  ),
+                );
               },
               child: Text('Restore Data'),
             ),

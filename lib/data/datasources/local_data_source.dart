@@ -396,7 +396,7 @@ class LocalDataSource {
     }
   }
 
-  '''  // Backup the database
+  // Backup the database
   Future<bool> backupDatabase() async {
     try {
       await closeDatabase(); // Close the database before backing up
@@ -412,12 +412,7 @@ class LocalDataSource {
 
         if (result != null) {
           final backupPath = join(result, 'dishtv_agent_tracker_backup.db');
-          final backupFile = File(backupPath);
-
-          // Read the database file as bytes and write to the backup file
-          final dbFileBytes = await dbFile.readAsBytes();
-          await backupFile.writeAsBytes(dbFileBytes, flush: true);
-
+          await dbFile.copy(backupPath);
           await init(); // Re-open the database
           return true;
         }
@@ -445,12 +440,8 @@ class LocalDataSource {
         final backupFile = File(result.files.single.path!);
         final dbFolder = await getDatabasesPath();
         final dbPath = join(dbFolder, AppConstants.databaseName);
-        final dbFile = File(dbPath);
 
-        // Read the backup file as bytes and write to the database file
-        final backupFileBytes = await backupFile.readAsBytes();
-        await dbFile.writeAsBytes(backupFileBytes, flush: true);
-
+        await backupFile.copy(dbPath);
         await init(); // Re-initialize the database
         return true;
       }
@@ -460,6 +451,6 @@ class LocalDataSource {
     }
     await init(); // Re-open the database if something went wrong
     return false;
-  }''
+  }
 }
 
