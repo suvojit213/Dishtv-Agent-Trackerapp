@@ -10,6 +10,12 @@ class AppConstants {
   static const int bonusCallTarget = 750;
   static const int bonusHourTarget = 100; // in hours
 
+  // CSAT Bonus and TDS constants
+  static const double csatBonusPercentage = 60.0;
+  static const int csatBonusCallTarget = 1000;
+  static const double csatBonusRate = 0.05; // 5% of total salary
+  static const double tdsRate = 0.10; // 10% TDS
+
   // Database constants
   static const String databaseName = 'dishtv_agent_tracker.db';
   static const int databaseVersion = 3; // Updated version for CQ feature

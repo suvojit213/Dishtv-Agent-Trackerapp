@@ -124,8 +124,20 @@ class ExcelService {
       'Rs. ${summary.bonusAmount.toStringAsFixed(2)}'
     ]);
     sheet.appendRow([
-      'Total Salary',
-      'Rs. ${summary.totalSalary.toStringAsFixed(2)}'
+      'CSAT Bonus',
+      'Rs. ${summary.csatBonus.toStringAsFixed(2)}'
+    ]);
+    sheet.appendRow([
+      'Gross Salary',
+      'Rs. ${(summary.totalSalary + summary.csatBonus).toStringAsFixed(2)}'
+    ]);
+    sheet.appendRow([
+      'TDS Deduction (${(summary.tdsDeduction / (summary.totalSalary + summary.csatBonus) * 100).toStringAsFixed(0)}%)',
+      'Rs. -${summary.tdsDeduction.toStringAsFixed(2)}'
+    ]);
+    sheet.appendRow([
+      'Net Salary',
+      'Rs. ${summary.netSalary.toStringAsFixed(2)}'
     ]);
     sheet.appendRow([]); // Empty row for spacing
 

@@ -63,6 +63,24 @@ class MonthlySummary extends Equatable {
   double get totalSalary {
     return baseSalary + bonusAmount;
   }
+
+  // Calculate CSAT bonus
+  double get csatBonus {
+    if (csatSummary != null && csatSummary!.averageScore >= AppConstants.csatBonusPercentage && totalCalls >= AppConstants.csatBonusCallTarget) {
+      return totalSalary * AppConstants.csatBonusRate;
+    }
+    return 0.0;
+  }
+
+  // Calculate TDS deduction
+  double get tdsDeduction {
+    return (totalSalary + csatBonus) * AppConstants.tdsRate;
+  }
+
+  // Calculate net salary
+  double get netSalary {
+    return totalSalary + csatBonus - tdsDeduction;
+  }
   
   // Format month name
   String get monthName {
