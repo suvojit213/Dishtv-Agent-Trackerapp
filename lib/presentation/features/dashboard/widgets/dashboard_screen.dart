@@ -77,13 +77,7 @@ class DashboardView extends StatelessWidget {
             icon: const Icon(Icons.color_lens),
             onPressed: () => Navigator.pushNamed(context, AppRouter.themeSelectionRoute),
           ),
-          IconButton(
-            icon: const Icon(Icons.refresh),
-            onPressed: () {
-              context.read<DashboardBloc>().add(RefreshDashboard());
-              context.read<GoalsBloc>().add(LoadGoals());
-            },
-          ),
+          
         ],
       ),
       body: GestureDetector(
@@ -180,13 +174,12 @@ class DashboardView extends StatelessWidget {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.pushNamed(context, AppRouter.addEntryRoute, arguments: null)
-              .then((value) {
-            if (value == true) {
-              context.read<DashboardBloc>().add(RefreshDashboard());
-            }
-          });
+        onPressed: () async {
+          final result = await Navigator.pushNamed(context, AppRouter.addEntryRoute, arguments: null);
+          if (result == true) {
+            context.read<DashboardBloc>().add(RefreshDashboard());
+            context.read<GoalsBloc>().add(LoadGoals());
+          }
         },
         backgroundColor: AppColors.dishTvOrange,
         child: const Icon(Icons.add, color: Colors.white),
