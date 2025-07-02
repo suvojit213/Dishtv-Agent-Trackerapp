@@ -66,7 +66,7 @@ class DashboardView extends StatelessWidget {
         title: 'Dashboard',
         leading: IconButton(
           icon: const Icon(Icons.info_outline_rounded),
-          onPressed: () => _showAboutDialog(context),
+          onPressed: () => Navigator.pushNamed(context, AppRouter.appInfoRoute),
         ),
         actions: [
           IconButton(
@@ -202,32 +202,7 @@ class DashboardView extends StatelessWidget {
     );
   }
 
-  void _showAboutDialog(BuildContext context) {
-    showAboutDialog(
-      context: context,
-      applicationName: AppConstants.appName,
-      applicationVersion: AppConstants.appVersion,
-      applicationIcon: Image.asset('assets/icon/app_icon.png', width: 48, height: 48),
-      applicationLegalese: '© 2025 Suvojeet Sengupta',
-      children: <Widget>[
-        const SizedBox(height: 24),
-        const Text(
-          'Developer - Suvojeet Sengupta',
-          style: TextStyle(fontWeight: FontWeight.bold),
-        ),
-        const SizedBox(height: 16),
-        const Text(
-          'Credits - Special Thanks to Didi Bhai (Mouma) , Sudhanshu  & many others who contributed and helped me to complete this app',
-           style: TextStyle(fontStyle: FontStyle.italic),
-        ),
-        const Divider(height: 32),
-        const Text(
-          '"I Developed This App for Easy to Track DishTV WFH Agent Perfomence Yourself, Thanks For using This Application"',
-           style: TextStyle(fontStyle: FontStyle.italic),
-        ),
-      ],
-    );
-  }
+  
 }
 
 

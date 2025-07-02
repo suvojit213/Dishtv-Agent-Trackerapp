@@ -64,7 +64,7 @@ class DashboardView extends StatelessWidget {
         title: 'Dashboard',
         leading: IconButton(
           icon: const Icon(Icons.info_outline_rounded),
-          onPressed: () => _showAboutDialog(context),
+          onPressed: () => Navigator.pushNamed(context, AppRouter.appInfoRoute),
         ),
         actions: [
           const AnimatedThemeSwitcher(),
@@ -193,30 +193,5 @@ class DashboardView extends StatelessWidget {
     );
   }
 
-  void _showAboutDialog(BuildContext context) {
-    showAboutDialog(
-      context: context,
-      applicationName: AppConstants.appName,
-      applicationVersion: AppConstants.appVersion,
-      applicationIcon: Image.asset('assets/icon/app_icon.png', width: 48, height: 48),
-      applicationLegalese: '© 2025 Suvojeet Sengupta',
-      children: <Widget>[
-        const SizedBox(height: 24),
-        const Text(
-          'Developer - Suvojeet Sengupta',
-          style: TextStyle(fontWeight: FontWeight.bold),
-        ),
-        const SizedBox(height: 16),
-        const Text(
-          'Credits - Sudhanshu for testing and all others to make possible',
-           style: TextStyle(fontStyle: FontStyle.italic),
-        ),
-        const Divider(height: 32),
-        const Text(
-          '"And this is made by me and I am learning."',
-           style: TextStyle(fontStyle: FontStyle.italic),
-        ),
-      ],
-    );
-  }
+  
 }
