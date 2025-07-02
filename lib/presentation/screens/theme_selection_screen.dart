@@ -16,7 +16,7 @@ class ThemeSelectionScreen extends StatelessWidget {
       ),
       body: ListView(
         children: [
-          ...AppThemeMode.values.where((mode) => mode != AppThemeMode.amber && mode != AppThemeMode.teal && mode != AppThemeMode.custom).map((themeMode) {
+          ...AppThemeMode.values.where((mode) => mode != AppThemeMode.custom).map((themeMode) {
             return RadioListTile<AppThemeMode>(
               title: Text(themeMode.toString().split('.').last.toUpperCase()),
               value: themeMode,

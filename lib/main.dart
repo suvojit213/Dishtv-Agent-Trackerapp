@@ -108,7 +108,6 @@ class MyApp extends StatelessWidget {
                 selectedTheme = AppTheme.generateThemeFromColor(themeState.customColor, Brightness.light); // Assuming light for custom for now
                 themeMode = ThemeMode.light;
                 break;
-            }
               default: // Fallback for any unhandled AppThemeMode, though all are handled now
                 selectedTheme = AppTheme.lightTheme;
                 themeMode = ThemeMode.light;
