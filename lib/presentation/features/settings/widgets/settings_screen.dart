@@ -1,3 +1,4 @@
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:dishtv_agent_tracker/presentation/common/widgets/custom_app_bar.dart';
@@ -10,6 +11,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:dishtv_agent_tracker/data/datasources/data_import_service.dart';
 import 'package:dishtv_agent_tracker/data/datasources/local_data_source.dart';
 import 'package:dishtv_agent_tracker/domain/usecases/import_data_usecase.dart';
+import 'package:dishtv_agent_tracker/core/constants/app_constants.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({Key? key}) : super(key: key);
@@ -58,7 +60,7 @@ class SettingsScreen extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             Text(
-              'Version: 1.0.5',
+              'Version: ${AppConstants.appVersion}',
               style: Theme.of(context).textTheme.bodyMedium,
             ),
           ],
@@ -102,28 +104,39 @@ class SettingsScreen extends StatelessWidget {
   }
 
   Future<void> _sendFeedback(BuildContext context) async {
-    final Uri emailLaunchUri = Uri(
-      scheme: 'mailto',
-      path: 'suvojitsengupta21@gmail.com',
-      query: encodeQueryParameters(<String, String>{
-        'subject': 'Feedback for DishTV Agent Tracker App',
-        'body': ''
-      }),
-    );
+    final String email = 'suvojitsengupta21@gmail.com';
+    final String subject = 'Feedback for DishTV Agent Tracker App';
+    String body = '\n\n---
+App Version: ${AppConstants.appVersion}\n';
+
+    DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+
+    if (Theme.of(context).platform == TargetPlatform.android) {
+      AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo();
+      body += 'Device: ${androidInfo.model} (Android ${androidInfo.version.release})\n';
+    } else if (Theme.of(context).platform == TargetPlatform.iOS) {
+      IosDeviceInfo iosInfo = await deviceInfo.iosInfo();
+      body += 'Device: ${iosInfo.model} (iOS ${iosInfo.systemVersion})\n';
+    } else if (Theme.of(context).platform == TargetPlatform.windows) {
+      WindowsDeviceInfo windowsInfo = await deviceInfo.windowsInfo();
+      body += 'OS: ${windowsInfo.productName} (Build ${windowsInfo.buildLab})\n';
+    } else if (Theme.of(context).platform == TargetPlatform.linux) {
+      LinuxDeviceInfo linuxInfo = await deviceInfo.linuxInfo();
+      body += 'OS: ${linuxInfo.prettyName}\n';
+    } else if (Theme.of(context).platform == TargetPlatform.macOS) {
+      MacOsDeviceInfo macOsInfo = await deviceInfo.macOsInfo();
+      body += 'OS: ${macOsInfo.computerName} (macOS ${macOsInfo.osRelease})\n';
+    }
+
+    final Uri emailLaunchUri = Uri.parse('mailto:$email?subject=${Uri.encodeComponent(subject)}&body=${Uri.encodeComponent(body)}');
 
     if (await canLaunchUrl(emailLaunchUri)) {
       await launchUrl(emailLaunchUri);
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Could not launch email app.')),
+        const SnackBar(content: Text('Could not launch email app. Please ensure you have an email app installed and configured.')),
       );
     }
-  }
-
-  String? encodeQueryParameters(Map<String, String> params) {
-    return params.entries
-        .map((e) => '${Uri.encodeComponent(e.key)}=${Uri.encodeComponent(e.value)}')
-        .join('&');
   }
 
   Future<void> _backupData(BuildContext context) async {
