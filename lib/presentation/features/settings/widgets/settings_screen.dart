@@ -106,27 +106,15 @@ class SettingsScreen extends StatelessWidget {
   Future<void> _sendFeedback(BuildContext context) async {
     final String email = 'suvojitsengupta21@gmail.com';
     final String subject = 'Feedback for DishTV Agent Tracker App';
-    String body = '\n\n---
-App Version: ${AppConstants.appVersion}\n';
+    String body = '''
+--- 
+App Version: ${AppConstants.appVersion}
+';''';
 
     DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
 
-    if (Theme.of(context).platform == TargetPlatform.android) {
-      AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo();
-      body += 'Device: ${androidInfo.model} (Android ${androidInfo.version.release})\n';
-    } else if (Theme.of(context).platform == TargetPlatform.iOS) {
-      IosDeviceInfo iosInfo = await deviceInfo.iosInfo();
-      body += 'Device: ${iosInfo.model} (iOS ${iosInfo.systemVersion})\n';
-    } else if (Theme.of(context).platform == TargetPlatform.windows) {
-      WindowsDeviceInfo windowsInfo = await deviceInfo.windowsInfo();
-      body += 'OS: ${windowsInfo.productName} (Build ${windowsInfo.buildLab})\n';
-    } else if (Theme.of(context).platform == TargetPlatform.linux) {
-      LinuxDeviceInfo linuxInfo = await deviceInfo.linuxInfo();
-      body += 'OS: ${linuxInfo.prettyName}\n';
-    } else if (Theme.of(context).platform == TargetPlatform.macOS) {
-      MacOsDeviceInfo macOsInfo = await deviceInfo.macOsInfo();
-      body += 'OS: ${macOsInfo.computerName} (macOS ${macOsInfo.osRelease})\n';
-    }
+    AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo();
+    body += 'Device: ${androidInfo.model} (Android ${androidInfo.version.release})\n';
 
     final Uri emailLaunchUri = Uri.parse('mailto:$email?subject=${Uri.encodeComponent(subject)}&body=${Uri.encodeComponent(body)}');
 
