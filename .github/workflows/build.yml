@@ -22,10 +22,10 @@ on:
   workflow_dispatch:
 
 jobs:
-  build-and-release:
+  build_artifacts:
     runs-on: ubuntu-latest
     permissions:
-      contents: write # This permission is required to create releases, upload assets, AND commit changes.
+      contents: read # Only read permission needed for building artifacts
 
     steps:
       - name: ✅ Checkout Code
@@ -52,34 +52,69 @@ jobs:
       - name: 💪 Build Release APK
         run: flutter build apk --release
 
+      - name: 💪 Build Release AAB
+        run: flutter build appbundle --release
+
       - name: 📦 Prepare Release Artifacts
         run: |
           mkdir -p release_artifacts
           mv build/app/outputs/flutter-apk/app-release.apk release_artifacts/DishTV-Agent-Tracker-${{ env.RELEASE_TAG }}.apk
+          mv build/app/outputs/bundle/release/app-release.aab release_artifacts/DishTV-Agent-Tracker-${{ env.RELEASE_TAG }}.aab
+
+      - name: ⬆️ Upload Release Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-artifacts
+          path: release_artifacts/
+
+  create_release:
+    needs: build_artifacts # This job depends on build_artifacts
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/stable' # Only run on push to stable branch
+    permissions:
+      contents: write # This permission is required to create releases and upload assets
+
+    steps:
+      - name: ✅ Checkout Code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: ⬇️ Download Release Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: app-artifacts
+          path: release_artifacts/
 
       - name: 📝 Generate Changelog
         id: changelog
         uses: mikepenz/release-changelog-builder-action@v4
         with:
-          fromTag: ${{ github.ref }}
-          toTag: ${{ github.ref }}
+          fromTag: ${{ github.ref_name }} # Use ref_name for current branch name
+          toTag: ${{ github.ref_name }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: 🚀 Create GitHub Release & Upload APK
+      - name: 🚀 Create GitHub Release & Upload Assets
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ env.RELEASE_TAG }}
           name: "Release ${{ env.RELEASE_TAG }}"
           body: |
-            ## ✨ New Release: ${{ env.RELEASE_TAG }}
-            **App:** DishTV Agent Tracker
-            **Released On:** ${{ env.CURRENT_DATE_TIME }}
-            
-            ### 📜 Changelog
+            # ✨ Release: DishTV Agent Tracker ${{ env.RELEASE_TAG }}
+
+            Hello there! A new version of DishTV Agent Tracker is now available.
+
+            ## 🚀 What's New
             ${{ steps.changelog.outputs.changelog }}
-            
-            Another awesome update is here! Grab the APK below. 👇
+
+            ## 📥 Download
+            You can download the latest APK and AAB from the assets section below.
+
+            ## 🤝 Support & Feedback
+            If you encounter any issues or have suggestions, please open an issue on our [GitHub repository](${{ github.server_url }}/${{ github.repository }}).
+
+            Thank you for using DishTV Agent Tracker!
           files: release_artifacts/*
 
       - name: 📲 Notify via Telegram
