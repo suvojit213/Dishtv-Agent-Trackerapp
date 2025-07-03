@@ -17,7 +17,7 @@ class ThemeSelectionScreen extends StatelessWidget {
           RadioListTile<AppThemeMode>(
             title: const Text('System Default'),
             value: AppThemeMode.system,
-            groupValue: context.watch<ThemeCubit>().state.themeMode,
+            groupValue: context.watch<ThemeCubit>().state,
             onChanged: (AppThemeMode? newValue) {
               if (newValue != null) {
                 context.read<ThemeCubit>().setTheme(newValue);
@@ -27,7 +27,7 @@ class ThemeSelectionScreen extends StatelessWidget {
           RadioListTile<AppThemeMode>(
             title: const Text('Light Mode'),
             value: AppThemeMode.light,
-            groupValue: context.watch<ThemeCubit>().state.themeMode,
+            groupValue: context.watch<ThemeCubit>().state,
             onChanged: (AppThemeMode? newValue) {
               if (newValue != null) {
                 context.read<ThemeCubit>().setTheme(newValue);
@@ -37,7 +37,7 @@ class ThemeSelectionScreen extends StatelessWidget {
           RadioListTile<AppThemeMode>(
             title: const Text('Dark Mode'),
             value: AppThemeMode.dark,
-            groupValue: context.watch<ThemeCubit>().state.themeMode,
+            groupValue: context.watch<ThemeCubit>().state,
             onChanged: (AppThemeMode? newValue) {
               if (newValue != null) {
                 context.read<ThemeCubit>().setTheme(newValue);
