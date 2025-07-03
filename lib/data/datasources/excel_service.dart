@@ -137,9 +137,9 @@ class ExcelService {
   }
 
   void _addTable(Sheet sheet, List<String> headers, List<List<dynamic>> data) {
-    sheet.appendRow(headers.map((e) => TextCellValue(e)).toList());
+    sheet.appendRow(headers.map((e) => excel.TextCellValue(e)).toList());
     for (var row in data) {
-      sheet.appendRow(row.map((e) => TextCellValue(e.toString())).toList());
+      sheet.appendRow(row.map((e) => excel.TextCellValue(e.toString())).toList());
     }
   }
 
