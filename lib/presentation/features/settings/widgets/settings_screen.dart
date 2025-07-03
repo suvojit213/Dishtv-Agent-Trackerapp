@@ -4,6 +4,7 @@ import 'package:dishtv_agent_tracker/presentation/common/widgets/custom_app_bar.
 import 'package:dishtv_agent_tracker/presentation/common/widgets/custom_button.dart';
 import 'package:dishtv_agent_tracker/domain/repositories/performance_repository.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:dishtv_agent_tracker/data/datasources/data_import_service.dart';
@@ -45,6 +46,21 @@ class SettingsScreen extends StatelessWidget {
               onPressed: () => _importData(context, ImportDataType.cqEntries),
             ),
             const SizedBox(height: 16),
+            Text(
+              'App Information',
+              style: Theme.of(context).textTheme.titleLarge,
+            ),
+            const SizedBox(height: 16),
+            CustomButton(
+              text: 'Send Feedback',
+              icon: Icons.feedback,
+              onPressed: () => _sendFeedback(context),
+            ),
+            const SizedBox(height: 16),
+            Text(
+              'Version: 1.0.5',
+              style: Theme.of(context).textTheme.bodyMedium,
+            ),
           ],
         ),
       ),
@@ -83,6 +99,31 @@ class SettingsScreen extends StatelessWidget {
         SnackBar(content: Text('Import failed: $e')),
       );
     }
+  }
+
+  Future<void> _sendFeedback(BuildContext context) async {
+    final Uri emailLaunchUri = Uri(
+      scheme: 'mailto',
+      path: 'suvojitsengupta21@gmail.com',
+      query: encodeQueryParameters(<String, String>{
+        'subject': 'Feedback for DishTV Agent Tracker App',
+        'body': ''
+      }),
+    );
+
+    if (await canLaunchUrl(emailLaunchUri)) {
+      await launchUrl(emailLaunchUri);
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Could not launch email app.')),
+      );
+    }
+  }
+
+  String? encodeQueryParameters(Map<String, String> params) {
+    return params.entries
+        .map((e) => '${Uri.encodeComponent(e.key)}=${Uri.encodeComponent(e.value)}')
+        .join('&');
   }
 
   Future<void> _backupData(BuildContext context) async {

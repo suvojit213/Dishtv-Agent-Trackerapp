@@ -81,6 +81,12 @@ class MonthlySummary extends Equatable {
   double get netSalary {
     return totalSalary + csatBonus - tdsDeduction;
   }
+
+  // Calculate average salary
+  double get averageSalary {
+    if (entries.isEmpty) return 0.0;
+    return totalSalary / entries.length;
+  }
   
   // Format month name
   String get monthName {
