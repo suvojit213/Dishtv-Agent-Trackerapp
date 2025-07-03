@@ -1,5 +1,5 @@
 import 'dart:io';
-import 'package:excel/excel.dart';
+import 'package:excel/excel.dart' as excel_lib;
 import 'package:path_provider/path_provider.dart';
 import 'package:intl/intl.dart';
 import 'package:dishtv_agent_tracker/domain/entities/monthly_summary.dart';
@@ -137,9 +137,9 @@ class ExcelService {
   }
 
   void _addTable(Sheet sheet, List<String> headers, List<List<dynamic>> data) {
-    sheet.appendRow(headers.map((e) => TextCellValue(e)).toList());
+    sheet.appendRow(headers.map((e) => excel_lib.TextCellValue(e)).toList());
     for (var row in data) {
-      sheet.appendRow(row.map((e) => TextCellValue(e.toString())).toList());
+      sheet.appendRow(row.map((e) => excel_lib.TextCellValue(e.toString())).toList());
     }
   }
 
