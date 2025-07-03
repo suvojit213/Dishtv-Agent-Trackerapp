@@ -25,119 +25,130 @@ class PdfService {
 
     // First page content (summary, CSAT, CQ, Salary)
     pdf.addPage(
-      pw.Page(
-        build: (pw.Context context) {
-          return pw.Column(
-            crossAxisAlignment: pw.CrossAxisAlignment.start,
-            children: [
-              _buildHeader(context, 'Monthly Summary'),
-              pw.Table.fromTextArray(
-                headers: ['Description', 'Value'],
-                data: [
-                  ['Total Login Hours', '${formatter.format(summary.totalLoginHours)} hrs'],
-                  ['Total Calls', summary.totalCalls.toString()],
-                  ['Average Daily Hours', '${formatter.format(summary.averageDailyLoginHours)} hrs'],
-                  ['Average Daily Calls', formatter.format(summary.averageDailyCalls)],
-                ],
-              ),
-              pw.SizedBox(height: 20),
-
-              // CSAT Summary
-              if (summary.csatSummary != null && summary.csatSummary!.entries.isNotEmpty) ...[
-                pw.Text('CSAT Summary', style: pw.TextStyle(fontSize: 20, fontWeight: pw.FontWeight.bold)),
-                pw.SizedBox(height: 10),
-                pw.SizedBox(height: 20),
-                pw.Text('Overall CSAT Performance', style: pw.TextStyle(fontSize: 16, fontWeight: pw.FontWeight.bold)),
-                pw.SizedBox(height: 5),
-                pw.Table.fromTextArray(
-                  headers: ['Description', 'Value'],
-                  data: [
-                    ['Total T2 Count', summary.csatSummary!.totalT2Count.toString()],
-                    ['Total B2 Count', summary.csatSummary!.totalB2Count.toString()],
-                    ['Total N Count', summary.csatSummary!.totalNCount.toString()],
-                    ['Total Survey Hits', summary.csatSummary!.totalSurveyHits.toString()],
-                    ['Monthly CSAT Percentage', '${formatter.format(summary.csatSummary!.monthlyCSATPercentage)}%'],
-                    ['Average Daily CSAT Score', '${formatter.format(summary.csatSummary!.averageScore)}%'],
-                  ],
-                ),
-                pw.SizedBox(height: 20),
-              ],
-
-              // CQ Summary
-              if (summary.cqSummary != null) ...[
-                pw.Text('CQ Summary', style: pw.TextStyle(fontSize: 20, fontWeight: pw.FontWeight.bold)),
-                pw.SizedBox(height: 10),
-                pw.Table.fromTextArray(
-                  headers: ['Description', 'Value'],
-                  data: [
-                    ['Total CQ Entries', summary.cqSummary!.entries.length.toString()],
-                    ['Average CQ Score', formatter.format(summary.cqSummary!.averageScore)],
-                  ],
-                ),
-                pw.SizedBox(height: 20),
-              ],
-
-              pw.Text('Salary Details', style: pw.TextStyle(fontSize: 20, fontWeight: pw.FontWeight.bold)),
-              pw.SizedBox(height: 10),
-              pw.Table.fromTextArray(
-                headers: ['Description', 'Amount'],
-                data: summary.salaryBreakdown.entries.map((entry) => [
-                  entry.key,
-                  'Rs. ${formatter.format(entry.value)}',
-                ]).toList(),
-              ),
+      pw.MultiPage(
+        build: (pw.Context context) => [
+          _buildHeader(context, 'Monthly Summary'),
+          pw.Table.fromTextArray(
+            headers: ['Description', 'Value'],
+            data: [
+              ['Total Login Hours', '${formatter.format(summary.totalLoginHours)} hrs'],
+              ['Total Calls', summary.totalCalls.toString()],
+              ['Average Daily Hours', '${formatter.format(summary.averageDailyLoginHours)} hrs'],
+              ['Average Daily Calls', formatter.format(summary.averageDailyCalls)],
             ],
-          );
-        },
+          ),
+          pw.SizedBox(height: 20),
+
+          // Overall CSAT Performance Section
+          if (summary.csatSummary != null && summary.csatSummary!.entries.isNotEmpty) ...[
+            pw.Text('Overall CSAT Performance', style: pw.TextStyle(fontSize: 20, fontWeight: pw.FontWeight.bold)),
+            pw.SizedBox(height: 10),
+            pw.Table.fromTextArray(
+              headers: ['Description', 'Value'],
+              data: [
+                ['Total T2 Count', summary.csatSummary!.totalT2Count.toString()],
+                ['Total B2 Count', summary.csatSummary!.totalB2Count.toString()],
+                ['Total N Count', summary.csatSummary!.totalNCount.toString()],
+                ['Total Survey Hits', summary.csatSummary!.totalSurveyHits.toString()],
+                ['Monthly CSAT Percentage', '${formatter.format(summary.csatSummary!.monthlyCSATPercentage)}%'],
+                ['Average Daily CSAT Score', '${formatter.format(summary.csatSummary!.averageScore)}%'],
+              ],
+            ),
+            pw.SizedBox(height: 20),
+          ],
+
+          // Overall CQ Performance Section
+          if (summary.cqSummary != null && summary.cqSummary!.entries.isNotEmpty) ...[
+            pw.Text('Overall CQ Performance', style: pw.TextStyle(fontSize: 20, fontWeight: pw.FontWeight.bold)),
+            pw.SizedBox(height: 10),
+            pw.Table.fromTextArray(
+              headers: ['Description', 'Value'],
+              data: [
+                ['Total CQ Entries', summary.cqSummary!.entries.length.toString()],
+                ['Average CQ Score', formatter.format(summary.cqSummary!.averageScore)],
+              ],
+            ),
+            pw.SizedBox(height: 20),
+          ],
+
+          // Salary Details Section
+          pw.Text('Salary Details', style: pw.TextStyle(fontSize: 20, fontWeight: pw.FontWeight.bold)),
+          pw.SizedBox(height: 10),
+          pw.Table.fromTextArray(
+            headers: ['Description', 'Amount', 'Status'],
+            data: [
+              ['Base Salary', '₹${formatter.format(summary.baseSalary)}', ''],
+              ['Bonus Amount', '₹${formatter.format(summary.bonusAmount)}', summary.isBonusAchieved ? 'Achieved' : 'Not Achieved'],
+              ['CSAT Bonus', '₹${formatter.format(summary.csatBonus)}', summary.isCSATBonusAchieved ? 'Achieved' : 'Not Achieved'],
+              ['Gross Salary', '₹${formatter.format(summary.totalSalary + summary.csatBonus)}', ''],
+              ['TDS Deduction', '₹-${formatter.format(summary.tdsDeduction)}', ''],
+              ['Net Salary', '₹${formatter.format(summary.netSalary)}', ''],
+            ],
+          ),
+          pw.SizedBox(height: 20),
+
+          // Daily Entries Section
+          if (summary.entries.isNotEmpty) ...[
+            pw.Text('Daily Entries', style: pw.TextStyle(fontSize: 20, fontWeight: pw.FontWeight.bold)),
+            pw.SizedBox(height: 10),
+            pw.Table.fromTextArray(
+              headers: ['Date', 'Login Time', 'Call Count'],
+              data: summary.entries.map((entry) => [
+                DateFormat('dd-MMM-yyyy').format(entry.date),
+                entry.formattedLoginTime,
+                entry.callCount.toString(),
+              ]).toList(),
+            ),
+            pw.SizedBox(height: 20),
+          ],
+
+          // CSAT Daily Breakdown Section
+          if (summary.csatSummary != null && summary.csatSummary!.entries.isNotEmpty) ...[
+            pw.Text('CSAT Daily Breakdown', style: pw.TextStyle(fontSize: 20, fontWeight: pw.FontWeight.bold)),
+            pw.SizedBox(height: 10),
+            pw.Table.fromTextArray(
+              headers: ['Date', 'T2', 'B2', 'N', 'CSAT %'],
+              data: summary.csatSummary!.entries.map((entry) {
+                final total = entry.t2Count + entry.b2Count + entry.nCount;
+                final csatPercentage = total == 0 ? 0.0 : ((entry.t2Count - entry.b2Count) / total) * 100;
+                return [
+                  DateFormat('dd-MMM-yyyy').format(entry.date),
+                  entry.t2Count.toString(),
+                  entry.b2Count.toString(),
+                  entry.nCount.toString(),
+                  '${csatPercentage.toStringAsFixed(2)}%',
+                ];
+              }).toList(),
+            ),
+            pw.SizedBox(height: 20),
+          ],
+
+          // CQ Daily Breakdown Section
+          if (summary.cqSummary != null && summary.cqSummary!.entries.isNotEmpty) ...[
+            pw.Text('CQ Daily Breakdown', style: pw.TextStyle(fontSize: 20, fontWeight: pw.FontWeight.bold)),
+            pw.SizedBox(height: 10),
+            pw.Table.fromTextArray(
+              headers: ['Date', 'Percentage', 'Quality Rating'],
+              data: summary.cqSummary!.entries.map((entry) => [
+                DateFormat('dd-MMM-yyyy').format(entry.auditDate),
+                entry.percentage.toStringAsFixed(2) + '%',
+                _getQualityRating(entry.percentage),
+              ]).toList(),
+            ),
+            pw.SizedBox(height: 20),
+          ],
+        ],
       ),
     );
 
-    // Daily Entries - potentially multiple pages
-    if (summary.entries.isEmpty) {
-      pdf.addPage(
-        pw.Page(
-          build: (pw.Context context) {
-            return pw.Column(
-              crossAxisAlignment: pw.CrossAxisAlignment.start,
-              children: [
-                _buildHeader(context, 'Daily Entries'),
-                pw.Text('No daily entries found for this month.', style: pw.TextStyle(fontSize: 14, fontStyle: pw.FontStyle.italic)),
-              ],
-            );
-          },
-        ),
-      );
-    } else {
-      const int rowsPerPage = 25; // Estimate rows that fit on a page
-      for (int i = 0; i < summary.entries.length; i += rowsPerPage) {
-        final end = (i + rowsPerPage < summary.entries.length) ? i + rowsPerPage : summary.entries.length;
-        final pageEntries = summary.entries.sublist(i, end);
-
-        pdf.addPage(
-          pw.Page(
-            build: (pw.Context context) {
-              return pw.Column(
-                crossAxisAlignment: pw.CrossAxisAlignment.start,
-                children: [
-                  _buildHeader(context, 'Daily Entries'),
-                  pw.Table.fromTextArray(
-                    headers: ['Date', 'Login Time', 'Call Count'],
-                    data: pageEntries.map((entry) => [
-                      DateFormat('dd-MMM-yyyy').format(entry.date),
-                      entry.formattedLoginTime,
-                      entry.callCount.toString(),
-                    ]).toList(),
-                  ),
-                ],
-              );
-            },
-          ),
-        );
-      }
-    }
-
     return pdf.save();
   }
+
+  String _getQualityRating(double percentage) {
+    if (percentage >= 95) return 'Excellent';
+    if (percentage >= 85) return 'Good';
+    if (percentage >= 75) return 'Average';
+    if (percentage >= 60) return 'Below Average';
+    return 'Poor';
+  }
 }
-
-

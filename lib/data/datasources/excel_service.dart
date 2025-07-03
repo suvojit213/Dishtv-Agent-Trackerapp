@@ -7,154 +7,108 @@ import 'package:dishtv_agent_tracker/domain/entities/monthly_summary.dart';
 class ExcelService {
   Future<File> generateMonthlyReportExcel(MonthlySummary summary) async {
     final excel = Excel.createExcel();
-    final sheet = excel['Monthly Report'];
+    final formatter = NumberFormat('#,##0.00');
 
-    // Add header row
-    sheet.appendRow([
-      'DishTV Agent Performance Report',
-      '',
-      '',
-      '',
-      '',
-      '',
-      '',
-      '',
-    ]);
-    sheet.merge(CellIndex.indexByColumnRow(columnIndex: 0, rowIndex: 0),
-        CellIndex.indexByColumnRow(columnIndex: 7, rowIndex: 0));
-    sheet.appendRow([
-      'Month: ${summary.formattedMonthYear}',
-      '',
-      '',
-      '',
-      '',
-      '',
-      '',
-      '',
-    ]);
-    sheet.merge(CellIndex.indexByColumnRow(columnIndex: 0, rowIndex: 1),
-        CellIndex.indexByColumnRow(columnIndex: 7, rowIndex: 1));
-    sheet.appendRow([]); // Empty row for spacing
+    // --- Summary Sheet ---
+    Sheet summarySheet = excel['Summary'];
+    _addHeader(summarySheet, 'DishTV Agent Performance Report', summary.formattedMonthYear);
 
-    // Monthly Summary
-    sheet.appendRow(['Monthly Summary']);
-    sheet.merge(CellIndex.indexByColumnRow(columnIndex: 0, rowIndex: sheet.maxRows - 1),
-        CellIndex.indexByColumnRow(columnIndex: 7, rowIndex: sheet.maxRows - 1));
-    sheet.appendRow(['Description', 'Value']);
-    sheet.appendRow([
-      'Total Login Hours',
-      '${summary.totalLoginHours.toStringAsFixed(2)} hrs'
+    // Monthly Summary Section
+    _addSectionTitle(summarySheet, 'Monthly Summary');
+    _addTable(summarySheet, ['Description', 'Value'], [
+      ['Total Login Hours', '${formatter.format(summary.totalLoginHours)} hrs'],
+      ['Total Calls', summary.totalCalls.toString()],
+      ['Average Daily Hours', '${formatter.format(summary.averageDailyLoginHours)} hrs'],
+      ['Average Daily Calls', formatter.format(summary.averageDailyCalls)],
     ]);
-    sheet.appendRow([
-      'Total Calls',
-      summary.totalCalls.toString()
-    ]);
-    sheet.appendRow([
-      'Average Daily Hours',
-      '${summary.averageDailyLoginHours.toStringAsFixed(2)} hrs'
-    ]);
-    sheet.appendRow([
-      'Average Daily Calls',
-      summary.averageDailyCalls.toStringAsFixed(2)
-    ]);
-    sheet.appendRow([]); // Empty row for spacing
+    _addEmptyRow(summarySheet);
 
-    // CSAT Summary
+    // Overall CSAT Performance Section
     if (summary.csatSummary != null && summary.csatSummary!.entries.isNotEmpty) {
-      sheet.appendRow(['CSAT Summary']);
-      sheet.merge(CellIndex.indexByColumnRow(columnIndex: 0, rowIndex: sheet.maxRows - 1),
-          CellIndex.indexByColumnRow(columnIndex: 7, rowIndex: sheet.maxRows - 1));
-      sheet.appendRow(['Date', 'T2', 'B2', 'N', 'CSAT %']);
-      for (var entry in summary.csatSummary!.entries) {
-        final total = entry.t2Count + entry.b2Count + entry.nCount;
-        final csatPercentage = total == 0 ? 0.0 : ((entry.t2Count - entry.b2Count) / total) * 100;
-        sheet.appendRow([
-          DateFormat('dd-MMM-yyyy').format(entry.date),
-          entry.t2Count,
-          entry.b2Count,
-          entry.nCount,
-          csatPercentage.toStringAsFixed(2) + '%',
-        ]);
-      }
-      sheet.appendRow([]); // Empty row for spacing
-
-      sheet.appendRow(['Overall CSAT Performance']);
-      sheet.merge(CellIndex.indexByColumnRow(columnIndex: 0, rowIndex: sheet.maxRows - 1),
-          CellIndex.indexByColumnRow(columnIndex: 7, rowIndex: sheet.maxRows - 1));
-      sheet.appendRow(['Description', 'Value']);
-      sheet.appendRow([
-        'Total CSAT Entries',
-        summary.csatSummary!.entries.length.toString()
+      _addSectionTitle(summarySheet, 'Overall CSAT Performance');
+      _addTable(summarySheet, ['Description', 'Value'], [
+        ['Total T2 Count', summary.csatSummary!.totalT2Count.toString()],
+        ['Total B2 Count', summary.csatSummary!.totalB2Count.toString()],
+        ['Total N Count', summary.csatSummary!.totalNCount.toString()],
+        ['Total Survey Hits', summary.csatSummary!.totalSurveyHits.toString()],
+        ['Monthly CSAT Percentage', '${formatter.format(summary.csatSummary!.monthlyCSATPercentage)}%'],
+        ['Average Daily CSAT Score', '${formatter.format(summary.csatSummary!.averageScore)}%'],
       ]);
-      sheet.appendRow([
-        'Average CSAT Score',
-        '${summary.csatSummary!.averageScore.toStringAsFixed(2)}%'
-      ]);
-      sheet.appendRow([]); // Empty row for spacing
+      _addEmptyRow(summarySheet);
     }
 
-    // CQ Summary
+    // Overall CQ Performance Section
     if (summary.cqSummary != null && summary.cqSummary!.entries.isNotEmpty) {
-      sheet.appendRow(['CQ Summary']);
-      sheet.merge(CellIndex.indexByColumnRow(columnIndex: 0, rowIndex: sheet.maxRows - 1),
-          CellIndex.indexByColumnRow(columnIndex: 7, rowIndex: sheet.maxRows - 1));
-      sheet.appendRow(['Description', 'Value']);
-      sheet.appendRow([
-        'Total CQ Entries',
-        summary.cqSummary!.entries.length.toString()
+      _addSectionTitle(summarySheet, 'Overall CQ Performance');
+      _addTable(summarySheet, ['Description', 'Value'], [
+        ['Total CQ Entries', summary.cqSummary!.entries.length.toString()],
+        ['Average CQ Score', formatter.format(summary.cqSummary!.averageScore)],
       ]);
-      sheet.appendRow([
-        'Average CQ Score',
-        summary.cqSummary!.averageScore.toStringAsFixed(2)
-      ]);
-      sheet.appendRow([]); // Empty row for spacing
+      _addEmptyRow(summarySheet);
     }
 
-    // Salary Details
-    sheet.appendRow(['Salary Details']);
-    sheet.merge(CellIndex.indexByColumnRow(columnIndex: 0, rowIndex: sheet.maxRows - 1),
-        CellIndex.indexByColumnRow(columnIndex: 7, rowIndex: sheet.maxRows - 1));
-    sheet.appendRow(['Description', 'Amount']);
-    sheet.appendRow([
-      'Base Salary',
-      'Rs. ${summary.baseSalary.toStringAsFixed(2)}'
+    // Salary Details Section
+    _addSectionTitle(summarySheet, 'Salary Details');
+    _addTable(summarySheet, ['Description', 'Amount', 'Status'], [
+      ['Base Salary', '₹${formatter.format(summary.baseSalary)}', ''],
+      ['Bonus Amount', '₹${formatter.format(summary.bonusAmount)}', summary.isBonusAchieved ? 'Achieved' : 'Not Achieved'],
+      ['CSAT Bonus', '₹${formatter.format(summary.csatBonus)}', summary.isCSATBonusAchieved ? 'Achieved' : 'Not Achieved'],
+      ['Gross Salary', '₹${formatter.format(summary.totalSalary + summary.csatBonus)}', ''],
+      ['TDS Deduction', '₹-${formatter.format(summary.tdsDeduction)}', ''],
+      ['Net Salary', '₹${formatter.format(summary.netSalary)}', ''],
     ]);
-    sheet.appendRow([
-      'Bonus',
-      'Rs. ${summary.bonusAmount.toStringAsFixed(2)}'
-    ]);
-    sheet.appendRow([
-      'CSAT Bonus',
-      'Rs. ${summary.csatBonus.toStringAsFixed(2)}'
-    ]);
-    sheet.appendRow([
-      'Gross Salary',
-      'Rs. ${(summary.totalSalary + summary.csatBonus).toStringAsFixed(2)}'
-    ]);
-    sheet.appendRow([
-      'TDS Deduction (${(summary.tdsDeduction / (summary.totalSalary + summary.csatBonus) * 100).toStringAsFixed(0)}%)',
-      'Rs. -${summary.tdsDeduction.toStringAsFixed(2)}'
-    ]);
-    sheet.appendRow([
-      'Net Salary',
-      'Rs. ${summary.netSalary.toStringAsFixed(2)}'
-    ]);
-    sheet.appendRow([]); // Empty row for spacing
+    _addEmptyRow(summarySheet);
 
-    // Daily Entries
+    // --- Daily Entries Sheet ---
     if (summary.entries.isNotEmpty) {
-      sheet.appendRow(['Daily Entries']);
-      sheet.merge(CellIndex.indexByColumnRow(columnIndex: 0, rowIndex: sheet.maxRows - 1),
-          CellIndex.indexByColumnRow(columnIndex: 7, rowIndex: sheet.maxRows - 1));
-      sheet.appendRow(['Date', 'Login Time', 'Call Count']);
-      for (var entry in summary.entries) {
-        sheet.appendRow([
+      Sheet dailyEntriesSheet = excel['Daily Entries'];
+      _addHeader(dailyEntriesSheet, 'Daily Entries', summary.formattedMonthYear);
+      _addTable(dailyEntriesSheet, ['Date', 'Login Time', 'Call Count'],
+        summary.entries.map((entry) => [
           DateFormat('dd-MMM-yyyy').format(entry.date),
           entry.formattedLoginTime,
           entry.callCount,
-        ]);
+        ]).toList(),
+      );
+    }
+
+    // --- CSAT Daily Breakdown Sheet ---
+    if (summary.csatSummary != null && summary.csatSummary!.entries.isNotEmpty) {
+      Sheet csatDailySheet = excel['CSAT Daily Breakdown'];
+      _addHeader(csatDailySheet, 'CSAT Daily Breakdown', summary.formattedMonthYear);
+      _addTable(csatDailySheet, ['Date', 'T2', 'B2', 'N', 'CSAT %'],
+        summary.csatSummary!.entries.map((entry) {
+          final total = entry.t2Count + entry.b2Count + entry.nCount;
+          final csatPercentage = total == 0 ? 0.0 : ((entry.t2Count - entry.b2Count) / total) * 100;
+          return [
+            DateFormat('dd-MMM-yyyy').format(entry.date),
+            entry.t2Count,
+            entry.b2Count,
+            entry.nCount,
+            csatPercentage.toStringAsFixed(2) + '%',
+          ];
+        }).toList(),
+      );
+    }
+
+    // --- CQ Daily Breakdown Sheet ---
+    if (summary.cqSummary != null && summary.cqSummary!.entries.isNotEmpty) {
+      Sheet cqDailySheet = excel['CQ Daily Breakdown'];
+      _addHeader(cqDailySheet, 'CQ Daily Breakdown', summary.formattedMonthYear);
+      _addTable(cqDailySheet, ['Date', 'Percentage', 'Quality Rating'],
+        summary.cqSummary!.entries.map((entry) => [
+          DateFormat('dd-MMM-yyyy').format(entry.auditDate),
+          entry.percentage,
+          _getQualityRating(entry.percentage),
+        ]).toList(),
+      );
+    }
+
+    // Auto-fit columns for all sheets
+    for (var sheetName in excel.tables.keys) {
+      for (var colIdx = 0; colIdx < excel.tables[sheetName]!.maxCols; colIdx++) {
+        excel.tables[sheetName]!.setColAutoFit(colIdx);
       }
-      sheet.appendRow([]); // Empty row for spacing
     }
 
     // Save the Excel file
@@ -163,5 +117,41 @@ class ExcelService {
     final file = File(filePath);
     await file.writeAsBytes(excel.encode()!);
     return file;
+  }
+
+  void _addHeader(Sheet sheet, String title, String monthYear) {
+    sheet.appendRow([title]);
+    sheet.merge(CellIndex.indexByColumnRow(columnIndex: 0, rowIndex: sheet.maxRows - 1),
+        CellIndex.indexByColumnRow(columnIndex: 7, rowIndex: sheet.maxRows - 1));
+    sheet.appendRow(['Month: $monthYear']);
+    sheet.merge(CellIndex.indexByColumnRow(columnIndex: 0, rowIndex: sheet.maxRows - 1),
+        CellIndex.indexByColumnRow(columnIndex: 7, rowIndex: sheet.maxRows - 1));
+    _addEmptyRow(sheet);
+  }
+
+  void _addSectionTitle(Sheet sheet, String title) {
+    sheet.appendRow([title]);
+    sheet.merge(CellIndex.indexByColumnRow(columnIndex: 0, rowIndex: sheet.maxRows - 1),
+        CellIndex.indexByColumnRow(columnIndex: 7, rowIndex: sheet.maxRows - 1));
+    _addEmptyRow(sheet);
+  }
+
+  void _addTable(Sheet sheet, List<String> headers, List<List<dynamic>> data) {
+    sheet.appendRow(headers.map((e) => TextCellValue(e)).toList());
+    for (var row in data) {
+      sheet.appendRow(row.map((e) => TextCellValue(e.toString())).toList());
+    }
+  }
+
+  void _addEmptyRow(Sheet sheet) {
+    sheet.appendRow([]);
+  }
+
+  String _getQualityRating(double percentage) {
+    if (percentage >= 95) return 'Excellent';
+    if (percentage >= 85) return 'Good';
+    if (percentage >= 75) return 'Average';
+    if (percentage >= 60) return 'Below Average';
+    return 'Poor';
   }
 }

@@ -75,12 +75,7 @@ class MonthlyPerformanceScreen extends StatelessWidget {
                       icon: Icons.currency_rupee,
                       iconColor: Theme.of(context).colorScheme.primary,
                     ),
-                    DashboardCard(
-                      title: 'Avg. Salary',
-                      value: '₹${summary.averageSalary.toStringAsFixed(2)}',
-                      icon: Icons.money,
-                      iconColor: Theme.of(context).colorScheme.secondary,
-                    ),
+                    
                     DashboardCard(
                       title: 'Bonus Achieved',
                       value: summary.isBonusAchieved ? 'Yes' : 'No',

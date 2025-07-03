@@ -267,12 +267,7 @@ class _DashboardViewState extends State<DashboardView> {
                           icon: Icons.currency_rupee,
                           iconColor: AppColors.accentBlue,
                         ),
-                        DashboardCard(
-                          title: 'Avg. Salary',
-                          value: '₹${state.monthlySummary!.averageSalary.toStringAsFixed(2)}',
-                          icon: Icons.money,
-                          iconColor: AppColors.accentGreen,
-                        ),
+                        
                       ]),
                     ),
                   ),
