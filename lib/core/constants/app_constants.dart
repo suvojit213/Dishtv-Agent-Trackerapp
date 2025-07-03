@@ -6,6 +6,7 @@ class AppConstants {
 
   // Salary calculation constants
   static const double baseRatePerCall = 4.30;
+  static const double baseRatePerCall = 4.30;
   static const double bonusAmount = 2000.0;
   static const int bonusCallTarget = 750;
   static const int bonusHourTarget = 100; // in hours

@@ -1,3 +1,5 @@
+import 'package:dishtv_agent_tracker/presentation/features/dashboard/widgets/salary_section.dart';
+import 'package:dishtv_agent_tracker/presentation/features/dashboard/widgets/summary_section.dart';
 import 'package:dishtv_agent_tracker/presentation/common/widgets/custom_divider.dart';
 import 'package:dishtv_agent_tracker/presentation/features/dashboard/widgets/dashboard_card.dart';
 import 'package:dishtv_agent_tracker/core/constants/app_constants.dart';
@@ -182,103 +184,59 @@ class _DashboardViewState extends State<DashboardView> {
                 context.read<GoalsBloc>().add(LoadGoals());
               },
               color: AppColors.dishTvOrange,
-              child: CustomScrollView(
+              child: ListView(
                 physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
-                slivers: [
-                  SliverToBoxAdapter(child: const SizedBox(height: 16)),
-                  SliverToBoxAdapter(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            state.monthlySummary!.formattedMonthYear,
-                            style: Theme.of(context).textTheme.headlineSmall,
-                          ),
-                          Row(
-                            children: [
-                              IconButton(
-                                icon: const Icon(Icons.chevron_left),
-                                onPressed: () {
-                                  final currentDate = DateTime(state.currentYear, state.currentMonth);
-                                  final previousMonth = DateTime(currentDate.year, currentDate.month - 1);
-                                  context.read<DashboardBloc>().add(
-                                    LoadDashboardData(month: previousMonth.month, year: previousMonth.year),
-                                  );
-                                },
-                              ),
-                              IconButton(
-                                icon: const Icon(Icons.chevron_right),
-                                onPressed: () {
-                                  final currentDate = DateTime(state.currentYear, state.currentMonth);
-                                  final nextMonth = DateTime(currentDate.year, currentDate.month + 1);
-                                  context.read<DashboardBloc>().add(
-                                    LoadDashboardData(month: nextMonth.month, year: nextMonth.year),
-                                  );
-                                },
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  SliverToBoxAdapter(child: const SizedBox(height: 16)),
-                  SliverPadding(
+                children: [
+                  const SizedBox(height: 16),
+                  Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16),
-                    sliver: SliverGrid(
-                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
-                        crossAxisSpacing: 16,
-                        mainAxisSpacing: 16,
-                        childAspectRatio: 1.2,
-                      ),
-                      delegate: SliverChildListDelegate([
-                        DashboardCard(
-                          title: 'Total Calls',
-                          value: state.monthlySummary!.totalCalls.toString(),
-                          icon: Icons.call,
-                          iconColor: AppColors.accentBlue,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          state.monthlySummary!.formattedMonthYear,
+                          style: Theme.of(context).textTheme.headlineSmall,
                         ),
-                        DashboardCard(
-                          title: 'Avg. Login Hours',
-                          value: state.monthlySummary!.averageDailyLoginHours.toStringAsFixed(2),
-                          icon: Icons.timer,
-                          iconColor: AppColors.accentGreen,
+                        Row(
+                          children: [
+                            IconButton(
+                              icon: const Icon(Icons.chevron_left),
+                              onPressed: () {
+                                final currentDate = DateTime(state.currentYear, state.currentMonth);
+                                final previousMonth = DateTime(currentDate.year, currentDate.month - 1);
+                                context.read<DashboardBloc>().add(
+                                  LoadDashboardData(month: previousMonth.month, year: previousMonth.year),
+                                );
+                              },
+                            ),
+                            IconButton(
+                              icon: const Icon(Icons.chevron_right),
+                              onPressed: () {
+                                final currentDate = DateTime(state.currentYear, state.currentMonth);
+                                final nextMonth = DateTime(currentDate.year, currentDate.month + 1);
+                                context.read<DashboardBloc>().add(
+                                  LoadDashboardData(month: nextMonth.month, year: nextMonth.year),
+                                );
+                              },
+                            ),
+                          ],
                         ),
-                        DashboardCard(
-                          title: 'CSAT Score',
-                          value: '${state.csatSummary!.monthlyCSATPercentage.toStringAsFixed(2)}%',
-                          icon: Icons.sentiment_satisfied_alt,
-                          iconColor: AppColors.dishTvOrange,
-                        ),
-                        DashboardCard(
-                          title: 'CQ Score',
-                          value: '${state.cqSummary!.monthlyAverageCQ.toStringAsFixed(2)}%',
-                          icon: Icons.assessment,
-                          iconColor: AppColors.accentRed,
-                        ),
-                      ]),
+                      ],
                     ),
                   ),
-                  const SliverToBoxAdapter(child: CustomDivider()),
-                  SliverToBoxAdapter(
-                    child: MonthlyGoalsSection(summary: state.monthlySummary!),
-                  ),
-                  const SliverToBoxAdapter(child: CustomDivider()),
-                  SliverToBoxAdapter(
-                    child: CSATPerformanceSection(csatSummary: state.csatSummary),
-                  ),
-                  const SliverToBoxAdapter(child: CustomDivider()),
-                  SliverToBoxAdapter(
-                    child: CQPerformanceSection(cqSummary: state.cqSummary),
-                  ),
-                  const SliverToBoxAdapter(child: CustomDivider()),
-                  SliverToBoxAdapter(
-                    child: DailyEntriesSection(entries: state.monthlySummary!.entries),
-                  ),
-                  SliverToBoxAdapter(child: const SizedBox(height: 100)),
+                  const SizedBox(height: 16),
+                  MonthlyGoalsSection(summary: state.monthlySummary!),
+                  const SizedBox(height: 24),
+                  CSATPerformanceSection(csatSummary: state.csatSummary), // Pass CSAT data directly from state
+                  const SizedBox(height: 24),
+                  CQPerformanceSection(cqSummary: state.cqSummary), // Pass CQ data directly from state
+                  const SizedBox(height: 24),
+                  SummarySection(summary: state.monthlySummary!),
+                  const SizedBox(height: 24),
+                  SalarySection(summary: state.monthlySummary!),
+                  const SizedBox(height: 24),
+                  DailyEntriesSection(entries: state.monthlySummary!.entries),
+                  const SizedBox(height: 100),
                 ],
               ),
             );

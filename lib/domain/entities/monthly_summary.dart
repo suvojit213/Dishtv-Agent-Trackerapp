@@ -30,7 +30,7 @@ class MonthlySummary extends Equatable {
     if (entries.isEmpty) return 0;
     return entries.fold(0, (sum, entry) => sum + entry.callCount);
   }
-  
+
   // Average daily login hours
   double get averageDailyLoginHours {
     if (entries.isEmpty) return 0;
@@ -66,10 +66,17 @@ class MonthlySummary extends Equatable {
 
   // Calculate CSAT bonus
   double get csatBonus {
-    if (csatSummary != null && csatSummary!.averageScore >= AppConstants.csatBonusPercentage && totalCalls >= AppConstants.csatBonusCallTarget) {
+    if (isCSATBonusAchieved) {
       return totalSalary * AppConstants.csatBonusRate;
     }
     return 0.0;
+  }
+
+  // Check if CSAT bonus targets are achieved
+  bool get isCSATBonusAchieved {
+    return csatSummary != null && 
+           csatSummary!.monthlyCSATPercentage >= AppConstants.csatBonusPercentage && 
+           totalCalls >= AppConstants.csatBonusCallTarget;
   }
 
   // Calculate TDS deduction
