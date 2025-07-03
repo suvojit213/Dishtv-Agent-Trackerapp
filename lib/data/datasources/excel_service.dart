@@ -6,11 +6,11 @@ import 'package:dishtv_agent_tracker/domain/entities/monthly_summary.dart';
 
 class ExcelService {
   Future<File> generateMonthlyReportExcel(MonthlySummary summary) async {
-    final excel = Excel.createExcel();
+    final excel = excel_lib.Excel.createExcel();
     final formatter = NumberFormat('#,##0.00');
 
     // --- Summary Sheet ---
-    Sheet summarySheet = excel['Summary'];
+    excel_lib.Sheet summarySheet = excel['Summary'];
     _addHeader(summarySheet, 'DishTV Agent Performance Report', summary.formattedMonthYear);
 
     // Monthly Summary Section
@@ -61,7 +61,7 @@ class ExcelService {
 
     // --- Daily Entries Sheet ---
     if (summary.entries.isNotEmpty) {
-      Sheet dailyEntriesSheet = excel['Daily Entries'];
+      excel_lib.Sheet dailyEntriesSheet = excel['Daily Entries'];
       _addHeader(dailyEntriesSheet, 'Daily Entries', summary.formattedMonthYear);
       _addTable(dailyEntriesSheet, ['Date', 'Login Time', 'Call Count'],
         summary.entries.map((entry) => [
@@ -74,7 +74,7 @@ class ExcelService {
 
     // --- CSAT Daily Breakdown Sheet ---
     if (summary.csatSummary != null && summary.csatSummary!.entries.isNotEmpty) {
-      Sheet csatDailySheet = excel['CSAT Daily Breakdown'];
+      excel_lib.Sheet csatDailySheet = excel['CSAT Daily Breakdown'];
       _addHeader(csatDailySheet, 'CSAT Daily Breakdown', summary.formattedMonthYear);
       _addTable(csatDailySheet, ['Date', 'T2', 'B2', 'N', 'CSAT %'],
         summary.csatSummary!.entries.map((entry) {
@@ -93,7 +93,7 @@ class ExcelService {
 
     // --- CQ Daily Breakdown Sheet ---
     if (summary.cqSummary != null && summary.cqSummary!.entries.isNotEmpty) {
-      Sheet cqDailySheet = excel['CQ Daily Breakdown'];
+      excel_lib.Sheet cqDailySheet = excel['CQ Daily Breakdown'];
       _addHeader(cqDailySheet, 'CQ Daily Breakdown', summary.formattedMonthYear);
       _addTable(cqDailySheet, ['Date', 'Percentage', 'Quality Rating'],
         summary.cqSummary!.entries.map((entry) => [
@@ -119,31 +119,31 @@ class ExcelService {
     return file;
   }
 
-  void _addHeader(Sheet sheet, String title, String monthYear) {
+  void _addHeader(excel_lib.Sheet sheet, String title, String monthYear) {
     sheet.appendRow([title]);
-    sheet.merge(CellIndex.indexByColumnRow(columnIndex: 0, rowIndex: sheet.maxRows - 1),
-        CellIndex.indexByColumnRow(columnIndex: 7, rowIndex: sheet.maxRows - 1));
+    sheet.merge(excel_lib.CellIndex.indexByColumnRow(columnIndex: 0, rowIndex: sheet.maxRows - 1),
+        excel_lib.CellIndex.indexByColumnRow(columnIndex: 7, rowIndex: sheet.maxRows - 1));
     sheet.appendRow(['Month: $monthYear']);
-    sheet.merge(CellIndex.indexByColumnRow(columnIndex: 0, rowIndex: sheet.maxRows - 1),
-        CellIndex.indexByColumnRow(columnIndex: 7, rowIndex: sheet.maxRows - 1));
+    sheet.merge(excel_lib.CellIndex.indexByColumnRow(columnIndex: 0, rowIndex: sheet.maxRows - 1),
+        excel_lib.CellIndex.indexByColumnRow(columnIndex: 7, rowIndex: sheet.maxRows - 1));
     _addEmptyRow(sheet);
   }
 
-  void _addSectionTitle(Sheet sheet, String title) {
+  void _addSectionTitle(excel_lib.Sheet sheet, String title) {
     sheet.appendRow([title]);
-    sheet.merge(CellIndex.indexByColumnRow(columnIndex: 0, rowIndex: sheet.maxRows - 1),
-        CellIndex.indexByColumnRow(columnIndex: 7, rowIndex: sheet.maxRows - 1));
+    sheet.merge(excel_lib.CellIndex.indexByColumnRow(columnIndex: 0, rowIndex: sheet.maxRows - 1),
+        excel_lib.CellIndex.indexByColumnRow(columnIndex: 7, rowIndex: sheet.maxRows - 1));
     _addEmptyRow(sheet);
   }
 
-  void _addTable(Sheet sheet, List<String> headers, List<List<dynamic>> data) {
+  void _addTable(excel_lib.Sheet sheet, List<String> headers, List<List<dynamic>> data) {
     sheet.appendRow(headers.map((e) => excel_lib.TextCellValue(e)).toList());
     for (var row in data) {
       sheet.appendRow(row.map((e) => excel_lib.TextCellValue(e.toString())).toList());
     }
   }
 
-  void _addEmptyRow(Sheet sheet) {
+  void _addEmptyRow(excel_lib.Sheet sheet) {
     sheet.appendRow([]);
   }
 
