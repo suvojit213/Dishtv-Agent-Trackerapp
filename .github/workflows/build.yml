@@ -26,6 +26,8 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read # Only read permission needed for building artifacts
+    outputs:
+      release_tag: ${{ steps.setup_vars.outputs.release_tag }}
 
     steps:
       - name: ✅ Checkout Code
@@ -39,6 +41,7 @@ jobs:
           APP_VERSION=$(grep 'version:' pubspec.yaml | sed 's/version: //')
           echo "RELEASE_TAG=v${APP_VERSION}" >> $GITHUB_ENV
           echo "CURRENT_DATE_TIME=$(date +"%Y-%m-%d %H:%M:%S")" >> $GITHUB_ENV
+          echo "release_tag=v${APP_VERSION}" >> $GITHUB_OUTPUT
 
       - name: 🐦 Set up Flutter
         uses: subosito/flutter-action@v2
@@ -90,18 +93,18 @@ jobs:
         id: changelog
         uses: mikepenz/release-changelog-builder-action@v4
         with:
-          fromTag: ${{ github.ref_name }} # Use ref_name for current branch name
-          toTag: ${{ github.ref_name }}
+          fromTag: ${{ needs.build_artifacts.outputs.release_tag }} # Use output from previous job
+          toTag: ${{ needs.build_artifacts.outputs.release_tag }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: 🚀 Create GitHub Release & Upload Assets
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: ${{ env.RELEASE_TAG }}
-          name: "Release ${{ env.RELEASE_TAG }}"
+          tag_name: ${{ needs.build_artifacts.outputs.release_tag }}
+          name: "Release ${{ needs.build_artifacts.outputs.release_tag }}"
           body: |
-            # ✨ Release: DishTV Agent Tracker ${{ env.RELEASE_TAG }}
+            # ✨ Release: DishTV Agent Tracker ${{ needs.build_artifacts.outputs.release_tag }}
 
             Hello there! A new version of DishTV Agent Tracker is now available.
 
