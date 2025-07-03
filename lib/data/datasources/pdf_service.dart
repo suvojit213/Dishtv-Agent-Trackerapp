@@ -77,12 +77,12 @@ class PdfService {
           pw.Table.fromTextArray(
             headers: ['Description', 'Amount', 'Status'],
             data: [
-              ['Base Salary', '₹${formatter.format(summary.baseSalary)}', ''],
-              ['Bonus Amount', '₹${formatter.format(summary.bonusAmount)}', summary.isBonusAchieved ? 'Achieved' : 'Not Achieved'],
-              ['CSAT Bonus', '₹${formatter.format(summary.csatBonus)}', summary.isCSATBonusAchieved ? 'Achieved' : 'Not Achieved'],
-              ['Gross Salary', '₹${formatter.format(summary.totalSalary + summary.csatBonus)}', ''],
-              ['TDS Deduction', '₹-${formatter.format(summary.tdsDeduction)}', ''],
-              ['Net Salary', '₹${formatter.format(summary.netSalary)}', ''],
+              ['Base Salary', 'Rs. ${formatter.format(summary.baseSalary)}', ''],
+              ['Bonus Amount', 'Rs. ${formatter.format(summary.bonusAmount)}', summary.isBonusAchieved ? 'Achieved' : 'Not Achieved'],
+              ['CSAT Bonus', 'Rs. ${formatter.format(summary.csatBonus)}', summary.isCSATBonusAchieved ? 'Achieved' : 'Not Achieved'],
+              ['Gross Salary', 'Rs. ${formatter.format(summary.totalSalary + summary.csatBonus)}', ''],
+              ['TDS Deduction', 'Rs. -${formatter.format(summary.tdsDeduction)}', ''],
+              ['Net Salary', 'Rs. ${formatter.format(summary.netSalary)}', ''],
             ],
           ),
           pw.SizedBox(height: 20),
