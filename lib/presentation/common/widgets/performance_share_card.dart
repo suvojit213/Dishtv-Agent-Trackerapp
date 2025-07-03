@@ -21,9 +21,10 @@ class PerformanceShareCard extends StatelessWidget {
         decoration: BoxDecoration(
           color: theme.cardColor, // Use card color for the background
           borderRadius: BorderRadius.circular(15),
+          border: Border.all(color: theme.colorScheme.outline, width: 1),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.1),
+              color: theme.colorScheme.shadow.withOpacity(0.1),
               blurRadius: 10,
               offset: const Offset(0, 5),
             ),
@@ -42,7 +43,7 @@ class PerformanceShareCard extends StatelessWidget {
                   AppConstants.appName,
                   style: theme.textTheme.headlineSmall?.copyWith(
                     fontWeight: FontWeight.bold,
-                    color: AppColors.dishTvOrange,
+                    color: theme.colorScheme.primary,
                   ),
                 ),
               ],
@@ -52,11 +53,11 @@ class PerformanceShareCard extends StatelessWidget {
             // Performance Summary
             Text(
               'Monthly Performance Summary',
-              style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+              style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold, color: theme.colorScheme.onSurface),
             ),
             Text(
               summary.formattedMonthYear,
-              style: theme.textTheme.titleMedium?.copyWith(color: AppColors.textSecondary),
+              style: theme.textTheme.titleMedium?.copyWith(color: theme.colorScheme.onSurfaceVariant),
             ),
             const SizedBox(height: 20),
 
@@ -65,18 +66,42 @@ class PerformanceShareCard extends StatelessWidget {
               Icons.timer,
               'Total Login Hours',
               '${formatter.format(summary.totalLoginHours)} hrs',
+              theme.colorScheme.secondary,
             ),
             _buildInfoRow(
               context,
               Icons.call,
               'Total Calls',
               summary.totalCalls.toString(),
+              theme.colorScheme.secondary,
             ),
             _buildInfoRow(
               context,
-              Icons.money,
-              'Estimated Net Salary',
-              '₹${formatter.format(summary.netSalary)}',
+              Icons.sentiment_satisfied_alt,
+              'CSAT Score',
+              '${summary.csatSummary?.monthlyCSATPercentage.toStringAsFixed(2) ?? 'N/A'}%',
+              theme.colorScheme.primary,
+            ),
+            _buildInfoRow(
+              context,
+              Icons.assessment,
+              'CQ Score',
+              '${summary.cqSummary?.monthlyAverageCQ.toStringAsFixed(2) ?? 'N/A'}%',
+              theme.colorScheme.primary,
+            ),
+            _buildInfoRow(
+              context,
+              Icons.currency_rupee,
+              'Total Salary',
+              'Rs. ${formatter.format(summary.totalSalary)}',
+              theme.colorScheme.primary,
+            ),
+            _buildInfoRow(
+              context,
+              Icons.payments,
+              'Net Salary',
+              'Rs. ${formatter.format(summary.netSalary)}',
+              theme.colorScheme.primary,
             ),
             const SizedBox(height: 20),
 
@@ -85,7 +110,7 @@ class PerformanceShareCard extends StatelessWidget {
               'Keep up the great work!',
               style: theme.textTheme.titleMedium?.copyWith(
                 fontStyle: FontStyle.italic,
-                color: AppColors.accentGreen,
+                color: theme.colorScheme.tertiary,
               ),
             ),
           ],
@@ -94,13 +119,13 @@ class PerformanceShareCard extends StatelessWidget {
     );
   }
 
-  Widget _buildInfoRow(BuildContext context, IconData icon, String label, String value) {
+  Widget _buildInfoRow(BuildContext context, IconData icon, String label, String value, Color iconColor) {
     final theme = Theme.of(context);
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 5),
       child: Row(
         children: [
-          Icon(icon, size: 20, color: AppColors.dishTvOrange),
+          Icon(icon, size: 20, color: iconColor),
           const SizedBox(width: 10),
           Text(
             '$label:',
