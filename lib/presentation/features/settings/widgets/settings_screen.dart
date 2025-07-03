@@ -113,7 +113,7 @@ App Version: ${AppConstants.appVersion}
 
     DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
 
-    AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo();
+    AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
     body += 'Device: ${androidInfo.model} (Android ${androidInfo.version.release})\n';
 
     final Uri emailLaunchUri = Uri.parse('mailto:$email?subject=${Uri.encodeComponent(subject)}&body=${Uri.encodeComponent(body)}');
