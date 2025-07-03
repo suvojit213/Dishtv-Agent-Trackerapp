@@ -1,3 +1,4 @@
+import 'package:dishtv_agent_tracker/presentation/common/widgets/custom_form_field.dart';
 import 'package:dishtv_agent_tracker/domain/entities/daily_entry.dart';
 import 'package:dishtv_agent_tracker/presentation/features/add_entry/widgets/add_csat_entry_screen.dart';
 import 'package:dishtv_agent_tracker/presentation/features/add_entry/widgets/add_cq_entry_screen.dart';
@@ -100,8 +101,7 @@ class AddEntryView extends StatelessWidget {
               const AddCQEntryScreen(),
             ],
           ),
-        ),
-      ),
+        ),),
     );
   }
 
@@ -119,105 +119,95 @@ class AddEntryView extends StatelessWidget {
             children: [
               // Date Section
               _buildSectionTitle(context, 'Date'),
+              const SizedBox(height: 8),
               CustomCard(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // InkWell ab hamesha enabled rahega
-                    InkWell(
-                      onTap: () => _selectDate(context),
-                      child: Container(
-                        width: double.infinity,
-                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
-                        decoration: BoxDecoration(
-                          color: Theme.of(context).inputDecorationTheme.fillColor,
-                          borderRadius: BorderRadius.circular(8),
-                          border: Border.all(color: AppColors.border),
-                        ),
-                        child: Row(
-                          children: [
-                            const Icon(
-                              Icons.calendar_today,
-                              color: AppColors.textSecondary,
-                            ),
-                            const SizedBox(width: 12),
-                            Text(
-                              DateFormat('dd MMM yyyy').format(state.date),
-                              style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontSize: 16),
-                            ),
-                          ],
-                        ),
-                      ),
+                child: InkWell(
+                  onTap: () => _selectDate(context),
+                  child: Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).inputDecorationTheme.fillColor,
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(color: AppColors.border),
                     ),
-                    // "Date cannot be edited" wala text हटा दिया गया है
-                  ],
+                    child: Row(
+                      children: [
+                        const Icon(
+                          Icons.calendar_today,
+                          color: AppColors.textSecondary,
+                        ),
+                        const SizedBox(width: 12),
+                        Text(
+                          DateFormat('dd MMM yyyy').format(state.date),
+                          style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontSize: 16),
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
               ),
               const SizedBox(height: 24),
 
               // Login Time Section
               _buildSectionTitle(context, 'Login Time'),
-              CustomCard(
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: _buildTimeField(
-                        context,
-                        'Hours',
-                        state.loginHours.toString(),
-                        (value) => context.read<AddEntryBloc>().add(
-                              LoginHoursChanged(hours: int.tryParse(value) ?? 0),
-                            ),
-                      ),
+              const SizedBox(height: 8),
+              Row(
+                children: [
+                  Expanded(
+                    child: CustomFormField(
+                      label: 'Hours',
+                      hintText: 'HH',
+                      icon: Icons.timer,
+                      initialValue: state.loginHours.toString(),
+                      keyboardType: TextInputType.number,
+                      onChanged: (value) => context.read<AddEntryBloc>().add(
+                            LoginHoursChanged(hours: int.tryParse(value) ?? 0),
+                          ),
                     ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: _buildTimeField(
-                        context,
-                        'Minutes',
-                        state.loginMinutes.toString(),
-                        (value) => context.read<AddEntryBloc>().add(
-                              LoginMinutesChanged(minutes: int.tryParse(value) ?? 0),
-                            ),
-                      ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: CustomFormField(
+                      label: 'Minutes',
+                      hintText: 'MM',
+                      icon: Icons.timer,
+                      initialValue: state.loginMinutes.toString(),
+                      keyboardType: TextInputType.number,
+                      onChanged: (value) => context.read<AddEntryBloc>().add(
+                            LoginMinutesChanged(minutes: int.tryParse(value) ?? 0),
+                          ),
                     ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: _buildTimeField(
-                        context,
-                        'Seconds',
-                        state.loginSeconds.toString(),
-                        (value) => context.read<AddEntryBloc>().add(
-                              LoginSecondsChanged(seconds: int.tryParse(value) ?? 0),
-                            ),
-                      ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: CustomFormField(
+                      label: 'Seconds',
+                      hintText: 'SS',
+                      icon: Icons.timer,
+                      initialValue: state.loginSeconds.toString(),
+                      keyboardType: TextInputType.number,
+                      onChanged: (value) => context.read<AddEntryBloc>().add(
+                            LoginSecondsChanged(seconds: int.tryParse(value) ?? 0),
+                          ),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
               const SizedBox(height: 24),
 
               // Call Count Section
-              _buildSectionTitle(context, 'Call Count'),
-              CustomCard(
-                padding: const EdgeInsets.symmetric(horizontal: 4),
-                child: TextFormField(
-                  initialValue: state.callCount.toString(),
-                  keyboardType: TextInputType.number,
-                  decoration: const InputDecoration(
-                    hintText: 'Enter number of calls',
-                    prefixIcon: Icon(Icons.call),
-                    border: InputBorder.none,
-                    focusedBorder: InputBorder.none,
-                    enabledBorder: InputBorder.none,
-                    helperText: 'e.g., 150 for one hundred fifty calls',
-                  ),
-                  onChanged: (value) {
-                    context.read<AddEntryBloc>().add(
-                          CallCountChanged(callCount: int.tryParse(value) ?? 0),
-                        );
-                  },
-                ),
+              CustomFormField(
+                label: 'Call Count',
+                hintText: 'Enter number of calls',
+                icon: Icons.call,
+                initialValue: state.callCount.toString(),
+                keyboardType: TextInputType.number,
+                onChanged: (value) {
+                  context.read<AddEntryBloc>().add(
+                        CallCountChanged(callCount: int.tryParse(value) ?? 0),
+                      );
+                },
               ),
               const SizedBox(height: 32),
 
@@ -262,37 +252,6 @@ class AddEntryView extends StatelessWidget {
     );
   }
   
-  Widget _buildTimeField(
-    BuildContext context,
-    String label,
-    String initialValue,
-    Function(String) onChanged,
-  ) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label,
-          style: Theme.of(context).textTheme.bodySmall,
-        ),
-        const SizedBox(height: 4),
-        TextFormField(
-          initialValue: initialValue,
-          keyboardType: TextInputType.number,
-          textAlign: TextAlign.center,
-          decoration: InputDecoration(
-            hintText: label,
-            contentPadding: const EdgeInsets.symmetric(
-              horizontal: 8,
-              vertical: 12,
-            ),
-          ),
-          onChanged: onChanged,
-        ),
-      ],
-    );
-  }
-
   Future<void> _selectDate(BuildContext context) async {
     final bloc = context.read<AddEntryBloc>();
     final currentDate = bloc.state.date;

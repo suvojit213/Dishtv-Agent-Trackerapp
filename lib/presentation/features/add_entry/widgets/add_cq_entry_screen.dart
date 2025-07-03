@@ -1,3 +1,4 @@
+import 'package:dishtv_agent_tracker/presentation/common/widgets/custom_form_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
@@ -57,6 +58,7 @@ class _AddCQEntryScreenState extends State<AddCQEntryScreen> {
           children: [
             // Date Section
             _buildSectionTitle(context, 'Audit Date'),
+            const SizedBox(height: 8),
             CustomCard(
               child: InkWell(
                 onTap: () => _selectDate(context),
@@ -87,36 +89,28 @@ class _AddCQEntryScreenState extends State<AddCQEntryScreen> {
             const SizedBox(height: 24),
 
             // CQ Percentage Section
-            _buildSectionTitle(context, 'Call Quality Percentage (out of 100)'),
-            CustomCard(
-              padding: const EdgeInsets.symmetric(horizontal: 4),
-              child: TextFormField(
-                controller: _percentageController,
-                keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                decoration: const InputDecoration(
-                  hintText: 'Enter CQ percentage (0-100)',
-                  prefixIcon: Icon(Icons.assessment, color: AppColors.dishTvOrange),
-                  suffixText: '%',
-                  border: InputBorder.none,
-                  focusedBorder: InputBorder.none,
-                  enabledBorder: InputBorder.none,
-                  helperText: 'e.g., 85.5 for 85.5%',
-                ),
-                onChanged: (value) {
-                  setState(() {
-                    _percentage = double.tryParse(value) ?? 0.0;
-                    // Ensure percentage is between 0 and 100
-                    if (_percentage < 0) _percentage = 0.0;
-                    if (_percentage > 100) _percentage = 100.0;
-                  });
-                },
-              ),
+            CustomFormField(
+              label: 'Call Quality Percentage',
+              hintText: 'Enter CQ percentage (0-100)',
+              icon: Icons.assessment,
+              controller: _percentageController,
+              keyboardType: const TextInputType.numberWithOptions(decimal: true),
+              suffixText: '%',
+              onChanged: (value) {
+                setState(() {
+                  _percentage = double.tryParse(value) ?? 0.0;
+                  // Ensure percentage is between 0 and 100
+                  if (_percentage < 0) _percentage = 0.0;
+                  if (_percentage > 100) _percentage = 100.0;
+                });
+              },
             ),
             const SizedBox(height: 24),
 
             // Preview Section
             if (_percentage > 0) ...[
               _buildSectionTitle(context, 'Preview'),
+              const SizedBox(height: 8),
               CustomCard(
                 child: Column(
                   children: [

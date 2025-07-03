@@ -1,3 +1,4 @@
+import 'package:dishtv_agent_tracker/presentation/common/widgets/custom_form_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
@@ -54,6 +55,7 @@ class _AddCSATEntryScreenState extends State<AddCSATEntryScreen> {
           children: [
             // Date Section
             _buildSectionTitle(context, 'Date'),
+            const SizedBox(height: 8),
             CustomCard(
               child: InkWell(
                 onTap: () => _selectDate(context),
@@ -84,80 +86,54 @@ class _AddCSATEntryScreenState extends State<AddCSATEntryScreen> {
             const SizedBox(height: 24),
 
             // T2 Count Section
-            _buildSectionTitle(context, 'T2 Count (Positive Feedback)'),
-            CustomCard(
-              padding: const EdgeInsets.symmetric(horizontal: 4),
-              child: TextFormField(
-                initialValue: _t2Count.toString(),
-                keyboardType: TextInputType.number,
-                decoration: const InputDecoration(
-                  hintText: 'Enter T2 count (positive feedback)',
-                  prefixIcon: Icon(Icons.thumb_up, color: AppColors.accentGreen),
-                  border: InputBorder.none,
-                  focusedBorder: InputBorder.none,
-                  enabledBorder: InputBorder.none,
-                  helperText: 'e.g., 5 for five positive feedbacks',
-                ),
-                onChanged: (value) {
-                  setState(() {
-                    _t2Count = int.tryParse(value) ?? 0;
-                  });
-                },
-              ),
+            CustomFormField(
+              label: 'T2 Count (Positive Feedback)',
+              hintText: 'Enter T2 count',
+              icon: Icons.thumb_up,
+              initialValue: _t2Count.toString(),
+              keyboardType: TextInputType.number,
+              onChanged: (value) {
+                setState(() {
+                  _t2Count = int.tryParse(value) ?? 0;
+                });
+              },
             ),
             const SizedBox(height: 16),
 
             // B2 Count Section
-            _buildSectionTitle(context, 'B2 Count (Negative Feedback)'),
-            CustomCard(
-              padding: const EdgeInsets.symmetric(horizontal: 4),
-              child: TextFormField(
-                initialValue: _b2Count.toString(),
-                keyboardType: TextInputType.number,
-                decoration: const InputDecoration(
-                  hintText: 'Enter B2 count (negative feedback)',
-                  prefixIcon: Icon(Icons.thumb_down, color: AppColors.accentRed),
-                  border: InputBorder.none,
-                  focusedBorder: InputBorder.none,
-                  enabledBorder: InputBorder.none,
-                  helperText: 'e.g., 2 for two negative feedbacks',
-                ),
-                onChanged: (value) {
-                  setState(() {
-                    _b2Count = int.tryParse(value) ?? 0;
-                  });
-                },
-              ),
+            CustomFormField(
+              label: 'B2 Count (Negative Feedback)',
+              hintText: 'Enter B2 count',
+              icon: Icons.thumb_down,
+              initialValue: _b2Count.toString(),
+              keyboardType: TextInputType.number,
+              onChanged: (value) {
+                setState(() {
+                  _b2Count = int.tryParse(value) ?? 0;
+                });
+              },
             ),
             const SizedBox(height: 16),
 
             // N Count Section
-            _buildSectionTitle(context, 'N Count (Neutral Feedback)'),
-            CustomCard(
-              padding: const EdgeInsets.symmetric(horizontal: 4),
-              child: TextFormField(
-                initialValue: _nCount.toString(),
-                keyboardType: TextInputType.number,
-                decoration: const InputDecoration(
-                  hintText: 'Enter N count (neutral feedback)',
-                  prefixIcon: Icon(Icons.remove, color: AppColors.textSecondary),
-                  border: InputBorder.none,
-                  focusedBorder: InputBorder.none,
-                  enabledBorder: InputBorder.none,
-                  helperText: 'e.g., 1 for one neutral feedback',
-                ),
-                onChanged: (value) {
-                  setState(() {
-                    _nCount = int.tryParse(value) ?? 0;
-                  });
-                },
-              ),
+            CustomFormField(
+              label: 'N Count (Neutral Feedback)',
+              hintText: 'Enter N count',
+              icon: Icons.remove,
+              initialValue: _nCount.toString(),
+              keyboardType: TextInputType.number,
+              onChanged: (value) {
+                setState(() {
+                  _nCount = int.tryParse(value) ?? 0;
+                });
+              },
             ),
             const SizedBox(height: 24),
 
             // Preview Section
             if (_t2Count > 0 || _b2Count > 0 || _nCount > 0) ...[
               _buildSectionTitle(context, 'Preview'),
+              const SizedBox(height: 8),
               CustomCard(
                 child: Column(
                   children: [
