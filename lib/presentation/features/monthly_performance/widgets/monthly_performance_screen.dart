@@ -1,8 +1,8 @@
+import 'package:dishtv_agent_tracker/presentation/common/widgets/custom_divider.dart';
+import 'package:dishtv_agent_tracker/presentation/features/dashboard/widgets/dashboard_card.dart';
 import 'package:dishtv_agent_tracker/domain/entities/monthly_summary.dart';
 import 'package:dishtv_agent_tracker/presentation/common/widgets/custom_app_bar.dart';
 import 'package:dishtv_agent_tracker/presentation/features/dashboard/widgets/daily_entries_section.dart';
-import 'package:dishtv_agent_tracker/presentation/features/dashboard/widgets/salary_section.dart';
-import 'package:dishtv_agent_tracker/presentation/features/dashboard/widgets/summary_section.dart';
 import 'package:dishtv_agent_tracker/presentation/routes/app_router.dart';
 import 'package:flutter/material.dart';
 
@@ -34,10 +34,56 @@ class MonthlyPerformanceScreen extends StatelessWidget {
           child: Column(
             children: [
               const SizedBox(height: 16),
-              SummarySection(summary: summary),
-              const SizedBox(height: 24),
-              SalarySection(summary: summary),
-              const SizedBox(height: 24),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: GridView.count(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  crossAxisCount: 2,
+                  crossAxisSpacing: 16,
+                  mainAxisSpacing: 16,
+                  childAspectRatio: 1.2,
+                  children: [
+                    DashboardCard(
+                      title: 'Total Calls',
+                      value: summary.totalCalls.toString(),
+                      icon: Icons.call,
+                      iconColor: Theme.of(context).colorScheme.primary,
+                    ),
+                    DashboardCard(
+                      title: 'Avg. Login Hours',
+                      value: summary.averageDailyLoginHours.toStringAsFixed(2),
+                      icon: Icons.timer,
+                      iconColor: Theme.of(context).colorScheme.secondary,
+                    ),
+                    DashboardCard(
+                      title: 'CSAT Score',
+                      value: '${summary.csatSummary?.monthlyCSATPercentage.toStringAsFixed(2) ?? 'N/A'}%',
+                      icon: Icons.sentiment_satisfied_alt,
+                      iconColor: Theme.of(context).colorScheme.primary,
+                    ),
+                    DashboardCard(
+                      title: 'CQ Score',
+                      value: '${summary.cqSummary?.monthlyAverageCQ.toStringAsFixed(2) ?? 'N/A'}%',
+                      icon: Icons.assessment,
+                      iconColor: Theme.of(context).colorScheme.secondary,
+                    ),
+                    DashboardCard(
+                      title: 'Total Salary',
+                      value: '₹${summary.totalSalary.toStringAsFixed(2)}',
+                      icon: Icons.currency_rupee,
+                      iconColor: Theme.of(context).colorScheme.primary,
+                    ),
+                    DashboardCard(
+                      title: 'Avg. Salary',
+                      value: '₹${summary.averageSalary.toStringAsFixed(2)}',
+                      icon: Icons.money,
+                      iconColor: Theme.of(context).colorScheme.secondary,
+                    ),
+                  ],
+                ),
+              ),
+              const CustomDivider(),
               DailyEntriesSection(entries: summary.entries),
               const SizedBox(height: 24),
             ],
@@ -47,3 +93,4 @@ class MonthlyPerformanceScreen extends StatelessWidget {
     );
   }
 }
+

@@ -243,19 +243,19 @@ class _DashboardViewState extends State<DashboardView> {
                         ),
                         DashboardCard(
                           title: 'Avg. Login Hours',
-                          value: state.monthlySummary!.averageLoginHours.toStringAsFixed(2),
+                          value: state.monthlySummary!.averageDailyLoginHours.toStringAsFixed(2),
                           icon: Icons.timer,
                           iconColor: AppColors.accentGreen,
                         ),
                         DashboardCard(
                           title: 'CSAT Score',
-                          value: '${state.csatSummary.csatPercentage.toStringAsFixed(2)}%',
+                          value: '${state.csatSummary!.monthlyCSATPercentage.toStringAsFixed(2)}%',
                           icon: Icons.sentiment_satisfied_alt,
                           iconColor: AppColors.dishTvOrange,
                         ),
                         DashboardCard(
                           title: 'CQ Score',
-                          value: '${state.cqSummary.averagePercentage.toStringAsFixed(2)}%',
+                          value: '${state.cqSummary!.monthlyAverageCQ.toStringAsFixed(2)}%',
                           icon: Icons.assessment,
                           iconColor: AppColors.accentRed,
                         ),
