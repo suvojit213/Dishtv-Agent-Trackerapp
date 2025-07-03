@@ -25,7 +25,7 @@ class AppInfoScreen extends StatelessWidget {
                     AppConstants.appName,
                     style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                           fontWeight: FontWeight.bold,
-                          color: AppColors.dishTvOrange,
+                          color: Theme.of(context).colorScheme.primary,
                         ),
                   ),
                   const SizedBox(height: 8),
@@ -43,7 +43,7 @@ class AppInfoScreen extends StatelessWidget {
                         ),
                   ),
                   ListTile(
-                    leading: Icon(Icons.person, color: AppColors.textSecondary),
+                    leading: Icon(Icons.person, color: Theme.of(context).colorScheme.secondary),
                     title: Text(
                       'Suvojeet Sengupta',
                       style: Theme.of(context).textTheme.bodyLarge,
@@ -52,11 +52,11 @@ class AppInfoScreen extends StatelessWidget {
                     contentPadding: EdgeInsets.zero,
                   ),
                   ListTile(
-                    leading: Icon(Icons.email, color: AppColors.textSecondary),
+                    leading: Icon(Icons.email, color: Theme.of(context).colorScheme.secondary),
                     title: Text(
                       'suvojitsengupta21@gmail.com',
                       style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                            color: AppColors.dishTvOrange,
+                            color: Theme.of(context).colorScheme.primary,
                             decoration: TextDecoration.underline,
                           ),
                     ),
@@ -74,11 +74,11 @@ class AppInfoScreen extends StatelessWidget {
                         ),
                   ),
                   ListTile(
-                    leading: Icon(Icons.code, color: AppColors.textSecondary),
+                    leading: Icon(Icons.code, color: Theme.of(context).colorScheme.secondary),
                     title: Text(
                       'GitHub Repository',
                       style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                            color: AppColors.dishTvOrange,
+                            color: Theme.of(context).colorScheme.primary,
                             decoration: TextDecoration.underline,
                           ),
                     ),

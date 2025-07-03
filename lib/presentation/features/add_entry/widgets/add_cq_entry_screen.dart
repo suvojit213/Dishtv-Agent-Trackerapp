@@ -68,13 +68,13 @@ class _AddCQEntryScreenState extends State<AddCQEntryScreen> {
                   decoration: BoxDecoration(
                     color: Theme.of(context).inputDecorationTheme.fillColor,
                     borderRadius: BorderRadius.circular(8),
-                    border: Border.all(color: AppColors.border),
+                    border: Border.all(color: Theme.of(context).colorScheme.outline),
                   ),
                   child: Row(
                     children: [
-                      const Icon(
+                      Icon(
                         Icons.calendar_today,
-                        color: AppColors.textSecondary,
+                        color: Theme.of(context).colorScheme.primary,
                       ),
                       const SizedBox(width: 12),
                       Text(
@@ -128,14 +128,14 @@ class _AddCQEntryScreenState extends State<AddCQEntryScreen> {
                         child: Container(
                           padding: const EdgeInsets.all(8),
                           decoration: BoxDecoration(
-                            color: AppColors.accentRed.withOpacity(0.1),
+                            color: Theme.of(context).colorScheme.error.withOpacity(0.1),
                             borderRadius: BorderRadius.circular(6),
                           ),
                           child: Row(
                             children: [
                               Icon(
                                 Icons.warning_amber_rounded,
-                                color: AppColors.accentRed,
+                                color: Theme.of(context).colorScheme.error,
                                 size: 16,
                               ),
                               const SizedBox(width: 8),
@@ -143,7 +143,7 @@ class _AddCQEntryScreenState extends State<AddCQEntryScreen> {
                                 child: Text(
                                   'CQ below 80% - Needs Improvement',
                                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                    color: AppColors.accentRed,
+                                    color: Theme.of(context).colorScheme.error,
                                     fontWeight: FontWeight.w500,
                                   ),
                                 ),
@@ -212,7 +212,7 @@ class _AddCQEntryScreenState extends State<AddCQEntryScreen> {
             value,
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
               fontWeight: FontWeight.bold,
-              color: color ?? (isHighlight ? AppColors.dishTvOrange : null),
+              color: color ?? (isHighlight ? Theme.of(context).colorScheme.primary : null),
             ),
           ),
         ],
@@ -229,9 +229,9 @@ class _AddCQEntryScreenState extends State<AddCQEntryScreen> {
   }
 
   Color _getQualityColor(double percentage) {
-    if (percentage >= 85) return AppColors.accentGreen;
-    if (percentage >= 75) return AppColors.dishTvOrange;
-    return AppColors.accentRed;
+    if (percentage >= 85) return Colors.green;
+    if (percentage >= 75) return Theme.of(context).colorScheme.primary;
+    return Colors.red;
   }
 
   Future<void> _selectDate(BuildContext context) async {
@@ -244,7 +244,7 @@ class _AddCQEntryScreenState extends State<AddCQEntryScreen> {
         return Theme(
           data: Theme.of(context).copyWith(
             colorScheme: Theme.of(context).colorScheme.copyWith(
-              primary: AppColors.dishTvOrange,
+              primary: Theme.of(context).colorScheme.primary,
             ),
           ),
           child: child!,
@@ -261,9 +261,9 @@ class _AddCQEntryScreenState extends State<AddCQEntryScreen> {
   void _submitEntry() async {
     if (_percentage <= 0 || _percentage > 100) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
+        SnackBar(
           content: Text('Please enter a valid percentage between 0 and 100'),
-          backgroundColor: AppColors.accentRed,
+          backgroundColor: Theme.of(context).colorScheme.error,
         ),
       );
       return;
@@ -290,7 +290,7 @@ class _AddCQEntryScreenState extends State<AddCQEntryScreen> {
                   ? 'CQ entry updated successfully!'
                   : 'CQ entry added successfully!',
             ),
-            backgroundColor: AppColors.accentGreen,
+            backgroundColor: Colors.green,
           ),
         );
         Navigator.pop(context, true); // Signal success to previous screen
@@ -300,7 +300,7 @@ class _AddCQEntryScreenState extends State<AddCQEntryScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('Failed to save CQ entry: $e'),
-            backgroundColor: AppColors.accentRed,
+            backgroundColor: Theme.of(context).colorScheme.error,
           ),
         );
       }
@@ -357,19 +357,19 @@ class _AddCQEntryScreenState extends State<AddCQEntryScreen> {
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
+          SnackBar(
             content: Text('CQ entry deleted successfully!'),
-            backgroundColor: AppColors.accentGreen,
+            backgroundColor: Colors.green,
           ),
         );
         Navigator.pop(context, true); // Signal success to previous screen
-      }
+      } 
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('Failed to delete CQ entry: $e'),
-            backgroundColor: AppColors.accentRed,
+            backgroundColor: Theme.of(context).colorScheme.error,
           ),
         );
       }

@@ -106,10 +106,7 @@ class SettingsScreen extends StatelessWidget {
   Future<void> _sendFeedback(BuildContext context) async {
     final String email = 'suvojitsengupta21@gmail.com';
     final String subject = 'Feedback for DishTV Agent Tracker App';
-    String body = '''
---- 
-App Version: ${AppConstants.appVersion}
-';''';
+    String body = 'Feedback from DishTV Agent Tracker App (App Version: ${AppConstants.appVersion})';
 
     DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
 

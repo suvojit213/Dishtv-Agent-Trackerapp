@@ -129,13 +129,13 @@ class AddEntryView extends StatelessWidget {
                     decoration: BoxDecoration(
                       color: Theme.of(context).inputDecorationTheme.fillColor,
                       borderRadius: BorderRadius.circular(8),
-                      border: Border.all(color: AppColors.border),
+                      border: Border.all(color: Theme.of(context).colorScheme.outline),
                     ),
                     child: Row(
                       children: [
-                        const Icon(
+                        Icon(
                           Icons.calendar_today,
-                          color: AppColors.textSecondary,
+                          color: Theme.of(context).colorScheme.primary,
                         ),
                         const SizedBox(width: 12),
                         Text(

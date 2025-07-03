@@ -65,13 +65,13 @@ class _AddCSATEntryScreenState extends State<AddCSATEntryScreen> {
                   decoration: BoxDecoration(
                     color: Theme.of(context).inputDecorationTheme.fillColor,
                     borderRadius: BorderRadius.circular(8),
-                    border: Border.all(color: AppColors.border),
+                    border: Border.all(color: Theme.of(context).colorScheme.outline),
                   ),
                   child: Row(
                     children: [
-                      const Icon(
+                      Icon(
                         Icons.calendar_today,
-                        color: AppColors.textSecondary,
+                        color: Theme.of(context).colorScheme.primary,
                       ),
                       const SizedBox(width: 12),
                       Text(
@@ -147,7 +147,7 @@ class _AddCSATEntryScreenState extends State<AddCSATEntryScreen> {
                       'CSAT Percentage',
                       '${_calculateCSAT().toStringAsFixed(2)}%',
                       isHighlight: true,
-                      color: _calculateCSAT() >= 60 ? AppColors.accentGreen : AppColors.accentRed,
+                      color: _calculateCSAT() >= 60 ? Colors.green : Theme.of(context).colorScheme.error,
                     ),
                     if (_calculateCSAT() < 60)
                       Padding(
@@ -155,14 +155,14 @@ class _AddCSATEntryScreenState extends State<AddCSATEntryScreen> {
                         child: Container(
                           padding: const EdgeInsets.all(8),
                           decoration: BoxDecoration(
-                            color: AppColors.accentRed.withOpacity(0.1),
+                            color: Theme.of(context).colorScheme.error.withOpacity(0.1),
                             borderRadius: BorderRadius.circular(6),
                           ),
                           child: Row(
                             children: [
                               Icon(
                                 Icons.warning_amber_rounded,
-                                color: AppColors.accentRed,
+                                color: Theme.of(context).colorScheme.error,
                                 size: 16,
                               ),
                               const SizedBox(width: 8),
@@ -170,7 +170,7 @@ class _AddCSATEntryScreenState extends State<AddCSATEntryScreen> {
                                 child: Text(
                                   'CSAT below 60% - Needs Improvement',
                                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                    color: AppColors.accentRed,
+                                    color: Theme.of(context).colorScheme.error,
                                     fontWeight: FontWeight.w500,
                                   ),
                                 ),
@@ -239,7 +239,7 @@ class _AddCSATEntryScreenState extends State<AddCSATEntryScreen> {
             value,
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
               fontWeight: FontWeight.bold,
-              color: color ?? (isHighlight ? AppColors.dishTvOrange : null),
+              color: color ?? (isHighlight ? Theme.of(context).colorScheme.primary : null),
             ),
           ),
         ],
@@ -266,7 +266,7 @@ class _AddCSATEntryScreenState extends State<AddCSATEntryScreen> {
         return Theme(
           data: Theme.of(context).copyWith(
             colorScheme: Theme.of(context).colorScheme.copyWith(
-              primary: AppColors.dishTvOrange,
+              primary: Theme.of(context).colorScheme.primary,
             ),
           ),
           child: child!,
@@ -304,7 +304,7 @@ class _AddCSATEntryScreenState extends State<AddCSATEntryScreen> {
                   ? 'CSAT entry updated successfully!'
                   : 'CSAT entry added successfully!',
             ),
-            backgroundColor: AppColors.accentGreen,
+            backgroundColor: Colors.green,
           ),
         );
         Navigator.pop(context, true); // Signal success to previous screen
@@ -314,7 +314,7 @@ class _AddCSATEntryScreenState extends State<AddCSATEntryScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('Failed to save CSAT entry: $e'),
-            backgroundColor: AppColors.accentRed,
+            backgroundColor: Theme.of(context).colorScheme.error,
           ),
         );
       }
@@ -371,9 +371,9 @@ class _AddCSATEntryScreenState extends State<AddCSATEntryScreen> {
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
+          SnackBar(
             content: Text('CSAT entry deleted successfully!'),
-            backgroundColor: AppColors.accentGreen,
+            backgroundColor: Colors.green,
           ),
         );
         Navigator.pop(context, true); // Signal success to previous screen
@@ -382,8 +382,8 @@ class _AddCSATEntryScreenState extends State<AddCSATEntryScreen> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Failed to delete CSAT entry: $e'),
-            backgroundColor: AppColors.accentRed,
+            content: Text('Failed to save CSAT entry: $e'),
+            backgroundColor: Theme.of(context).colorScheme.error,
           ),
         );
       }

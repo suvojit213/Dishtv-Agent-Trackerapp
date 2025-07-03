@@ -118,30 +118,38 @@ class AllReportsView extends StatelessWidget {
         children: [
           Text(
             summary.formattedMonthYear,
-            style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+            style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold, color: Theme.of(context).colorScheme.primary),
           ),
           const Divider(height: 24),
-          _buildInfoRow(context, Icons.call, 'Total Calls', '${summary.totalCalls}'),
+          _buildInfoRow(context, Icons.call, 'Total Calls', '${summary.totalCalls}', Theme.of(context).colorScheme.secondary),
           const SizedBox(height: 8),
-          _buildInfoRow(context, Icons.timer, 'Total Hours', '${formatter.format(summary.totalLoginHours)} hrs'),
+          _buildInfoRow(context, Icons.timer, 'Total Hours', '${formatter.format(summary.totalLoginHours)} hrs', Theme.of(context).colorScheme.secondary),
           const SizedBox(height: 8),
-          _buildInfoRow(context, Icons.monetization_on, 'Total Salary', '₹${formatter.format(summary.totalSalary)}'),
+          _buildInfoRow(context, Icons.monetization_on, 'Total Salary', '₹${formatter.format(summary.totalSalary)}', Theme.of(context).colorScheme.primary),
           const SizedBox(height: 16),
           Align(
             alignment: Alignment.centerRight,
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                TextButton.icon(
+                ElevatedButton.icon(
                   icon: const Icon(Icons.picture_as_pdf),
                   label: const Text("Export PDF"),
                   onPressed: () => _generateAndSharePdf(context, summary),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Theme.of(context).colorScheme.primary,
+                    foregroundColor: Theme.of(context).colorScheme.onPrimary,
+                  ),
                 ),
                 const SizedBox(width: 8),
-                TextButton.icon(
+                ElevatedButton.icon(
                   icon: const Icon(Icons.table_chart),
                   label: const Text("Export Excel"),
                   onPressed: () => _generateAndShareExcel(context, summary),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Theme.of(context).colorScheme.secondary,
+                    foregroundColor: Theme.of(context).colorScheme.onSecondary,
+                  ),
                 ),
               ],
             ),
@@ -151,14 +159,14 @@ class AllReportsView extends StatelessWidget {
     );
   }
 
-  Widget _buildInfoRow(BuildContext context, IconData icon, String label, String value) {
+  Widget _buildInfoRow(BuildContext context, IconData icon, String label, String value, Color iconColor) {
     return Row(
       children: [
-        Icon(icon, size: 16, color: Theme.of(context).colorScheme.secondary),
-        const SizedBox(width: 8),
-        Text('$label: ', style: Theme.of(context).textTheme.bodyMedium),
+        Icon(icon, size: 20, color: iconColor),
+        const SizedBox(width: 12),
+        Text('$label: ', style: Theme.of(context).textTheme.bodyLarge),
         const Spacer(),
-        Text(value, style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold)),
+        Text(value, style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold)),
       ],
     );
   }
