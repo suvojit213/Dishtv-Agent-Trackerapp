@@ -91,14 +91,10 @@ class PdfService {
               pw.SizedBox(height: 10),
               pw.Table.fromTextArray(
                 headers: ['Description', 'Amount'],
-                data: [
-                  ['Base Salary', 'Rs. ${formatter.format(summary.baseSalary)}'],
-                  ['Bonus', 'Rs. ${formatter.format(summary.bonusAmount)}'],
-                  ['CSAT Bonus', 'Rs. ${formatter.format(summary.csatBonus)}'],
-                  ['Gross Salary', 'Rs. ${formatter.format(summary.totalSalary + summary.csatBonus)}'],
-                  ['TDS Deduction (${(summary.tdsDeduction / (summary.totalSalary + summary.csatBonus) * 100).toStringAsFixed(0)}%)', 'Rs. -${formatter.format(summary.tdsDeduction)}'],
-                  ['Net Salary', 'Rs. ${formatter.format(summary.netSalary)}'],
-                ],
+                data: summary.salaryBreakdown.entries.map((entry) => [
+                  entry.key,
+                  'Rs. ${formatter.format(entry.value)}',
+                ]).toList(),
               ),
             ],
           );

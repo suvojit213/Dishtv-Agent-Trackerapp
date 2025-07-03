@@ -89,6 +89,18 @@ class MonthlySummary extends Equatable {
     return totalSalary + csatBonus - tdsDeduction;
   }
 
+  // Detailed salary breakdown
+  Map<String, double> get salaryBreakdown {
+    return {
+      'Base Salary': baseSalary,
+      'Bonus Amount': bonusAmount,
+      'CSAT Bonus': csatBonus,
+      'Gross Salary': totalSalary + csatBonus,
+      'TDS Deduction': tdsDeduction,
+      'Net Salary': netSalary,
+    };
+  }
+
   // Calculate average salary
   double get averageSalary {
     if (entries.isEmpty) return 0.0;
