@@ -218,6 +218,7 @@ class CQPerformanceSection extends StatelessWidget {
   }
 
   Color _getQualityColor(double percentage) {
+    if (percentage == 0) return Colors.black;
     if (percentage >= 85) return AppColors.accentGreen;
     if (percentage >= 75) return AppColors.dishTvOrange;
     return AppColors.accentRed;

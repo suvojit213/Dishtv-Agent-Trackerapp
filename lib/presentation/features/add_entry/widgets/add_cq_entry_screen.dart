@@ -221,6 +221,7 @@ class _AddCQEntryScreenState extends State<AddCQEntryScreen> {
   }
 
   String _getQualityRating(double percentage) {
+    if (percentage == 0) return 'FATAL';
     if (percentage >= 95) return 'Excellent';
     if (percentage >= 85) return 'Good';
     if (percentage >= 75) return 'Average';
@@ -229,6 +230,7 @@ class _AddCQEntryScreenState extends State<AddCQEntryScreen> {
   }
 
   Color _getQualityColor(double percentage) {
+    if (percentage == 0) return Colors.black;
     if (percentage >= 85) return Colors.green;
     if (percentage >= 75) return Theme.of(context).colorScheme.primary;
     return Colors.red;
@@ -259,7 +261,7 @@ class _AddCQEntryScreenState extends State<AddCQEntryScreen> {
   }
 
   void _submitEntry() async {
-    if (_percentage <= 0 || _percentage > 100) {
+    if (_percentage < 0 || _percentage > 100) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Please enter a valid percentage between 0 and 100'),
