@@ -41,24 +41,54 @@ class MonthlyGoalsSection extends StatelessWidget {
               ),
               const SizedBox(height: 12),
               CustomCard(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                child: Column(
                   children: [
-                    _buildProgressIndicator(
-                      context,
-                      percent: hoursProgress,
-                      title: 'Login Hours',
-                      current: summary.totalLoginHours.toStringAsFixed(1),
-                      target: '${state.targetHours}h',
-                      color: theme.colorScheme.primary,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        _buildProgressIndicator(
+                          context,
+                          percent: hoursProgress,
+                          title: 'Login Hours',
+                          current: summary.totalLoginHours.toStringAsFixed(1),
+                          target: '${state.targetHours}h',
+                          color: theme.colorScheme.primary,
+                        ),
+                        _buildProgressIndicator(
+                          context,
+                          percent: callsProgress,
+                          title: 'Calls',
+                          current: summary.totalCalls.toString(),
+                          target: state.targetCalls.toString(),
+                          color: theme.colorScheme.secondary,
+                        ),
+                      ],
                     ),
-                    _buildProgressIndicator(
+                    const SizedBox(height: 16),
+                    Divider(color: theme.colorScheme.onSurface.withOpacity(0.1)),
+                    const SizedBox(height: 16),
+                    _buildGoalDetails(
                       context,
-                      percent: callsProgress,
-                      title: 'Calls',
-                      current: summary.totalCalls.toString(),
-                      target: state.targetCalls.toString(),
-                      color: theme.colorScheme.secondary,
+                      'Remaining Hours to Goal:',
+                      '${(state.targetHours - summary.totalLoginHours).clamp(0.0, double.infinity).toStringAsFixed(1)}h',
+                    ),
+                    const SizedBox(height: 8),
+                    _buildGoalDetails(
+                      context,
+                      'Remaining Calls to Goal:',
+                      '${(state.targetCalls - summary.totalCalls).clamp(0, double.infinity).toInt()}',
+                    ),
+                    const SizedBox(height: 8),
+                    _buildGoalDetails(
+                      context,
+                      'Daily Avg. Hours Needed:',
+                      '${((state.targetHours - summary.totalLoginHours).clamp(0.0, double.infinity) / (DateTime(summary.year, summary.month + 1, 0).day - DateTime.now().day)).toStringAsFixed(1)}h',
+                    ),
+                    const SizedBox(height: 8),
+                    _buildGoalDetails(
+                      context,
+                      'Daily Avg. Calls Needed:',
+                      '${((state.targetCalls - summary.totalCalls).clamp(0, double.infinity).toInt() / (DateTime(summary.year, summary.month + 1, 0).day - DateTime.now().day)).toStringAsFixed(0)}',
                     ),
                   ],
                 ),
@@ -98,6 +128,17 @@ class MonthlyGoalsSection extends StatelessWidget {
       progressColor: color,
       animation: true,
       animationDuration: 800,
+    );
+  }
+
+  Widget _buildGoalDetails(BuildContext context, String label, String value) {
+    final theme = Theme.of(context);
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(label, style: theme.textTheme.bodyLarge),
+        Text(value, style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold)),
+      ],
     );
   }
 

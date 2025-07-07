@@ -43,34 +43,6 @@ class MonthlySummary extends Equatable {
     return totalCalls / entries.length;
   }
   
-  // Remaining hours to achieve bonus target
-  double get remainingHoursToGoal {
-    final remaining = AppConstants.bonusHourTarget - totalLoginHours;
-    return remaining > 0 ? remaining : 0;
-  }
-
-  // Remaining calls to achieve bonus target
-  int get remainingCallsToGoal {
-    final remaining = AppConstants.bonusCallTarget - totalCalls;
-    return remaining > 0 ? remaining : 0;
-  }
-
-  // Calculate daily average hours needed to reach goal by month end
-  double dailyHoursNeededToGoal(int currentDay) {
-    final totalDaysInMonth = DateTime(year, month + 1, 0).day;
-    final daysRemaining = totalDaysInMonth - currentDay;
-    if (daysRemaining <= 0) return 0.0; // Already past month end or last day
-    return remainingHoursToGoal / daysRemaining;
-  }
-
-  // Calculate daily average calls needed to reach goal by month end
-  double dailyCallsNeededToGoal(int currentDay) {
-    final totalDaysInMonth = DateTime(year, month + 1, 0).day;
-    final daysRemaining = totalDaysInMonth - currentDay;
-    if (daysRemaining <= 0) return 0.0; // Already past month end or last day
-    return remainingCallsToGoal / daysRemaining;
-  }
-
   // Check if bonus targets are achieved
   bool get isBonusAchieved {
     return totalCalls >= AppConstants.bonusCallTarget && 
