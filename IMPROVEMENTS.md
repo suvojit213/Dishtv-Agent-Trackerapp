@@ -50,7 +50,7 @@
 All existing functionality has been preserved:
 - ✅ Dashboard navigation and data display
 - ✅ Add/Edit entry functionality
-- ✅ Monthly reports and CSV export
+- ✅ Monthly reports
 - ✅ Theme switching
 - ✅ Swipe gestures for navigation
 - ✅ Pull-to-refresh functionality

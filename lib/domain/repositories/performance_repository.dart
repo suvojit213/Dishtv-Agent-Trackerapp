@@ -31,7 +31,7 @@ abstract class PerformanceRepository {
   Future<CQEntry?> getCQEntryForDate(DateTime date);
   Future<int> updateCQEntry(CQEntry entry);
   
-  // PDF को CSV से बदलें
+  
   Future<List<int>> generateMonthlyReportPdf(MonthlySummary summary);
   Future<File> generateMonthlyReportExcel(MonthlySummary summary);
 

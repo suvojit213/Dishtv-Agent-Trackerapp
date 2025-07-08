@@ -30,24 +30,7 @@ class SettingsScreen extends StatelessWidget {
               style: Theme.of(context).textTheme.titleLarge,
             ),
             const SizedBox(height: 16),
-            CustomButton(
-              text: 'Import Daily Entries (CSV)',
-              icon: Icons.upload_file,
-              onPressed: () => _importData(context, ImportDataType.dailyEntries),
-            ),
-            const SizedBox(height: 16),
-            CustomButton(
-              text: 'Import CSAT Entries (CSV)',
-              icon: Icons.upload_file,
-              onPressed: () => _importData(context, ImportDataType.csatEntries),
-            ),
-            const SizedBox(height: 16),
-            CustomButton(
-              text: 'Import CQ Entries (CSV)',
-              icon: Icons.upload_file,
-              onPressed: () => _importData(context, ImportDataType.cqEntries),
-            ),
-            const SizedBox(height: 16),
+            // Removed CSV import buttons
             Text(
               'App Information',
               style: Theme.of(context).textTheme.titleLarge,
@@ -69,39 +52,7 @@ class SettingsScreen extends StatelessWidget {
     );
   }
 
-  Future<void> _importData(BuildContext context, ImportDataType type) async {
-    try {
-      FilePickerResult? result = await FilePicker.platform.pickFiles(
-        type: FileType.custom,
-        allowedExtensions: ['csv'],
-      );
-
-      if (result != null && result.files.single.path != null) {
-        File file = File(result.files.single.path!);
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Importing ${type.name} from ${file.path.split('/').last}...')),
-        );
-
-        final importUseCase = ImportDataUseCase(DataImportService(), LocalDataSource());
-        final importedCount = await importUseCase.execute(file, type);
-
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Successfully imported $importedCount ${type.name} entries!')),
-        );
-        // Optionally, refresh dashboard or relevant data after import
-        // context.read<DashboardBloc>().add(RefreshDashboard());
-      } else {
-        // User canceled the picker
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('File selection cancelled.')),
-        );
-      }
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Import failed: $e')),
-      );
-    }
-  }
+  // Removed _importData method
 
   Future<void> _sendFeedback(BuildContext context) async {
     final String email = 'suvojitsengupta21@gmail.com';
@@ -126,17 +77,17 @@ class SettingsScreen extends StatelessWidget {
 
   Future<void> _backupData(BuildContext context) async {
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Backing up data...')), 
+      const SnackBar(content: Text('Backing up data...')),
     );
     try {
       final repo = context.read<PerformanceRepository>();
       final backupPath = await repo.backupDatabase();
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Data backed up to: $backupPath')), 
+        SnackBar(content: Text('Data backed up to: $backupPath')),
       );
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Backup failed: $e')), 
+        SnackBar(content: Text('Backup failed: $e')),
       );
     }
   }
@@ -145,7 +96,7 @@ class SettingsScreen extends StatelessWidget {
     // This is a simplified example. In a real app, you'd want a file picker.
     // For now, let's assume the backup file is in a known location or user selects it.
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Restoring data... (Manual file selection needed in real app)')), 
+      const SnackBar(content: Text('Restoring data... (Manual file selection needed in real app)')),
     );
     try {
       final repo = context.read<PerformanceRepository>();
@@ -162,21 +113,19 @@ class SettingsScreen extends StatelessWidget {
       // Check if the placeholder file exists
       if (!await File(backupFilePath).exists()) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Backup file not found at assumed path. Please select manually in a real app.')), 
+          const SnackBar(content: Text('Backup file not found at assumed path. Please select manually in a real app.')),
         );
         return;
       }
 
       await repo.restoreDatabase(backupFilePath);
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Data restored successfully! Please restart the app.')), 
+        const SnackBar(content: Text('Data restored successfully! Please restart the app.')),
       );
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Restore failed: $e')), 
+        SnackBar(content: Text('Restore failed: $e')),
       );
     }
   }
 }
-
-
