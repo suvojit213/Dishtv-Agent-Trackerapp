@@ -1,5 +1,8 @@
 package com.suvojeet.dishtvagenttracker
 
+import android.content.Intent
+import android.net.Uri
+import android.os.Build
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
@@ -7,17 +10,19 @@ import android.os.Environment
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
-import android.os.Build
 import androidx.core.app.NotificationCompat
 import java.io.File
 import java.io.FileOutputStream
 
 class MainActivity: FlutterActivity() {
-    private val CHANNEL = "com.dishtv.agenttracker/pdf"
+    private val PDF_CHANNEL = "com.dishtv.agenttracker/pdf"
+    private val FEEDBACK_CHANNEL = "com.suvojeet.dishtv_agent_tracker/feedback"
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
-        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL).setMethodCallHandler {
+
+        // PDF Channel
+        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, PDF_CHANNEL).setMethodCallHandler {
             call, result ->
             if (call.method == "savePdf") {
                 val pdfBytes = call.argument<ByteArray>("pdfBytes")
@@ -32,6 +37,21 @@ class MainActivity: FlutterActivity() {
                     }
                 } else {
                     result.error("INVALID_ARGUMENTS", "Invalid arguments for savePdf", null)
+                }
+            } else {
+                result.notImplemented()
+            }
+        }
+
+        // Feedback Channel
+        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, FEEDBACK_CHANNEL).setMethodCallHandler {
+            call, result ->
+            if (call.method == "sendFeedback") {
+                try {
+                    sendFeedbackEmail()
+                    result.success(null)
+                } catch (e: Exception) {
+                    result.error("EMAIL_FAILED", "Failed to send feedback email.", e.toString())
                 }
             } else {
                 result.notImplemented()
@@ -62,5 +82,40 @@ class MainActivity: FlutterActivity() {
             .build()
 
         notificationManager.notify(1, notification)
+    }
+
+    private fun sendFeedbackEmail() {
+        val email = "suvojitsengupta21@gmail.com"
+        val subject = "Feedback for DishTV Agent Tracker App"
+
+        val body = """
+            Feedback from DishTV Agent Tracker App
+            -----------------------------------
+            App Version: ${getAppVersion()}
+            Device: ${Build.MANUFACTURER} ${Build.MODEL}
+            Android Version: ${Build.VERSION.RELEASE}
+            -----------------------------------
+
+            Please write your feedback below:
+
+        """.trimIndent()
+
+        val intent = Intent(Intent.ACTION_SENDTO).apply {
+            data = Uri.parse("mailto:")
+            putExtra(Intent.EXTRA_EMAIL, arrayOf(email))
+            putExtra(Intent.EXTRA_SUBJECT, subject)
+            putExtra(Intent.EXTRA_TEXT, body)
+        }
+
+        startActivity(Intent.createChooser(intent, "Send Feedback"))
+    }
+
+    private fun getAppVersion(): String {
+        return try {
+            val packageInfo = context.packageManager.getPackageInfo(context.packageName, 0)
+            packageInfo.versionName
+        } catch (e: Exception) {
+            "N/A"
+        }
     }
 }

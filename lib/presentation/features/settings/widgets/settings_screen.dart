@@ -1,11 +1,10 @@
-import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:dishtv_agent_tracker/presentation/common/widgets/custom_app_bar.dart';
 import 'package:dishtv_agent_tracker/presentation/common/widgets/custom_button.dart';
 import 'package:dishtv_agent_tracker/domain/repositories/performance_repository.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:dishtv_agent_tracker/data/datasources/data_import_service.dart';
@@ -15,6 +14,8 @@ import 'package:dishtv_agent_tracker/core/constants/app_constants.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({Key? key}) : super(key: key);
+
+  static const _platform = MethodChannel('com.suvojeet.dishtv_agent_tracker/feedback');
 
   @override
   Widget build(BuildContext context) {
@@ -55,22 +56,11 @@ class SettingsScreen extends StatelessWidget {
   // Removed _importData method
 
   Future<void> _sendFeedback(BuildContext context) async {
-    final String email = 'suvojitsengupta21@gmail.com';
-    final String subject = 'Feedback for DishTV Agent Tracker App';
-    String body = 'Feedback from DishTV Agent Tracker App (App Version: ${AppConstants.appVersion})';
-
-    DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
-
-    AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
-    body += 'Device: ${androidInfo.model} (Android ${androidInfo.version.release})\n';
-
-    final Uri emailLaunchUri = Uri.parse('mailto:$email?subject=${Uri.encodeComponent(subject)}&body=${Uri.encodeComponent(body)}');
-
-    if (await canLaunchUrl(emailLaunchUri)) {
-      await launchUrl(emailLaunchUri);
-    } else {
+    try {
+      await _platform.invokeMethod('sendFeedback');
+    } on PlatformException catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Could not launch email app. Please ensure you have an email app installed and configured.')),
+        SnackBar(content: Text("Failed to send feedback: '${e.message}'.")),
       );
     }
   }
