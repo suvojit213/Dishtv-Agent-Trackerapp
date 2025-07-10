@@ -223,7 +223,7 @@ class _DashboardViewState extends State<DashboardView> {
                           color: AppColors.dishTvOrange,
                           child: CustomScrollView(
                             physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
-                            sliver: [
+                            slivers: [
                               SliverToBoxAdapter(child: const SizedBox(height: 16)),
                               SliverPadding(
                                 padding: const EdgeInsets.symmetric(horizontal: 16),
