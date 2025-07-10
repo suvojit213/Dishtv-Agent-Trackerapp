@@ -34,7 +34,7 @@ class _AddCQEntryScreenState extends State<AddCQEntryScreen> {
     } else {
       _selectedDate = DateTime.now();
       _percentage = 0.0;
-      _percentageController.text = '0.0';
+      _percentageController.text = '';
     }
   }
 

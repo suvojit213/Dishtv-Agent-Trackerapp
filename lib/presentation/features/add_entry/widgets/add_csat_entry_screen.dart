@@ -120,7 +120,7 @@ class _AddCSATEntryScreenState extends State<AddCSATEntryScreen> {
               label: 'N Count (Neutral Feedback)',
               hintText: 'Enter N count',
               icon: Icons.remove,
-              initialValue: _nCount.toString(),
+              initialValue: widget.entryToEdit != null ? _nCount.toString() : (_nCount == 0 ? '' : _nCount.toString()),
               keyboardType: TextInputType.number,
               onChanged: (value) {
                 setState(() {

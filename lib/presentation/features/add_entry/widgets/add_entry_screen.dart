@@ -201,7 +201,7 @@ class AddEntryView extends StatelessWidget {
                 label: 'Call Count',
                 hintText: 'Enter number of calls',
                 icon: Icons.call,
-                initialValue: state.callCount.toString(),
+                initialValue: state.isUpdate ? state.callCount.toString() : (state.callCount == 0 ? '' : state.callCount.toString()),
                 keyboardType: TextInputType.number,
                 onChanged: (value) {
                   context.read<AddEntryBloc>().add(
