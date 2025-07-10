@@ -30,8 +30,42 @@ class AddEntryScreen extends StatelessWidget {
   }
 }
 
-class AddEntryView extends StatelessWidget {
+class AddEntryView extends StatefulWidget {
   const AddEntryView({Key? key}) : super(key: key);
+
+  @override
+  State<AddEntryView> createState() => _AddEntryViewState();
+}
+
+class _AddEntryViewState extends State<AddEntryView> {
+  late final TextEditingController _loginHoursController;
+  late final TextEditingController _loginMinutesController;
+  late final TextEditingController _loginSecondsController;
+  late final TextEditingController _callCountController;
+
+  @override
+  void initState() {
+    super.initState();
+    final state = context.read<AddEntryBloc>().state;
+
+    _loginHoursController = TextEditingController(
+        text: state.isUpdate ? state.loginHours.toString() : (state.loginHours == 0 ? '' : state.loginHours.toString()));
+    _loginMinutesController = TextEditingController(
+        text: state.isUpdate ? state.loginMinutes.toString() : (state.loginMinutes == 0 ? '' : state.loginMinutes.toString()));
+    _loginSecondsController = TextEditingController(
+        text: state.isUpdate ? state.loginSeconds.toString() : (state.loginSeconds == 0 ? '' : state.loginSeconds.toString()));
+    _callCountController = TextEditingController(
+        text: state.isUpdate ? state.callCount.toString() : (state.callCount == 0 ? '' : state.callCount.toString()));
+  }
+
+  @override
+  void dispose() {
+    _loginHoursController.dispose();
+    _loginMinutesController.dispose();
+    _loginSecondsController.dispose();
+    _callCountController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -185,7 +219,7 @@ class AddEntryView extends StatelessWidget {
                       label: 'Seconds',
                       hintText: 'SS',
                       icon: Icons.timer,
-                      initialValue: state.loginSeconds.toString(),
+                      initialValue: state.isUpdate ? state.loginSeconds.toString() : (state.loginSeconds == 0 ? '' : state.loginSeconds.toString()),
                       keyboardType: TextInputType.number,
                       onChanged: (value) => context.read<AddEntryBloc>().add(
                             LoginSecondsChanged(seconds: int.tryParse(value) ?? 0),
@@ -201,7 +235,7 @@ class AddEntryView extends StatelessWidget {
                 label: 'Call Count',
                 hintText: 'Enter number of calls',
                 icon: Icons.call,
-                initialValue: state.isUpdate ? state.callCount.toString() : (state.callCount == 0 ? '' : state.callCount.toString()),
+                controller: _callCountController,
                 keyboardType: TextInputType.number,
                 onChanged: (value) {
                   context.read<AddEntryBloc>().add(
