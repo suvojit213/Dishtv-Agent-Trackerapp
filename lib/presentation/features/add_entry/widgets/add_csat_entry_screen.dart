@@ -130,6 +130,7 @@ class _AddCSATEntryScreenState extends State<AddCSATEntryScreen> {
               icon: Icons.thumb_up,
               controller: _t2CountController,
               keyboardType: TextInputType.number,
+              onChanged: (value) {},
             ),
             const SizedBox(height: 16),
 
@@ -140,6 +141,7 @@ class _AddCSATEntryScreenState extends State<AddCSATEntryScreen> {
               icon: Icons.thumb_down,
               controller: _b2CountController,
               keyboardType: TextInputType.number,
+              onChanged: (value) {},
             ),
             const SizedBox(height: 16),
 
@@ -150,6 +152,7 @@ class _AddCSATEntryScreenState extends State<AddCSATEntryScreen> {
               icon: Icons.remove,
               controller: _nCountController,
               keyboardType: TextInputType.number,
+              onChanged: (value) {},
             ),
             const SizedBox(height: 24),
 
