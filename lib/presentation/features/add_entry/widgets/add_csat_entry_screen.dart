@@ -8,6 +8,7 @@ import 'package:dishtv_agent_tracker/presentation/common/widgets/custom_app_bar.
 import 'package:dishtv_agent_tracker/presentation/common/widgets/custom_card.dart';
 import 'package:dishtv_agent_tracker/presentation/common/widgets/custom_button.dart';
 import 'package:dishtv_agent_tracker/domain/repositories/performance_repository.dart'; // Import PerformanceRepository
+// This comment is added to force a re-compilation.
 
 class AddCSATEntryScreen extends StatefulWidget {
   final CSATEntry? entryToEdit;
@@ -20,25 +21,62 @@ class AddCSATEntryScreen extends StatefulWidget {
 
 class _AddCSATEntryScreenState extends State<AddCSATEntryScreen> {
   late DateTime _selectedDate;
-  late int _t2Count;
-  late int _b2Count;
-  late int _nCount;
+  late final TextEditingController _t2CountController;
+  late final TextEditingController _b2CountController;
+  late final TextEditingController _nCountController;
+  int _t2Count = 0;
+  int _b2Count = 0;
+  int _nCount = 0;
   bool _isLoading = false;
 
   @override
   void initState() {
     super.initState();
+    _t2CountController = TextEditingController();
+    _b2CountController = TextEditingController();
+    _nCountController = TextEditingController();
+
     if (widget.entryToEdit != null) {
       _selectedDate = widget.entryToEdit!.date;
-      _t2Count = widget.entryToEdit!.t2Count;
-      _b2Count = widget.entryToEdit!.b2Count;
-      _nCount = widget.entryToEdit!.nCount;
+      _t2CountController.text = widget.entryToEdit!.t2Count.toString();
+      _b2CountController.text = widget.entryToEdit!.b2Count.toString();
+      _nCountController.text = widget.entryToEdit!.nCount.toString();
     } else {
       _selectedDate = DateTime.now();
-      _t2Count = 0;
-      _b2Count = 0;
-      _nCount = 0;
+      _t2CountController.text = '';
+      _b2CountController.text = '';
+      _nCountController.text = '';
     }
+
+    _t2Count = int.tryParse(_t2CountController.text) ?? 0;
+    _b2Count = int.tryParse(_b2CountController.text) ?? 0;
+    _nCount = int.tryParse(_nCountController.text) ?? 0;
+
+    _t2CountController.addListener(() {
+      setState(() {
+        _t2Count = int.tryParse(_t2CountController.text) ?? 0;
+      });
+    });
+    _b2CountController.addListener(() {
+      setState(() {
+        _b2Count = int.tryParse(_b2CountController.text) ?? 0;
+      });
+    });
+    _nCountController.addListener(() {
+      setState(() {
+        _nCount = int.tryParse(_nCountController.text) ?? 0;
+      });
+    });
+  }
+
+  
+
+  @override
+  void dispose() {
+    _t2CountController.dispose();
+    _b2CountController.dispose();
+    _nCountController.dispose();
+    super.dispose();
   }
 
   @override
@@ -90,13 +128,8 @@ class _AddCSATEntryScreenState extends State<AddCSATEntryScreen> {
               label: 'T2 Count (Positive Feedback)',
               hintText: 'Enter T2 count',
               icon: Icons.thumb_up,
-              initialValue: _t2Count.toString(),
+              controller: _t2CountController,
               keyboardType: TextInputType.number,
-              onChanged: (value) {
-                setState(() {
-                  _t2Count = int.tryParse(value) ?? 0;
-                });
-              },
             ),
             const SizedBox(height: 16),
 
@@ -105,13 +138,8 @@ class _AddCSATEntryScreenState extends State<AddCSATEntryScreen> {
               label: 'B2 Count (Negative Feedback)',
               hintText: 'Enter B2 count',
               icon: Icons.thumb_down,
-              initialValue: _b2Count.toString(),
+              controller: _b2CountController,
               keyboardType: TextInputType.number,
-              onChanged: (value) {
-                setState(() {
-                  _b2Count = int.tryParse(value) ?? 0;
-                });
-              },
             ),
             const SizedBox(height: 16),
 
@@ -120,13 +148,8 @@ class _AddCSATEntryScreenState extends State<AddCSATEntryScreen> {
               label: 'N Count (Neutral Feedback)',
               hintText: 'Enter N count',
               icon: Icons.remove,
-              initialValue: widget.entryToEdit != null ? _nCount.toString() : (_nCount == 0 ? '' : _nCount.toString()),
+              controller: _nCountController,
               keyboardType: TextInputType.number,
-              onChanged: (value) {
-                setState(() {
-                  _nCount = int.tryParse(value) ?? 0;
-                });
-              },
             ),
             const SizedBox(height: 24),
 
