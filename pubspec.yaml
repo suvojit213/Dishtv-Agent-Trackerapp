@@ -48,7 +48,6 @@ flutter:
 # यह नया और बेहतर कॉन्फ़िगरेशन है
 flutter_launcher_icons:
   android: true
-  ios: true
   image_path: "assets/icon/app_icon.png" # यह सामान्य आइकन के लिए है
   min_sdk_android: 21
   remove_alpha_ios: true
