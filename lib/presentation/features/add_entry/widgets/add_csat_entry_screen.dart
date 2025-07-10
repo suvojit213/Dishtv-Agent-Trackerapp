@@ -289,9 +289,9 @@ class _AddCSATEntryScreenState extends State<AddCSATEntryScreen> {
       final entry = CSATEntry(
         id: widget.entryToEdit?.id,
         date: _selectedDate,
-        t2Count: _t2Count,
-        b2Count: _b2Count,
-        nCount: _nCount,
+        t2Count: int.tryParse(_t2CountController.text) ?? 0,
+        b2Count: int.tryParse(_b2CountController.text) ?? 0,
+        nCount: int.tryParse(_nCountController.text) ?? 0,
       );
 
       await context.read<PerformanceRepository>().saveCSATEntry(entry); // Use the repository

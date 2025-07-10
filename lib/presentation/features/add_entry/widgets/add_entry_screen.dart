@@ -193,7 +193,7 @@ class _AddEntryViewState extends State<AddEntryView> {
                       label: 'Hours',
                       hintText: 'HH',
                       icon: Icons.timer,
-                      initialValue: state.loginHours.toString(),
+                      controller: _loginHoursController,
                       keyboardType: TextInputType.number,
                       onChanged: (value) => context.read<AddEntryBloc>().add(
                             LoginHoursChanged(hours: int.tryParse(value) ?? 0),
@@ -206,7 +206,7 @@ class _AddEntryViewState extends State<AddEntryView> {
                       label: 'Minutes',
                       hintText: 'MM',
                       icon: Icons.timer,
-                      initialValue: state.loginMinutes.toString(),
+                      controller: _loginMinutesController,
                       keyboardType: TextInputType.number,
                       onChanged: (value) => context.read<AddEntryBloc>().add(
                             LoginMinutesChanged(minutes: int.tryParse(value) ?? 0),
@@ -219,7 +219,7 @@ class _AddEntryViewState extends State<AddEntryView> {
                       label: 'Seconds',
                       hintText: 'SS',
                       icon: Icons.timer,
-                      initialValue: state.isUpdate ? state.loginSeconds.toString() : (state.loginSeconds == 0 ? '' : state.loginSeconds.toString()),
+                      controller: _loginSecondsController,
                       keyboardType: TextInputType.number,
                       onChanged: (value) => context.read<AddEntryBloc>().add(
                             LoginSecondsChanged(seconds: int.tryParse(value) ?? 0),
