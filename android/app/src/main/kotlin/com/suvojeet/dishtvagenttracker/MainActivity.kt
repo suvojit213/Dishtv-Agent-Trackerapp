@@ -113,7 +113,7 @@ class MainActivity: FlutterActivity() {
     private fun getAppVersion(): String {
         return try {
             val packageInfo = context.packageManager.getPackageInfo(context.packageName, 0)
-            packageInfo.versionName
+            packageInfo.versionName ?: "N/A"
         } catch (e: Exception) {
             "N/A"
         }
