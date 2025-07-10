@@ -8,10 +8,12 @@ import 'package:dishtv_agent_tracker/presentation/features/all_reports/bloc/all_
 import 'package:dishtv_agent_tracker/presentation/features/all_reports/bloc/all_reports_event.dart';
 import 'package:dishtv_agent_tracker/presentation/features/all_reports/bloc/all_reports_state.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:dishtv_agent_tracker/presentation/common/widgets/custom_app_bar.dart';
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:share_plus/share_plus.dart';
 
 class AllReportsScreen extends StatelessWidget {
@@ -31,22 +33,35 @@ class AllReportsScreen extends StatelessWidget {
 class AllReportsView extends StatelessWidget {
   const AllReportsView({Key? key}) : super(key: key);
 
+  static const platform = MethodChannel('com.dishtv.agenttracker/pdf');
+
   Future<void> _generateAndSharePdf(BuildContext context, MonthlySummary summary) async {
     ScaffoldMessenger.of(context)
       ..hideCurrentSnackBar()
       ..showSnackBar(const SnackBar(content: Text("Generating PDF Report...")));
 
     try {
+      var status = await Permission.storage.status;
+      if (!status.isGranted) {
+        await Permission.storage.request();
+      }
+
       final repo = context.read<PerformanceRepository>();
       final pdfBytes = await repo.generateMonthlyReportPdf(summary);
-      final directory = await getTemporaryDirectory();
-      final filePath = "${directory.path}/DishTV_Report_${summary.monthName}_${summary.year}.pdf";
-      final file = File(filePath);
-      await file.writeAsBytes(pdfBytes);
+      
+      final result = await platform.invokeMethod('savePdf', {
+        'pdfBytes': pdfBytes,
+        'fileName': "DishTV_Report_${summary.monthName}_${summary.year}.pdf"
+      });
 
-      final xFile = XFile(filePath, mimeType: "application/pdf");
-      await Share.shareXFiles([xFile], subject: "Monthly Report - ${summary.formattedMonthYear}");
+      ScaffoldMessenger.of(context)
+        ..hideCurrentSnackBar()
+        ..showSnackBar(SnackBar(content: Text(result ?? "PDF Saved")));
 
+    } on PlatformException catch (e) {
+      ScaffoldMessenger.of(context)
+        ..hideCurrentSnackBar()
+        ..showSnackBar(SnackBar(content: Text("Failed to save PDF: '${e.message}'.")));
     } catch (e) {
       ScaffoldMessenger.of(context)
         ..hideCurrentSnackBar()
