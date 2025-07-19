@@ -57,22 +57,20 @@ jobs:
           echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 --decode > android/app/my_release_key.jks
         working-directory: ./
 
+      - name: Create key.properties
+        run: |
+          echo "storeFile=my_release_key.jks" >> android/key.properties
+          echo "keyAlias=${{ secrets.ANDROID_KEY_ALIAS }}" >> android/key.properties
+          echo "keyPassword=${{ secrets.ANDROID_KEY_PASSWORD }}" >> android/key.properties
+          echo "storePassword=${{ secrets.ANDROID_KEYSTORE_PASSWORD }}" >> android/key.properties
+        working-directory: android/app/
+
       - name: 💪 Build Release APK
         run: flutter build apk --release
-        env:
-          ORG_GRADLE_PROJECT_storeFile: my_release_key.jks
-          ORG_GRADLE_PROJECT_storePassword: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
-          ORG_GRADLE_PROJECT_keyAlias: ${{ secrets.ANDROID_KEY_ALIAS }}
-          ORG_GRADLE_PROJECT_keyPassword: ${{ secrets.ANDROID_KEY_PASSWORD }}
         working-directory: ./
 
       - name: 💪 Build Release AAB
         run: flutter build appbundle --release
-        env:
-          ORG_GRADLE_PROJECT_storeFile: my_release_key.jks
-          ORG_GRADLE_PROJECT_storePassword: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
-          ORG_GRADLE_PROJECT_keyAlias: ${{ secrets.ANDROID_KEY_ALIAS }}
-          ORG_GRADLE_PROJECT_keyPassword: ${{ secrets.ANDROID_KEY_PASSWORD }}
         working-directory: ./
 
       - name: 📦 Prepare Release Artifacts
