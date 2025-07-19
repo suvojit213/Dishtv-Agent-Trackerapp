@@ -49,9 +49,34 @@ android {
         versionName flutterVersionName
     }
 
+    signingConfigs {
+        release {
+            storeFile rootProject.file('key.properties').withReader { reader ->
+                def props = new Properties()
+                props.load(reader)
+                return file(props['storeFile'])
+            }
+            storePassword rootProject.file('key.properties').withReader { reader ->
+                def props = new Properties()
+                props.load(reader)
+                return props['storePassword']
+            }
+            keyAlias rootProject.file('key.properties').withReader { reader ->
+                def props = new Properties()
+                props.load(reader)
+                return props['keyAlias']
+            }
+            keyPassword rootProject.file('key.properties').withReader { reader ->
+                def props = new Properties()
+                props.load(reader)
+                return props['keyPassword']
+            }
+        }
+    }
+
     buildTypes {
         release {
-            signingConfig signingConfigs.debug
+            signingConfig signingConfigs.release
         }
     }
 }
