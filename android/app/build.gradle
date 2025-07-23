@@ -51,7 +51,7 @@ android {
 
     signingConfigs {
         release {
-            storeFile rootProject.file('android/key.properties').withReader { reader ->
+            storeFile file('../key.properties').withReader { reader ->
                 def props = new Properties()
                 props.load(reader)
                 return file("../" + props['storeFile'])
