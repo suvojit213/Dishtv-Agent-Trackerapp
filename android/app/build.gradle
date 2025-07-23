@@ -54,7 +54,7 @@ android {
             storeFile rootProject.file('key.properties').withReader { reader ->
                 def props = new Properties()
                 props.load(reader)
-                return file(props['storeFile'])
+                return rootProject.file("android/" + props['storeFile'])
             }
             storePassword rootProject.file('key.properties').withReader { reader ->
                 def props = new Properties()
